@@ -1,0 +1,12 @@
+.artgrid-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 0 6rem;
+}
+.artgrid-art-wrapper {
+  width: 30%;
+}
+.artgrid-art {
+  margin: 1rem;
+}

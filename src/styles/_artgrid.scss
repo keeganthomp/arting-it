@@ -1,12 +1,18 @@
 .artgrid-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  margin: 0 6rem;
 }
 .artgrid-art-wrapper {
-  width: 30%;
+  // width: 30%;
+  margin: 0 auto;
 }
 .artgrid-art {
-  margin: 1rem;
+  margin: 0 1rem;
+  transition: box-shadow 0.3s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    -webkit-box-shadow: 4px 5px 12px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 5px 12px -5px rgba(0,0,0,0.75);
+    box-shadow: 4px 5px 12px -5px rgba(0,0,0,0.75);
+  }
 }

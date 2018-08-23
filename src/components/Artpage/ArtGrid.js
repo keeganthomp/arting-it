@@ -4,7 +4,6 @@ import React, { Component}  from 'react'
 class ArtGrid extends Component {
   constructor (props) {
     super()
-    console.log('THIS PROPS', props)
   }
   render () {
     return(

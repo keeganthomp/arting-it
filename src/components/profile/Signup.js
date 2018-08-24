@@ -6,29 +6,27 @@ import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import Input from '@material-ui/core/Input'
 import MenuItem from '@material-ui/core/MenuItem'
-import { createArtist } from '../api'
+import * as Yup from 'yup'
+import { createArtist } from '../../api'
 
 class Signup extends Component {
   constructor(props){
     super()
   }
   createArtist = data => {
-    console.log('DATAAAA IN CRATE ARTIST FUNC::', data)
     createArtist(data)
   }
   render() {
     return(<div className='signup-container container'>
       <h1>Signup page</h1>
         <Formik
-          initialValues={{
-            // firstName: 'jow',
-            // lastName: 'woo',
-            // sex: 'F',
-            // age: 40,
-            // location: 'Nashville',
-            // specialty: 'watercolor'
-          }}
-          onSubmit={(values) => createArtist(values)}
+          validationSchema={
+            Yup.object().shape({
+              username: Yup.string().required('username is required'),
+              password: Yup.string().min(5)
+            })
+          }
+          onSubmit={(values) => this.createArtist(values)}
           render={({
             values,
             errors,
@@ -36,9 +34,33 @@ class Signup extends Component {
             handleChange,
             handleBlur,
             handleSubmit,
-            isSubmitting
+            isSubmitting,
+            setFieldValue
           }) => (
             <form className='signup-form row' onSubmit={handleSubmit}>
+              <div className='col-12'>
+                <TextField
+                  error={errors.username && true}
+                  label='Username'
+                  type='text'
+                  name='username'
+                  value={values.username}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              {errors.username && <span>{errors.username}</span>}
+              </div>
+              <div className='col-12'>
+                <TextField
+                  error={errors.password && true}
+                  label='Password'
+                  type='password'
+                  name='password'
+                  value={values.password}
+                  onChange={handleChange}
+                />
+              {errors.password && <span>{errors.password}</span>}                
+              </div>
               <div className='col-12'>
                 <TextField
                   label='First Name'

@@ -18,6 +18,9 @@ export default class Navigation extends Component {
         <Link to='/signup'>
           <button>Signup</button>
         </Link>
+        <Link to='/login'>
+          <button>Login</button>
+        </Link>
       </div>
     )
   }

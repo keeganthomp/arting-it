@@ -17,10 +17,17 @@ export const makeTartApiRequest = ({ method, token, location, body = {} }) => {
 }
 
 export const createArtist = (body) => {
-  console.log('BODYY IN API FINC:', body)
   makeTartApiRequest({
     method: 'POST',
-    location: '/api/artist',
+    location: '/api/artist/signup',
+    body
+  })
+}
+
+export const login = (body) => {
+  makeTartApiRequest({
+    method: 'POST',
+    location: '/api/artist/login',
     body
   })
 }

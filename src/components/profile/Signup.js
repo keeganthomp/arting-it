@@ -16,9 +16,6 @@ class Signup extends Component {
   createArtist = data => {
     createArtist(data)
   }
-  saveImagePath = (imagePath) => {
-    this.setState({ imagePath })
-  }
   render() {
     return(<div className='signup-container container'>
       <h1>Signup page</h1>

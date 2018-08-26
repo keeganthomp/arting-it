@@ -6,9 +6,25 @@ import { login } from '../../api'
 class Login extends Component {
   constructor(props){
     super()
+    this.state = {
+      apiError: '',
+      noPermissionsMessage: ''
+    }
+  }
+  componentDidMount () {
+    this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state})
+  }
+  getUserData = (userData) => {
+    this.props.history.push({
+      pathname: '/profile',
+      state: userData
+    })
+  }
+  handleApiErrors = (apiError) => {
+    this.setState({ apiError })
   }
   login = data => {
-    login(data)
+    login(data, this.getUserData, this.handleApiErrors)
   }
   render() {
     return(<div className='Login-container container'>
@@ -26,6 +42,7 @@ class Login extends Component {
             setFieldValue
           }) => (
             <form className='Login-form row' onSubmit={handleSubmit}>
+            {this.state.noPermissionsMessage && <div className='col-12'>{this.state.noPermissionsMessage}</div>}
               <div className='col-12'>
                 <TextField
                   label='Username'
@@ -44,6 +61,7 @@ class Login extends Component {
                   onChange={handleChange}
                 />
               </div>
+              {this.state.apiError && <div className='col-12' style={{ color: 'red' }} >Incorrect User Name or Password.</div>}
               <div className='col-12'>              
                 <button type='submit'>SUBMIT</button>
               </div>

@@ -72,7 +72,8 @@ const getArtistLogin = (req, res) => {
     where: {
       username
     }
-  }).then(artist => { 
+  }).then(artist => {
+    // console.log('ARTISTTTLL', artist)
     if (artist && validPassword(password, artist.dataValues.password)) {
       const artistData = omit(artist.dataValues, ['password']) 
       req.session.user = artistData
@@ -88,8 +89,29 @@ const getArtistLogin = (req, res) => {
   })
 }
 
+const getArtist = (req, res) => {
+  const { username } = req.body
+  Artist.findOne({
+    where: {
+      id
+    }
+  }).then(artist => {
+    if (artist) {
+      res.json({
+        status: 200,
+        artist
+      })
+    } else {
+      res.status(408).json({
+        error: 'No Artist Found'
+      })
+    }
+  })
+}
+
 module.exports = {
   getAllArtists,
   createArtist,
-  getArtistLogin
+  getArtistLogin,
+  getArtist
 }

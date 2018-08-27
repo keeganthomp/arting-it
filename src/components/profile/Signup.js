@@ -81,28 +81,28 @@ class Signup extends Component {
               </div>
               <div className='col-12'>
                 <FormControl>
-                  <InputLabel shrink htmlFor="sex-input-signup">
+                  <InputLabel shrink htmlFor='sex-input-signup'>
                     Sex
                   </InputLabel>
                   <Select
                     value={values.sex}
                     onChange={handleChange}
-                    input={<Input name="sex" id="sex-input-signup" />}
+                    input={<Input name='sex' id='sex-input-signup' />}
                   >
-                    <MenuItem value="F">Female</MenuItem>
-                    <MenuItem value="M">Male</MenuItem>
+                    <MenuItem value='F'>Female</MenuItem>
+                    <MenuItem value='M'>Male</MenuItem>
                   </Select>
                 </FormControl>
               </div>
               <div className='col-12'>
                 <FormControl>
-                  <InputLabel shrink htmlFor="age-input-signup">
+                  <InputLabel shrink htmlFor='age-input-signup'>
                     Age
                   </InputLabel>
                   <Select
                     value={values.age}
                     onChange={handleChange}
-                    input={<Input name="age" id="age-input-signup" />}
+                    input={<Input name='age' id='age-input-signup' />}
                   >
                     <MenuItem value={20}>20</MenuItem>
                     <MenuItem value={40}>40</MenuItem>
@@ -113,13 +113,13 @@ class Signup extends Component {
               </div>
               <div className='col-12'>
                 <FormControl>
-                  <InputLabel shrink htmlFor="location-input-signup">
+                  <InputLabel shrink htmlFor='location-input-signup'>
                     Location
                   </InputLabel>
                   <Select
                     value={values.location}
                     onChange={handleChange}
-                    input={<Input name="location" id="location-input-signup" />}
+                    input={<Input name='location' id='location-input-signup' />}
                   >
                     <MenuItem value='Nashville'>Nashville</MenuItem>
                     <MenuItem value='Smyrna'>Smyrna</MenuItem>

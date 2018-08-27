@@ -12,7 +12,7 @@ class Login extends Component {
     }
   }
   componentDidMount () {
-    this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state})
+    this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state })
   }
   getUserData = (userData) => {
     this.props.history.push({

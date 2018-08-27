@@ -1,4 +1,4 @@
-import React, { Component}  from 'react'
+import React, { Component }  from 'react'
 // import { navigateToPa/ge } from '../../helpers/navigateToPage'
 
 class ArtGrid extends Component {

@@ -12,7 +12,7 @@ class ArtPage extends Component {
       }
     }
   shouldShowDetailedView = (detailedViewArt) => {
-    this.setState({ detailedViewArt})
+    this.setState({ detailedViewArt })
   }
   render () {
     return(

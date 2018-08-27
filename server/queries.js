@@ -2,6 +2,7 @@ const omit = require('lodash/omit')
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('postgres://localhost:5432/tart')
 const { generateHash, validPassword } = require('./helpers/validation')
+const b64toBlob = require('b64-to-blob')
 
 const Artist = sequelize.define('artist', {
   username: {
@@ -33,11 +34,11 @@ const Artist = sequelize.define('artist', {
     type: Sequelize.INTEGER
   },
   avatar: {
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   }
 })
 
-Artist.sync().then(() => 'Artists Table Ready')
+Artist.sync({ force: true }).then(() => 'Artists Table Ready')
 
 const getAllArtists = (req, res) => {
   Artist.findAll().then((data) => {
@@ -109,9 +110,32 @@ const getArtist = (req, res) => {
   })
 }
 
+const updateArtist = (req, res) => {
+  console.log('UPDATING ARTISTTTTTTTT')
+  console.log('REQ BODy IN uPDATE::', req.body.avatar)
+  Artist.update(
+    { avatar: req.body.avatar },
+    { where: { id: req.params.id } }
+  ).then(updatedArtist => {
+    console.log('updateARTISTT:', updateArtist)
+    if (updatedArtist) {
+      res.json({
+        status: 200,
+        woo: 'UPDATEDDD',
+        updatedArtist
+      })
+    } else {
+      res.status(408).json({
+        error: 'UNABLE TO UPDATE ARTIST'
+      })
+    }
+  })
+}
+
 module.exports = {
   getAllArtists,
   createArtist,
   getArtistLogin,
-  getArtist
+  getArtist,
+  updateArtist
 }

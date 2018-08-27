@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const makeTartApiRequest = ({ method, token, location, body = {}, callbackOnSuccess,  callbackOnFailure}) => {
+export const makeTartApiRequest = ({ method, token, location, body = {}, callbackOnSuccess,  callbackOnFailure }) => {
   return new Promise((resolve, reject) => {
     return axios({
       method: method,
@@ -39,6 +39,15 @@ export const getArtist = (body) => {
   makeTartApiRequest({
     method: 'POST',
     location: '/api/artist',
+    body
+  })
+}
+
+export const updateArtist = (body, id) => {
+  console.log('UPDATING ARTIST ON THE FEEE', body)
+  makeTartApiRequest({
+    method: 'PATCH',
+    location: `/api/artist/${id}`,
     body
   })
 }

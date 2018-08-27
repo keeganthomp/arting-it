@@ -1,0 +1,11 @@
+.profile {
+  &_avatar {
+    
+  }
+  &_avatar-icon {
+    font-size: 3rem;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

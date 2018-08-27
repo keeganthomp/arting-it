@@ -25,6 +25,7 @@ app.get('/api/artists', db.getAllArtists)
 app.post('/api/artist/signup', db.createArtist)
 app.post('/api/artist/login', db.getArtistLogin)
 app.post('/api/artist', db.getArtist)
+app.patch('/api/artist/:id', db.updateArtist)
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
 module.exports = router

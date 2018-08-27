@@ -1,0 +1,15 @@
+.file-uploader {
+  margin: 1.5rem auto; 
+  border: 1px dashed gray; 
+  max-width: 200px;
+  border-radius: 10px;
+  &:hover {
+    cursor: pointer;
+  }
+  &_summary {
+    margin: 1rem 0;
+  }
+  &_image-preview {
+    max-width: 12rem;
+  }
+}

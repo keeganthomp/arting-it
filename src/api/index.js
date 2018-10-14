@@ -18,7 +18,7 @@ export const makeTartApiRequest = ({ method, token, location, body = {}, callbac
 }
 
 export const createArtist = (body) => {
-  makeTartApiRequest({
+  return makeTartApiRequest({
     method: 'POST',
     location: '/api/artist/signup',
     body
@@ -35,19 +35,32 @@ export const login = (body, callbackOnSuccess, callbackOnFailure) => {
   })
 }
 
-export const getArtist = (body) => {
-  makeTartApiRequest({
-    method: 'POST',
-    location: '/api/artist',
-    body
+export const getArtist = (id) => {
+  return makeTartApiRequest({
+    method: 'GET',
+    location: `/api/artist/${id}`
   })
 }
 
 export const updateArtist = (body, id) => {
-  console.log('UPDATING ARTIST ON THE FEEE', body)
   makeTartApiRequest({
     method: 'PATCH',
     location: `/api/artist/${id}`,
+    body
+  })
+}
+  export const uploadThing = (body, id) => {
+    return makeTartApiRequest({
+      method: 'PATCH',
+      location: `/api/artist/${id}`,
+      body
+    })
+  }
+
+export const updateArt = (body, id) => {
+  makeTartApiRequest({
+    method: 'PATCH',
+    location: `/api/update/art/${id}`,
     body
   })
 }

@@ -14,7 +14,7 @@ class Signup extends Component {
     super()
   }
   createArtist = data => {
-    createArtist(data)
+    createArtist(data).then(res => res.status === 200 && this.props.history.push('/login'))
   }
   render() {
     return(<div className='signup-container container'>
@@ -22,8 +22,11 @@ class Signup extends Component {
         <Formik
           validationSchema={
             Yup.object().shape({
-              username: Yup.string().required('username is required'),
-              password: Yup.string().min(5)
+              username: Yup.string().min(5).required(),
+              password: Yup.string().min(5).required(),
+              first_name: Yup.string().required(),
+              last_name: Yup.string().required(),
+              sex: Yup.string().required()
             })
           }
           onSubmit={(values) => this.createArtist(values)}
@@ -48,7 +51,7 @@ class Signup extends Component {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-              {errors.username && <span>{errors.username}</span>}
+              {errors.username && <div className='signup-form_error'>{errors.username}</div>}
               </div>
               <div className='col-12'>
                 <TextField
@@ -59,7 +62,7 @@ class Signup extends Component {
                   value={values.password}
                   onChange={handleChange}
                 />
-              {errors.password && <span>{errors.password}</span>}                
+              {errors.password && <div className='signup-form_error'>{errors.password}</div>}                
               </div>
               <div className='col-12'>
                 <TextField
@@ -69,6 +72,7 @@ class Signup extends Component {
                   value={values.firstName}
                   onChange={handleChange}
                 />
+                {errors.first_name && <div className='signup-form_error'>{errors.first_name}</div>}   
               </div>
               <div className='col-12'>
                 <TextField
@@ -78,6 +82,7 @@ class Signup extends Component {
                   value={values.lastName}
                   onChange={handleChange}                
                 />
+                {errors.last_name && <div className='signup-form_error'>{errors.last_name}</div>}   
               </div>
               <div className='col-12'>
                 <FormControl>
@@ -93,6 +98,7 @@ class Signup extends Component {
                     <MenuItem value='M'>Male</MenuItem>
                   </Select>
                 </FormControl>
+                {errors.sex && <div className='signup-form_error'>{errors.sex}</div>}
               </div>
               <div className='col-12'>
                 <FormControl>
@@ -110,6 +116,7 @@ class Signup extends Component {
                     <MenuItem value={60}>60</MenuItem>
                   </Select>
                 </FormControl>
+                {errors.age && <div className='signup-form_error'>{errors.age}</div>}
               </div>
               <div className='col-12'>
                 <FormControl>
@@ -127,6 +134,7 @@ class Signup extends Component {
                     <MenuItem value='Franklin'>Franklin</MenuItem>
                   </Select>
                 </FormControl>
+                {errors.location && <div className='signup-form_error'>{errors.location}</div>}
               </div>
               <div className='col-12'>
                 <TextField

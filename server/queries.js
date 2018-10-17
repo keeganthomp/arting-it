@@ -1,18 +1,6 @@
 const omit = require('lodash/omit')
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize('tart', 'keegan', '', {
-  host: 'localhost',
-  dialect: 'postgres',
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  },
-
-  // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
-  operatorsAliases: false
-})
+const sequelize = new Sequelize(`postgres://localhost:5432/tart`)
 const { generateHash, validPassword } = require('./helpers/validation')
 const b64toBlob = require('b64-to-blob')
 const fs = require('fs')

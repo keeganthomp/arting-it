@@ -4,7 +4,7 @@ export const makeTartApiRequest = ({ method, token, location, body = {}, callbac
   return new Promise((resolve, reject) => {
     return axios({
       method: method,
-      url: location,
+      url: `http://142.93.241.62:8080${location}`,
       headers: { 'Content-Type': 'application/json' },
       data: body
     }).then(axiosResult => {

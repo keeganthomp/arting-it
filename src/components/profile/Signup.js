@@ -15,6 +15,7 @@ class Signup extends Component {
   }
   createArtist = data => {
     createArtist(data).then(res => res.status === 200 && this.props.history.push('/login'))
+    console.log('ARTIST CREATEDD')
   }
   render() {
     return(<div className='signup-container container'>

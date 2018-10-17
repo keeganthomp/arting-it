@@ -1,9 +1,9 @@
 const omit = require('lodash/omit')
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('tart', 'keegan', 'hu8jmn3', {
-  host: 'localhost',
+  host: '142.93.241.62',
   dialect: 'postgres',
-
+  port:'8080',
   pool: {
     max: 5,
     min: 0,

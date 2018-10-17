@@ -26,6 +26,7 @@ export const createArtist = (body) => {
 }
 
 export const login = (body, callbackOnSuccess, callbackOnFailure) => {
+  console.log('BODYY IN LOGIN ::', body)
   makeTartApiRequest({
     method: 'POST',
     location: '/api/artist/login',

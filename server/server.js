@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const cors = require('cors')
 
 const router = express.Router()
 const app = express()
@@ -19,6 +20,7 @@ app.use(session({
 }))
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use('cors')
 
 app.get('/api/artists', db.getAllArtists)
 

@@ -20,7 +20,7 @@ app.use(session({
 }))
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use('cors')
+app.use(cors())
 
 app.get('/api/artists', db.getAllArtists)
 

@@ -165,6 +165,7 @@ const uploadToS3 = (props) => {
   const buff = new Buffer(base64encodedImage.replace(/^data:image\/\w+base64,/, ''),'base64')
   s3.createBucket({ Bucket: myBucket }, function(err, data) {
   if (err) {
+    console.log('ERRORR 11::', err)
     res.status(400).json({
       error: 'Unable to upload image'
     })
@@ -172,6 +173,7 @@ const uploadToS3 = (props) => {
       params = { Bucket: myBucket, Key: fileName, Body: buff }
       s3.upload(params, (err, data) => {
         if (err) {
+            console.log('ERRORR 22:', err)
             res.status(400).json({
               error: 'Unable to upload image'
             })

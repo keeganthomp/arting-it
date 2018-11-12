@@ -13,13 +13,10 @@ const sequelize = new Sequelize('tart', 'keegan', 'hu8jmn3', {
   }
 })
 const { generateHash, validPassword } = require('./helpers/validation')
-const b64toBlob = require('b64-to-blob')
 const fs = require('fs')
 const AWS = require('aws-sdk')
 const uuidv1 = require('uuid/v1')
 const s3 = new AWS.S3()
-
-AWS.config.update({ accessKeyId: 'AKIAJZVAFRGRFMCFLP4A', secretAccessKey: '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' })
 
 const Artist = sequelize.define('artist', {
   username: {
@@ -139,8 +136,6 @@ const updateArtist = (req, res) => {
   fs.writeFile("./temp/test.jpeg", bufffer, function(err) {
     if(err) {
       console.log("err", err)
-    } else {
-      console.log('WOOOOO')
     }
   })
   Artist.update(
@@ -163,20 +158,11 @@ const updateArtist = (req, res) => {
 
 
 const uploadToS3 = (props) => {
-  let fileWrittenToTempFolder = false
   const { base64encodedImage, fileName, bucket, res, userId, image } = props
   const myBucket = bucket
   const imageForDisk = base64encodedImage.split(';base64,').pop()
   fs.writeFile(path.join(__dirname + `/temp/${fileName}`), imageForDisk, { encoding: 'base64' }, (err) => {
-    console.log('1111')
-      if (!err) {
-        fileWrittenToTempFolder = true
-        console.log('22222')
-      } else {
-          console.log('3333')
-
-
-      }
+      err && console.log('ERROR WRITING FILE:', err)
     })
     setTimeout(() => {
     s3.createBucket({ Bucket: myBucket }, function(err, data) {
@@ -227,6 +213,7 @@ const uploadToS3 = (props) => {
                   { 'art': sequelize.fn('array_append', sequelize.col('art'), artPiece) },
                   { returning: true, where: { id: userId } }
                   ).then(([rowsUpdated, [artistWithUpdatedPortfolio]]) => {
+                    fs.unlink(path.join(__dirname + `/temp/${fileName}`), () => console.log('FILE REMOVED'))
                     if (artistWithUpdatedPortfolio.art) {
                       res.json({
                         status: 200,
@@ -249,21 +236,18 @@ const uploadToS3 = (props) => {
 
 const fileUpload = (req, res) => {
   const { isProfilePicture, base64encodedImage, fileName, price, description, image } = req.body
-  console.log('REQ BOD::Y', req.body)
-  console.log('WEEEEE')
   if (isProfilePicture) {
     uploadToS3({
       base64encodedImage: base64encodedImage,
-      fileName: req.body.fileName,
+      fileName,
       bucket: 'artist-profile-images',
       res,
       userId: req.params.id 
     })
    } else {
-     console.log('NOOOOWEOR')
       uploadToS3({
         base64encodedImage: base64encodedImage,
-        fileName: req.body.fileName,
+        fileName,
         bucket: 'artist-portfolio-images',
         res,
         userId: req.params.id,
@@ -287,7 +271,7 @@ const fileUpload = (req, res) => {
         })
       } else {
         res.status(400).json({
-          error: 'UNABLE TO UPDATE ARTTTTTTTT'
+          error: 'UNABLE TO UPDATE ARTT'
         })
       }
     })

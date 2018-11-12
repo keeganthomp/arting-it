@@ -1,21 +1,26 @@
 {
   "parser": "babel-eslint",
+  "extends": [
+    "standard",
+    "standard-react"
+  ],
   "parserOptions": {
-      "ecmaVersion": 6,
-      "sourceType": "module",
-      "ecmaFeatures": {
-          "jsx": true,
-          "modules": true,
-          "experimentalObjectRestSpread": true
-      }
+    "ecmaVersion": 2017
+},
+"plugins": [
+  "babel",
+  "react",
+  "promise"
+],
+"env": {
+  "browser" : true,
+  "es6": true
   },
   "rules": {
-      "semi": ["error", "never"],
-      "no-extra-semi": 2,
-      "key-spacing"          : 0,
-      "jsx-quotes"           : [2, "prefer-single"],
-      "max-len"              : [2, 200, 2, { "ignoreStrings": true, "ignoreTemplateLiterals": true, "ignoreUrls": true }],
-      "object-curly-spacing" : [2, "always"],
-      "no-mixed-operators" : 0
+    "key-spacing"          : 0,
+    "jsx-quotes"           : [2, "prefer-single"],
+    "max-len"              : [2, 200, 2, { "ignoreStrings": true, "ignoreTemplateLiterals": true, "ignoreUrls": true }],
+    "object-curly-spacing" : [2, "always"],
+    "no-mixed-operators" : 0
   }
 }

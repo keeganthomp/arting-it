@@ -44,7 +44,6 @@ class Artpiece extends Component {
   }
   render() {
     const { artDescription, artPrice, artPiece } = this.state
-    console.log('ART PIECE:', artPiece)
     return(
     <div className='profile_available-art-image-container'>
       <img className='profile_available-art-image' src={artPiece.artImage} alt='' />

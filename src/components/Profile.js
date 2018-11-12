@@ -7,7 +7,6 @@ import Artpiece from './profile/Artpiece'
 
 class Profile extends Component {
   constructor(props){
-    console.log('PROPSSS:', props)
     super()
     this.state = {
       artist: props.location.state || null,
@@ -28,9 +27,6 @@ class Profile extends Component {
       state: 'Please login or create an account to view profile.'
     })
   }
-  componentDidUpdate(){
-    console.log('UDATEDDD')
-  }
   onDrop = (file) => {
     const art = [...this.state.art, file[0]]
     this.setState({ art })
@@ -45,7 +41,6 @@ class Profile extends Component {
       uploadThing({
         isProfilePicture: true,
         base64encodedImage: reader.result,
-        image: file,
         fileName: file[0].name
       }, artist.id).then(res => {
         this.setState({ 
@@ -99,8 +94,8 @@ class Profile extends Component {
         <p>Below are your current pieces for sale:</p>
         {artist && !isUpdating && <div className='profile_available-art-container'>
             {art && art.length > 0 && art.map(artPiece => {
-            const parsedArt = JSON.parse(artPiece)
-             return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id}/>
+             const parsedArt = JSON.parse(artPiece)
+             return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
             })}
         </div> || <CircularProgress />}
       </Fragment> 

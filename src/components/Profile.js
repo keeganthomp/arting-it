@@ -45,6 +45,7 @@ class Profile extends Component {
       uploadThing({
         isProfilePicture: true,
         base64encodedImage: reader.result,
+        image: file,
         fileName: file[0].name
       }, artist.id).then(res => {
         this.setState({ 
@@ -68,7 +69,8 @@ class Profile extends Component {
       uploadThing({
         isProfilePicture: false,        
         base64encodedImage: reader.result,
-        fileName: file[0].name
+        fileName: file[0].name,
+        image: file
       }, artist.id).then(res => {
         this.setState({ 
           isUpdating: false

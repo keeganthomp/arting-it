@@ -1,5 +1,7 @@
 const omit = require('lodash/omit')
 const Sequelize = require('sequelize')
+const path = require('path')
+
 const sequelize = new Sequelize('tart', 'keegan', 'hu8jmn3', {
   host: 'localhost',
   dialect: 'postgres',
@@ -16,6 +18,8 @@ const fs = require('fs')
 const AWS = require('aws-sdk')
 const uuidv1 = require('uuid/v1')
 const s3 = new AWS.S3()
+
+AWS.config.update({ accessKeyId: 'AKIAJZVAFRGRFMCFLP4A', secretAccessKey: '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' })
 
 const Artist = sequelize.define('artist', {
   username: {
@@ -159,91 +163,113 @@ const updateArtist = (req, res) => {
 
 
 const uploadToS3 = (props) => {
-  const { base64encodedImage, fileName, bucket, res, userId } = props
+  let fileWrittenToTempFolder = false
+  const { base64encodedImage, fileName, bucket, res, userId, image } = props
   const myBucket = bucket
-  const myKey = fileName
-  const buff = new Buffer(base64encodedImage.replace(/^data:image\/\w+base64,/, ''),'base64')
-  s3.createBucket({ Bucket: myBucket }, function(err, data) {
-  if (err) {
-    console.log('ERRORR 11::', err)
-    res.status(400).json({
-      error: 'Unable to upload image'
+  const imageForDisk = base64encodedImage.split(';base64,').pop()
+  fs.writeFile(path.join(__dirname + `/temp/${fileName}`), imageForDisk, { encoding: 'base64' }, (err) => {
+    console.log('1111')
+      if (!err) {
+        fileWrittenToTempFolder = true
+        console.log('22222')
+      } else {
+          console.log('3333')
+
+
+      }
     })
-    } else {
-      params = { Bucket: myBucket, Key: fileName, Body: buff }
-      s3.upload(params, (err, data) => {
-        if (err) {
-            console.log('ERRORR 22:', err)
-            res.status(400).json({
-              error: 'Unable to upload image'
-            })
-          } else {
-            if (bucket === 'artist-profile-images' ) {
-             Artist.update(
-              { avatar: `https://s3.amazonaws.com/${bucket}/${data.key}` },
-              { returning: true, where: { id: userId } }
-            ).then(([rowsUpdated, [artistWithUpdatedProfilePicture]]) => {
-              if (artistWithUpdatedProfilePicture) {
-                res.json({
-                  status: 200,
-                  message: 'Successfully updated profile image',
-                  updatedProfileImage: artistWithUpdatedProfilePicture.avatar
-                })
-              } else {
-                res.status(400).json({
-                  error: 'UNABLE TO UPDATE ARTIST PROFILE'
-                })
-              }
-            })
-          } else {
-            const artPiece = JSON.stringify({
-              id: uuidv1(),
-              price: '$6.66',
-              description: 'Some description about the art',
-              artImage: `https://s3.amazonaws.com/${bucket}/${data.key}`
-            })
-            Artist.update(
-              { 'art': sequelize.fn('array_append', sequelize.col('art'), artPiece) },
-              { returning: true, where: { id: userId } }
-            ).then(([rowsUpdated, [artistWithUpdatedPortfolio]]) => {
-              if (artistWithUpdatedPortfolio.art) {
-                res.json({
-                  status: 200,
-                  message: 'Successfully added art to art image',
-                  updatedPortfolio: artistWithUpdatedPortfolio.art
-                })
-              } else {
-                res.status(400).json({
-                  error: 'UNABLE TO UPDATE ARTIST IMAGESSS'
-                })
-              }
-            })
+    setTimeout(() => {
+    s3.createBucket({ Bucket: myBucket }, function(err, data) {
+      const imageToUpload = fs.createReadStream(path.join(__dirname + `/temp/${fileName}`))
+      if (err) {
+        res.status(400).json({
+          error: 'Unable to upload image'
+        })
+        } else {
+          params = { 
+            Bucket: myBucket,
+            Key: fileName,
+            Body: imageToUpload,
+            ContentEncoding: 'base64',
+            type: 'image/jpeg'
           }
-         }
+          s3.upload(params, (err, data) => {
+            if (err) {
+                res.status(400).json({
+                  error: 'Unable to upload image'
+                })
+              } else {
+                if (bucket === 'artist-profile-images' ) {
+                Artist.update(
+                  { avatar: `https://s3.amazonaws.com/${bucket}/${data.key}` },
+                  { returning: true, where: { id: userId } }
+                ).then(([rowsUpdated, [artistWithUpdatedProfilePicture]]) => {
+                  if (artistWithUpdatedProfilePicture) {
+                    res.json({
+                      status: 200,
+                      message: 'Successfully updated profile image',
+                      updatedProfileImage: artistWithUpdatedProfilePicture.avatar
+                    })
+                  } else {
+                    res.status(400).json({
+                      error: 'UNABLE TO UPDATE ARTIST PROFILE'
+                    })
+                  }
+                })
+              } else {
+                const artPiece = JSON.stringify({
+                  id: uuidv1(),
+                  price: '$6.66',
+                  description: 'Some description about the art',
+                  artImage: `https://s3.amazonaws.com/${bucket}/${data.key}`
+                })
+                Artist.update(
+                  { 'art': sequelize.fn('array_append', sequelize.col('art'), artPiece) },
+                  { returning: true, where: { id: userId } }
+                  ).then(([rowsUpdated, [artistWithUpdatedPortfolio]]) => {
+                    if (artistWithUpdatedPortfolio.art) {
+                      res.json({
+                        status: 200,
+                        message: 'Successfully added art to art image',
+                        updatedPortfolio: artistWithUpdatedPortfolio.art
+                      })
+                  } else {
+                    res.status(400).json({
+                      error: 'UNABLE TO UPDATE ARTIST IMAGESSS'
+                    })
+                  }
+                })
+              }
+            }
+          })
+        }
       })
-    }
-  })
+    },2000)
 }
 
 const fileUpload = (req, res) => {
-  const { isProfilePicture, base64encodedImage, fileName, price, description } = req.body
+  const { isProfilePicture, base64encodedImage, fileName, price, description, image } = req.body
+  console.log('REQ BOD::Y', req.body)
+  console.log('WEEEEE')
   if (isProfilePicture) {
     uploadToS3({
-      base64encodedImage: req.body.base64encodedImage,
+      base64encodedImage: base64encodedImage,
       fileName: req.body.fileName,
       bucket: 'artist-profile-images',
       res,
       userId: req.params.id 
     })
    } else {
+     console.log('NOOOOWEOR')
       uploadToS3({
-        base64encodedImage: req.body.base64encodedImage,
+        base64encodedImage: base64encodedImage,
         fileName: req.body.fileName,
         bucket: 'artist-portfolio-images',
         res,
         userId: req.params.id,
         price,
-        description
+        description,
+        image
       }) 
     }
   }

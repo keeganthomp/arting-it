@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import FileUploader from './ui/fileUploader'
-import { updateArtist, getArtist, uploadThing } from '../api'
-import { baseProfileImageUrl } from '../constants/url'
+import { getArtist, uploadThing } from '../api'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Artpiece from './profile/Artpiece'
+import PropTypes from 'prop-types'
 
 class Profile extends Component {
   constructor(props){
@@ -93,7 +93,9 @@ class Profile extends Component {
         <FileUploader onDrop={this.updateArtPortfolio} isLoading={isUpdating}/>
         <p>Below are your current pieces for sale:</p>
         {artist && !isUpdating && <div className='profile_available-art-container'>
+        {console.log('ART BABEE:', art)}
             {art && art.length > 0 && art.map(artPiece => {
+              console.log('ARTPIECE:', artPiece)
              const parsedArt = JSON.parse(artPiece)
              return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
             })}
@@ -101,6 +103,11 @@ class Profile extends Component {
       </Fragment> 
     )
   }
+}
+
+Profile.propTypes = {
+  location: PropTypes.object,
+  history: PropTypes.object
 }
 
 export default Profile

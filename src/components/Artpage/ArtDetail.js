@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 export const ArtDetail = (props) => {
   return(
@@ -17,6 +18,11 @@ export const ArtDetail = (props) => {
       </div>
     </div>
   )
+}
+
+ArtDetail.propTypes = {
+  image: PropTypes.string,
+  history: PropTypes.object
 }
 
 export default ArtDetail

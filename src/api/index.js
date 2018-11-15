@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const makeTartApiRequest = ({ method, token, location, body = {}, callbackOnSuccess,  callbackOnFailure }) => {
+export const makeTartApiRequest = ({ method, location, body = {}, callbackOnSuccess,  callbackOnFailure }) => {
   return new Promise((resolve, reject) => {
     return axios({
       method: method,

@@ -8,152 +8,151 @@ import Input from '@material-ui/core/Input'
 import MenuItem from '@material-ui/core/MenuItem'
 import * as Yup from 'yup'
 import { createArtist } from '../../api'
+import PropTypes from 'prop-types'
 
 class Signup extends Component {
-  constructor(props){
-    super()
-  }
   createArtist = data => {
     createArtist(data).then(res => res.status === 200 && this.props.history.push('/login'))
   }
-  render() {
-    return(<div className='signup-container container'>
+  render () {
+    return (<div className='signup-container container'>
       <h1>Signup page</h1>
-        <Formik
-          validationSchema={
-            Yup.object().shape({
-              username: Yup.string().min(5).required(),
-              password: Yup.string().min(5).required(),
-              first_name: Yup.string().required(),
-              last_name: Yup.string().required(),
-              sex: Yup.string().required()
-            })
-          }
-          onSubmit={(values) => this.createArtist(values)}
-          render={({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            setFieldValue
-          }) => (
-            <form className='signup-form row' onSubmit={handleSubmit}>
-              <div className='col-12'>
-                <TextField
-                  error={errors.username && true}
-                  label='Username'
-                  type='text'
-                  name='username'
-                  value={values.username}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
+      <Formik
+        validationSchema={
+          Yup.object().shape({
+            username: Yup.string().min(5).required(),
+            password: Yup.string().min(5).required(),
+            first_name: Yup.string().required(),
+            last_name: Yup.string().required(),
+            sex: Yup.string().required()
+          })
+        }
+        onSubmit={(values) => this.createArtist(values)}
+        render={({
+          values,
+          errors,
+          handleChange,
+          handleBlur,
+          handleSubmit
+        }) => (
+          <form className='signup-form row' onSubmit={handleSubmit}>
+            <div className='col-12'>
+              <TextField
+                error={errors.username && true}
+                label='Username'
+                type='text'
+                name='username'
+                value={values.username}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
               {errors.username && <div className='signup-form_error'>{errors.username}</div>}
-              </div>
-              <div className='col-12'>
-                <TextField
-                  error={errors.password && true}
-                  label='Password'
-                  type='password'
-                  name='password'
-                  value={values.password}
+            </div>
+            <div className='col-12'>
+              <TextField
+                error={errors.password && true}
+                label='Password'
+                type='password'
+                name='password'
+                value={values.password}
+                onChange={handleChange}
+              />
+              {errors.password && <div className='signup-form_error'>{errors.password}</div>}
+            </div>
+            <div className='col-12'>
+              <TextField
+                label='First Name'
+                type='text'
+                name='first_name'
+                value={values.firstName}
+                onChange={handleChange}
+              />
+              {errors.first_name && <div className='signup-form_error'>{errors.first_name}</div>}
+            </div>
+            <div className='col-12'>
+              <TextField
+                label='Last Name'
+                type='text'
+                name='last_name'
+                value={values.lastName}
+                onChange={handleChange}
+              />
+              {errors.last_name && <div className='signup-form_error'>{errors.last_name}</div>}
+            </div>
+            <div className='col-12'>
+              <FormControl>
+                <InputLabel shrink htmlFor='sex-input-signup'>
+                  Sex
+                </InputLabel>
+                <Select
+                  value={values.sex}
                   onChange={handleChange}
-                />
-              {errors.password && <div className='signup-form_error'>{errors.password}</div>}                
-              </div>
-              <div className='col-12'>
-                <TextField
-                  label='First Name'
-                  type='text'
-                  name='first_name'
-                  value={values.firstName}
+                  input={<Input name='sex' id='sex-input-signup' />}
+                >
+                  <MenuItem value='F'>Female</MenuItem>
+                  <MenuItem value='M'>Male</MenuItem>
+                </Select>
+              </FormControl>
+              {errors.sex && <div className='signup-form_error'>{errors.sex}</div>}
+            </div>
+            <div className='col-12'>
+              <FormControl>
+                <InputLabel shrink htmlFor='age-input-signup'>
+                  Age
+                </InputLabel>
+                <Select
+                  value={values.age}
                   onChange={handleChange}
-                />
-                {errors.first_name && <div className='signup-form_error'>{errors.first_name}</div>}   
-              </div>
-              <div className='col-12'>
-                <TextField
-                  label='Last Name'
-                  type='text'
-                  name='last_name'
-                  value={values.lastName}
-                  onChange={handleChange}                
-                />
-                {errors.last_name && <div className='signup-form_error'>{errors.last_name}</div>}   
-              </div>
-              <div className='col-12'>
-                <FormControl>
-                  <InputLabel shrink htmlFor='sex-input-signup'>
-                    Sex
-                  </InputLabel>
-                  <Select
-                    value={values.sex}
-                    onChange={handleChange}
-                    input={<Input name='sex' id='sex-input-signup' />}
-                  >
-                    <MenuItem value='F'>Female</MenuItem>
-                    <MenuItem value='M'>Male</MenuItem>
-                  </Select>
-                </FormControl>
-                {errors.sex && <div className='signup-form_error'>{errors.sex}</div>}
-              </div>
-              <div className='col-12'>
-                <FormControl>
-                  <InputLabel shrink htmlFor='age-input-signup'>
-                    Age
-                  </InputLabel>
-                  <Select
-                    value={values.age}
-                    onChange={handleChange}
-                    input={<Input name='age' id='age-input-signup' />}
-                  >
-                    <MenuItem value={20}>20</MenuItem>
-                    <MenuItem value={40}>40</MenuItem>
-                    <MenuItem value={50}>50</MenuItem>
-                    <MenuItem value={60}>60</MenuItem>
-                  </Select>
-                </FormControl>
-                {errors.age && <div className='signup-form_error'>{errors.age}</div>}
-              </div>
-              <div className='col-12'>
-                <FormControl>
-                  <InputLabel shrink htmlFor='location-input-signup'>
-                    Location
-                  </InputLabel>
-                  <Select
-                    value={values.location}
-                    onChange={handleChange}
-                    input={<Input name='location' id='location-input-signup' />}
-                  >
-                    <MenuItem value='Nashville'>Nashville</MenuItem>
-                    <MenuItem value='Smyrna'>Smyrna</MenuItem>
-                    <MenuItem value='Brentwood'>Brentwood</MenuItem>
-                    <MenuItem value='Franklin'>Franklin</MenuItem>
-                  </Select>
-                </FormControl>
-                {errors.location && <div className='signup-form_error'>{errors.location}</div>}
-              </div>
-              <div className='col-12'>
-                <TextField
-                  label='Specialty'
-                  type='text'
-                  name='specialty'
-                  value={values.specialty}
-                  onChange={handleChange}                
-                />
-              </div>
-              <div className='col-12'>              
-                <button type='submit'>SUBMIT</button>
-              </div>
-            </form>
-          )}
-        />
+                  input={<Input name='age' id='age-input-signup' />}
+                >
+                  <MenuItem value={20}>20</MenuItem>
+                  <MenuItem value={40}>40</MenuItem>
+                  <MenuItem value={50}>50</MenuItem>
+                  <MenuItem value={60}>60</MenuItem>
+                </Select>
+              </FormControl>
+              {errors.age && <div className='signup-form_error'>{errors.age}</div>}
+            </div>
+            <div className='col-12'>
+              <FormControl>
+                <InputLabel shrink htmlFor='location-input-signup'>
+                  Location
+                </InputLabel>
+                <Select
+                  value={values.location}
+                  onChange={handleChange}
+                  input={<Input name='location' id='location-input-signup' />}
+                >
+                  <MenuItem value='Nashville'>Nashville</MenuItem>
+                  <MenuItem value='Smyrna'>Smyrna</MenuItem>
+                  <MenuItem value='Brentwood'>Brentwood</MenuItem>
+                  <MenuItem value='Franklin'>Franklin</MenuItem>
+                </Select>
+              </FormControl>
+              {errors.location && <div className='signup-form_error'>{errors.location}</div>}
+            </div>
+            <div className='col-12'>
+              <TextField
+                label='Specialty'
+                type='text'
+                name='specialty'
+                value={values.specialty}
+                onChange={handleChange}
+              />
+            </div>
+            <div className='col-12'>
+              <button type='submit'>SUBMIT</button>
+            </div>
+          </form>
+        )}
+      />
     </div>
     )
   }
+}
+
+Signup.propTypes = {
+  history: PropTypes.object
 }
 
 export default Signup

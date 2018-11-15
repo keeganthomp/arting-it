@@ -1,12 +1,9 @@
-import React, { Component }  from 'react'
-// import { navigateToPa/ge } from '../../helpers/navigateToPage'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class ArtGrid extends Component {
-  constructor (props) {
-    super()
-  }
   render () {
-    return(
+    return (
       <div className='artgrid-container'>
         <div className='artgrid-art-wrapper'>
           <img onClick={() => this.props.push('/art/123')} alt='' className='artgrid-art' src='https://picsum.photos/200/300/?random' />
@@ -56,9 +53,14 @@ class ArtGrid extends Component {
             <p>$45.99</p>
           </div>
         </div>
-    </div>
+      </div>
     )
   }
+}
+
+ArtGrid.propTypes = {
+  shouldShowDetailedView: PropTypes.func,
+  push: PropTypes.func
 }
 
 export default ArtGrid

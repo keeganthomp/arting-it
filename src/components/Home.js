@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Homepage = (props) => {
+export const Homepage = () => {
   return(
     <div>
       <p>HOE PAGE OF THE THING</p>

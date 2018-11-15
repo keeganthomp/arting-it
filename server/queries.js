@@ -260,7 +260,7 @@ const fileUpload = (req, res) => {
 
   const updateArt = (req, res) => {
     Artist.update(
-      { 'art': [...JSON.stringify(req.body)] },
+      { 'art': req.body },
       { returning: true, where: { id: req.params.artistId } }
     ).then(([rowsUpdated, [artistWithUpdatedPortfolio]]) => {
       if (artistWithUpdatedPortfolio.art) {

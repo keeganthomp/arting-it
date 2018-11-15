@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { updateArt } from '../../api'
+import PropTypes from 'prop-types'
 
 class Artpiece extends Component {
-  constructor(props) {
+  constructor() {
     super()
     this.state = {
       artPiece: {},
@@ -11,12 +12,12 @@ class Artpiece extends Component {
     }
   }
   componentDidMount() {
-    const { artPiece, allArt } = this.props
+    const { artPiece } = this.props
     if (typeof artPiece === 'string') {
       this.setState({
          artPiece: JSON.parse(artPiece),
          artPrice: JSON.parse(artPiece).price,
-         artDescription: JSON.parse(artPiece).description,
+         artDescription: JSON.parse(artPiece).description
      })
     } else {
       this.setState({
@@ -39,7 +40,7 @@ class Artpiece extends Component {
       description: artDescription || artToUpdate.description
     }
     parsedArt[indexOfItemToUpdate] = updatedArtPiece
-    const artForDb = JSON.stringify(parsedArt)
+    const artForDb = parsedArt.map(art => JSON.stringify(art))
     updateArt(artForDb, artistId)
   }
   render() {
@@ -57,4 +58,10 @@ class Artpiece extends Component {
   }
 }
 
-  export default Artpiece
+Artpiece.propTypes = {
+  artPiece: PropTypes.object,
+  allArt: PropTypes.array,
+  artistId: PropTypes.number
+}
+
+export default Artpiece

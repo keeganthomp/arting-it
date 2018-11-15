@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import PropTypes from 'prop-types'
 
 class FileUploader extends Component {
-  constructor(props) {
+  constructor() {
     super()
     this.state = {
       files: [],
@@ -41,6 +41,14 @@ class FileUploader extends Component {
         </div>
     )
   }
+}
+
+FileUploader.propTypes = {
+  onDrop: PropTypes.func,
+  className: PropTypes.string,
+  noPreview: PropTypes.bool,
+  children: PropTypes.object,
+  isLoadingImage: PropTypes.bool
 }
 
 export default FileUploader

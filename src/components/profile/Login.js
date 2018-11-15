@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Formik } from 'formik'
 import TextField from '@material-ui/core/TextField'
 import { login } from '../../api'
+import PropTypes from 'prop-types'
 
 class Login extends Component {
-  constructor(props){
+  constructor(){
     super()
     this.state = {
       apiError: '',
@@ -33,13 +34,8 @@ class Login extends Component {
           onSubmit={(values) => this.login(values)}
           render={({
             values,
-            errors,
-            touched,
             handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            setFieldValue
+            handleSubmit
           }) => (
             <form className='Login-form row' onSubmit={handleSubmit}>
             {this.state.noPermissionsMessage && <div className='col-12'>{this.state.noPermissionsMessage}</div>}
@@ -71,6 +67,11 @@ class Login extends Component {
     </div>
     )
   }
+}
+
+Login.propTypes = {
+  location: PropTypes.object,
+  history: PropTypes.object
 }
 
 export default Login

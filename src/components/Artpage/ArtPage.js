@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import ArtGrid from './ArtGrid'
 import ArtpageLeftColumn from './ArtpageLeftColumn'
 import ArtDetail from './ArtDetail'
+import PropTypes from 'prop-types'
 
 class ArtPage extends Component {
-    constructor(props) {
+    constructor() {
       super()
       this.state = {
         detailedViewArt: '',
@@ -29,6 +30,10 @@ class ArtPage extends Component {
       </div>
     )
   }
+}
+
+ArtPage.propTypes = {
+  history: PropTypes.object
 }
 
 export default ArtPage

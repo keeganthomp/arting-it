@@ -156,15 +156,15 @@ module.exports = {
           {
             test: /\.scss$/,
             use: [
-              // {
-              //   loader: require.resolve('style-loader'),
-              // },
-              // {
-              //   loader: require.resolve('css-loader'),
-              //   options: {
-              //     importLoaders: 1,
-              //   }
-              // },
+              {
+                loader: require.resolve('style-loader'),
+              },
+              {
+                loader: require.resolve('css-loader'),
+                options: {
+                  importLoaders: 1,
+                }
+              },
               {
                 loader: require.resolve('sass-loader'),
               },

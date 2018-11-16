@@ -57,7 +57,6 @@
     "pg-hstore": "^2.3.2",
     "pg-promise": "^8.4.6",
     "postcss-flexbugs-fixes": "3.2.0",
-    "postcss-loader": "2.0.8",
     "promise": "8.0.1",
     "prop-types": "^15.6.2",
     "raf": "3.4.0",
@@ -133,6 +132,7 @@
   },
   "devDependencies": {
     "node-sass": "^4.9.3",
+    "postcss-loader": "^2.0.8",
     "sass-loader": "^7.1.0"
   },
   "proxy": "http://localhost:5000/"

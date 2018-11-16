@@ -167,21 +167,56 @@ module.exports = {
           // use the "style" loader inside the async code so CSS from them won't be
           // in the main CSS file.
           {
-          
-            
-              test: /\.scss$/,
-              loaders:[
-                require.resolve('style-loader'),
-                require.resolve('css-loader'),
-                require.resolve('sass-loader'),
+            exclude: [
+              /\.html$/,
+              /\.(js|jsx)$/,
+              /\.css$/,
+              /\.json$/,
+              /\.bmp$/,
+              /\.gif$/,
+              /\.jpe?g$/,
+              /\.png$/,
+              /\.scss$/,
+            ],
+            loader: require.resolve('file-loader'),
+            options: {
+              name: 'static/media/[name].[hash:8].[ext]',
+            },
+          },
+          {
+            test: /\.css$/,
+            use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+              use: [
+                {
+                  loader: 'css-loader',
+                  options: {
+                    modules: true,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                  }
+                },
+              'postcss-loader'
               ]
-              // loader: ExtractTextPlugin.extract(
-              //     'sass-loader', // backup loader when not building .css file
-              //     'css-loader!sass-loader' // loaders to preprocess CSS
-              // )
-          
-  
-},
+            })
+          },
+          {
+            test: /\.scss$/,
+            use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+              use: [
+                {
+                  loader: 'css-loader',
+                  options: {
+                    modules: true,
+                    sourceMap: true,
+                    importLoaders: 2,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                  }
+                },
+              'sass-loader'
+              ]
+            })
+          },
           {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract(
@@ -256,6 +291,7 @@ module.exports = {
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In production, it will be an empty string unless you specify "homepage"
     // in `package.json`, in which case it will be the pathname of that URL.
+    new ExtractTextPlugin({ filename: 'styles.css', allChunks: true, disable: process.env.NODE_ENV !== 'production' }),
     new InterpolateHtmlPlugin(env.raw),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({

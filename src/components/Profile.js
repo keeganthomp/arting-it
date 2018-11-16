@@ -80,7 +80,7 @@ class Profile extends Component {
     return(
       artist && <Fragment>
         <h3>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
-       {this.state.source && <img src={this.state.source} alt='' />}
+        {this.state.source && <img src={this.state.source} alt='' />}
         <FileUploader noPreview className='profile_avatar' onDrop={this.saveAvatar}>
           <div>
             {artist.avatar && <img className='profile_avatar-image' src={artist.avatar}/> ||
@@ -93,12 +93,12 @@ class Profile extends Component {
         <FileUploader onDrop={this.updateArtPortfolio} isLoading={isUpdating}/>
         <p>Below are your current pieces for sale:</p>
         {artist && !isUpdating && <div className='profile_available-art-container'>
-        {console.log('ART BABEE:', art)}
-            {art && art.length > 0 && art.map(artPiece => {
-              console.log('ARTPIECE:', artPiece)
-             const parsedArt = JSON.parse(artPiece)
-             return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
-            })}
+          {console.log('ART BABEE:', art)}
+          {art && art.length > 0 && art.map(artPiece => {
+            console.log('ARTPIECE:', artPiece)
+            const parsedArt = JSON.parse(artPiece)
+            return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
+          })}
         </div> || <CircularProgress />}
       </Fragment> 
     )

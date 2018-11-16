@@ -15,10 +15,10 @@ class Artpiece extends Component {
     const { artPiece } = this.props
     if (typeof artPiece === 'string') {
       this.setState({
-         artPiece: JSON.parse(artPiece),
-         artPrice: JSON.parse(artPiece).price,
-         artDescription: JSON.parse(artPiece).description
-     })
+        artPiece: JSON.parse(artPiece),
+        artPrice: JSON.parse(artPiece).price,
+        artDescription: JSON.parse(artPiece).description
+      })
     } else {
       this.setState({
         artPiece,
@@ -46,14 +46,14 @@ class Artpiece extends Component {
   render() {
     const { artDescription, artPrice, artPiece } = this.state
     return(
-    <div className='profile_available-art-image-container'>
-      <img className='profile_available-art-image' src={artPiece.artImage} alt='' />
-      <form className='profile_available-art-info-container' onSubmit={(e) => this.updateArtPieceMeta(e)}>
-        <input type='text' value={artDescription} name='art-description' onChange={e => this.setState({ artDescription: e.target.value })}/>
-        <input type='text' value={artPrice} name='art-price' onChange={e => this.setState({ artPrice: e.target.value })}/>
-        <button>Submit</button>
-      </form>
-    </div>
+      <div className='profile_available-art-image-container'>
+        <img className='profile_available-art-image' src={artPiece.artImage} alt='' />
+        <form className='profile_available-art-info-container' onSubmit={(e) => this.updateArtPieceMeta(e)}>
+          <input type='text' value={artDescription} name='art-description' onChange={e => this.setState({ artDescription: e.target.value })}/>
+          <input type='text' value={artPrice} name='art-price' onChange={e => this.setState({ artPrice: e.target.value })}/>
+          <button>Submit</button>
+        </form>
+      </div>
     )
   }
 }

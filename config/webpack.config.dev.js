@@ -3,7 +3,7 @@
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
@@ -28,6 +28,7 @@ const env = getClientEnvironment(publicUrl);
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
 module.exports = {
+  mode: 'development',
   resolve: {
     root: path.resolve('../src'),
     extensions: ['', '.js']
@@ -118,12 +119,12 @@ module.exports = {
         enforce: 'pre',
         use: [
           {
+            loader: require.resolve('eslint-loader'),
             options: {
               formatter: eslintFormatter,
-              eslintPath: require.resolve('eslint'),
+              // eslintPath: require.resolve('eslint'),
               emitWarning: true
             },
-            loader: require.resolve('eslint-loader'),
           },
         ],
         include: paths.appSrc,
@@ -261,12 +262,16 @@ module.exports = {
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In development, this will be an empty string.
-    new InterpolateHtmlPlugin(env.raw),
-    // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
     }),
+    new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
+      PUBLIC_URL: publicUrl,
+      // You can pass any key-value pairs, this was just an example.
+      // WHATEVER: 42 will replace %WHATEVER% with 42 in index.html.
+    }),
+    // Generates an `index.html` file with the <script> injected.
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),
     // Makes some environment variables available to the JS code, for example:

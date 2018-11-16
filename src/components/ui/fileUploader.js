@@ -24,21 +24,21 @@ class FileUploader extends Component {
     const { files, loading } = this.state
     const { className, noPreview, children, isLoadingImage } = this.props
     return(
-        <div className='file-uploader_container'>
-          <Dropzone onDrop={this.onDrop} onDropAccepted={this.onDropAccepted} className={`${className ? className : 'file-uploader'}`}>
-            {children || <h1 style={{ padding: '2.25rem', fontSize: '4rem' }}>+</h1>}
-          </Dropzone>
-            {files.length > 0 && !noPreview && !loading && !isLoadingImage && <div className='file-uploader_summary'>
-              <p>Recently uploaded:</p>
-                <div>
-                {files.map((file, index) =>  
-                  <div key={index}>
-                  <div>{file.name} - {file.size} bytes</div>
-                      <img className='file-uploader_image-preview' src={URL.createObjectURL(file)} alt='' />
-                </div>)}
-              </div>
-            </div> || null}
-        </div>
+      <div className='file-uploader_container'>
+        <Dropzone onDrop={this.onDrop} onDropAccepted={this.onDropAccepted} className={`${className ? className : 'file-uploader'}`}>
+          {children || <h1 style={{ padding: '2.25rem', fontSize: '4rem' }}>+</h1>}
+        </Dropzone>
+        {files.length > 0 && !noPreview && !loading && !isLoadingImage && <div className='file-uploader_summary'>
+          <p>Recently uploaded:</p>
+          <div>
+            {files.map((file, index) =>  
+              <div key={index}>
+                <div>{file.name} - {file.size} bytes</div>
+                <img className='file-uploader_image-preview' src={URL.createObjectURL(file)} alt='' />
+              </div>)}
+          </div>
+        </div> || null}
+      </div>
     )
   }
 }

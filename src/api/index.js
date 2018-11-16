@@ -49,13 +49,14 @@ export const updateArtist = (body, id) => {
     body
   })
 }
-  export const uploadThing = (body, id) => {
-    return makeTartApiRequest({
-      method: 'PATCH',
-      location: `/api/artist/${id}`,
-      body
-    })
-  }
+
+export const uploadThing = (body, id) => {
+  return makeTartApiRequest({
+    method: 'PATCH',
+    location: `/api/artist/${id}`,
+    body
+  })
+}
 
 export const updateArt = (body, id) => {
   makeTartApiRequest({

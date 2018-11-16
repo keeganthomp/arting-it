@@ -5,13 +5,13 @@ import ArtDetail from './ArtDetail'
 import PropTypes from 'prop-types'
 
 class ArtPage extends Component {
-    constructor() {
-      super()
-      this.state = {
-        detailedViewArt: '',
-        shouldShowDetailedView: false
-      }
+  constructor() {
+    super()
+    this.state = {
+      detailedViewArt: '',
+      shouldShowDetailedView: false
     }
+  }
   shouldShowDetailedView = (detailedViewArt) => {
     this.setState({ detailedViewArt })
   }

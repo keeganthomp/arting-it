@@ -225,7 +225,7 @@ module.exports = {
                   fallback: {
                     loader: require.resolve('style-loader'),
                     options: {
-                      hmr: false,
+                      hmr: false
                     },
                   },
                   use: [
@@ -234,7 +234,7 @@ module.exports = {
                       options: {
                         importLoaders: 1,
                         minimize: true,
-                        sourceMap: shouldUseSourceMap,
+                        sourceMap: shouldUseSourceMap
                       },
                     },
                     {

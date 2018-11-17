@@ -1,66 +1,29 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 class ArtGrid extends Component {
   render () {
-    return (
-      <div className='artgrid-container'>
+    const { art, isFetchingArt, selectedFilters } = this.props
+    return !isFetchingArt && (<Fragment>
+      {art.map(artPiece => selectedFilters.includes(artPiece.type) && <div key={artPiece.id} className='artgrid-container'>
         <div className='artgrid-art-wrapper'>
-          <img onClick={() => this.props.push('/art/123')} alt='' className='artgrid-art' src='https://picsum.photos/200/300/?random' />
+          <img onClick={() => this.props.push(`art/${artPiece.id}`)} alt='' className='artgrid-art' src={artPiece.artImage} />
           <div className='artgrid-price-wrapper'>
-            <p>$45.99</p>
+            <p>{artPiece.price}</p>
           </div>
         </div>
-        <div className='artgrid-art-wrapper'>
-          <img alt='' onClick={() => this.props.shouldShowDetailedView('https://picsum.photos/200/300/?random')} className='artgrid-art' src='https://picsum.photos/200/300/?random' />
-          <div className='artgrid-price-wrapper'>
-            <p>$45.99</p>
-          </div>
-        </div>
-        <div className='artgrid-art-wrapper'>
-          <img alt='' onClick={() => this.props.shouldShowDetailedView('https://picsum.photos/200/300/?random')} className='artgrid-art' src='https://picsum.photos/200/300/?random' />
-          <div className='artgrid-price-wrapper'>
-            <p>$45.99</p>
-          </div>
-        </div>
-        <div className='artgrid-art-wrapper'>
-          <img alt='' onClick={() => this.props.shouldShowDetailedView('https://picsum.photos/200/300/?random')} className='artgrid-art' src='https://picsum.photos/200/300/?random' />
-          <div className='artgrid-price-wrapper'>
-            <p>$45.99</p>
-          </div>
-        </div>
-        <div className='artgrid-art-wrapper'>
-          <img alt='' onClick={() => this.props.shouldShowDetailedView('https://picsum.photos/200/300/?random')} className='artgrid-art' src='https://picsum.photos/200/300/?random' />
-          <div className='artgrid-price-wrapper'>
-            <p>$45.99</p>
-          </div>
-        </div>
-        <div className='artgrid-art-wrapper'>
-          <img alt='' onClick={() => this.props.shouldShowDetailedView('https://picsum.photos/200/300/?random')} className='artgrid-art' src='https://picsum.photos/200/300/?random' />
-          <div className='artgrid-price-wrapper'>
-            <p>$45.99</p>
-          </div>
-        </div>
-        <div className='artgrid-art-wrapper'>
-          <img alt='' onClick={() => this.props.shouldShowDetailedView('https://picsum.photos/200/300/?random')} className='artgrid-art' src='https://picsum.photos/200/300/?random' />
-          <div className='artgrid-price-wrapper'>
-            <p>$45.99</p>
-          </div>
-        </div>
-        <div className='artgrid-art-wrapper'>
-          <img alt='' onClick={() => this.props.shouldShowDetailedView('https://picsum.photos/200/300/?random')} className='artgrid-art' src='https://picsum.photos/200/300/?random' />
-          <div className='artgrid-price-wrapper'>
-            <p>$45.99</p>
-          </div>
-        </div>
-      </div>
+      </div>)}
+    </Fragment>
     )
   }
 }
 
 ArtGrid.propTypes = {
   shouldShowDetailedView: PropTypes.func,
-  push: PropTypes.func
+  push: PropTypes.func,
+  art: PropTypes.array,
+  isFetchingArt: PropTypes.bool,
+  selectedFilters: PropTypes.array
 }
 
 export default ArtGrid

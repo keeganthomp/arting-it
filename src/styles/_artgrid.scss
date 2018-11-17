@@ -6,6 +6,7 @@
   margin: 0 auto;
 }
 .artgrid-art {
+  max-width: 14rem;
   margin: 0 1rem;
   transition: box-shadow 0.3s ease-in-out;
   &:hover {

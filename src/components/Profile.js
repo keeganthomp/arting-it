@@ -1,31 +1,32 @@
 import React, { Component, Fragment } from 'react'
 import FileUploader from './ui/fileUploader'
-import { getArtist, uploadThing } from '../api'
+import { uploadThing } from '../api'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Artpiece from './profile/Artpiece'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 class Profile extends Component {
-  constructor(props){
+  constructor() {
     super()
     this.state = {
-      artist: props.location.state || null,
+      artist: {},
       art: [],
       isUpdating: false
     }
   }
   componentDidMount() {
-    const { artist } = this.state
-    artist && getArtist(artist.id).then(response => {
-      this.setState({ 
-        artist: response.data.artist
-      })
-      response.data.artist.art && this.setState({ art: [...response.data.artist.art] })
-    })
-    !artist && this.props.history.push({
-      pathname: '/login',
-      state: 'Please login or create an account to view profile.'
-    })
+    const { artist } = this.props
+    const userFromSession = JSON.parse(sessionStorage.getItem('user'))
+    console.log('USER FROM SESSION:', userFromSession)
+    if (userFromSession) {
+      this.setState({ artist: userFromSession })
+    } else if (artist) {
+      this.setState({ artist })
+    }
+    if (artist && artist.art && artist.art.length > 0) {
+      this.setState({ art: artist.art })
+    }
   }
   onDrop = (file) => {
     const art = [...this.state.art, file[0]]
@@ -77,8 +78,9 @@ class Profile extends Component {
 
   render () {
     const { artist, isUpdating, art } = this.state
+    console.log('ARTIST::', artist)
     return(
-      artist && <Fragment>
+      artist !== {} && <Fragment>
         <h3>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
         {this.state.source && <img src={this.state.source} alt='' />}
         <FileUploader noPreview className='profile_avatar' onDrop={this.saveAvatar}>
@@ -93,9 +95,7 @@ class Profile extends Component {
         <FileUploader onDrop={this.updateArtPortfolio} isLoading={isUpdating}/>
         <p>Below are your current pieces for sale:</p>
         {artist && !isUpdating && <div className='profile_available-art-container'>
-          {console.log('ART BABEE:', art)}
-          {art && art.length > 0 && art.map(artPiece => {
-            console.log('ARTPIECE:', artPiece)
+          {(art && art.length > 0) || (this.state.artist && this.state.artist.art && this.state.artist.art.length > 0) && art.map(artPiece => {
             const parsedArt = JSON.parse(artPiece)
             return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
           })}
@@ -107,7 +107,14 @@ class Profile extends Component {
 
 Profile.propTypes = {
   location: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
+  artist: PropTypes.object
 }
 
-export default Profile
+const mapStateToProps = (state) => {
+  return {
+    artist: state.user
+  }
+}
+
+export default connect(mapStateToProps)(Profile)

@@ -3,6 +3,8 @@ import { Formik } from 'formik'
 import TextField from '@material-ui/core/TextField'
 import { login } from '../../api'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { getUser } from '../../actions/userActions'
 
 class Login extends Component {
   constructor(){
@@ -16,6 +18,8 @@ class Login extends Component {
     this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state })
   }
   getUserData = (userData) => {
+    this.props.getUser({ payload: userData })
+    sessionStorage.setItem('user', JSON.stringify(userData))
     this.props.history.push({
       pathname: '/profile',
       state: userData
@@ -74,4 +78,8 @@ Login.propTypes = {
   history: PropTypes.object
 }
 
-export default Login
+const mapDispatchToProps = {
+  getUser
+}
+
+export default connect(null, mapDispatchToProps)(Login)

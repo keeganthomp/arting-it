@@ -5,6 +5,7 @@ import ArtpageLeftColumn from './ArtpageLeftColumn'
 import ArtDetail from './ArtDetail'
 import PropTypes from 'prop-types'
 import CircularProgress from '@material-ui/core/CircularProgress'
+// import { isLoggedIn } from '../../helpers/auth'
 
 class ArtPage extends Component {
   constructor() {
@@ -24,18 +25,20 @@ class ArtPage extends Component {
       method: 'GET',
       url: `http://${process.env.NODE_ENV === 'production' ? '142.93.241.62' : 'localhost'}:8080/api/art`
     }).then(axiosResult => {
-      const art = axiosResult.data.art
-      const parsedArt = art.map(artPiece => JSON.parse(artPiece))
-      const artTypes = parsedArt.map(art => art.type)
-      const filtersAvailable = artTypes.filter((item, index) => artTypes.indexOf(item) >= index)
-      this.setState({ 
-        art: parsedArt,
-        filtersAvailable,
-        isFetchingArt: false
-      })
+      const art = axiosResult.data && axiosResult.data.art
+      if (art) {
+        const parsedArt = art.map(artPiece => JSON.parse(artPiece))
+        const artTypes = parsedArt.map(art => art.type)
+        const filtersAvailable = artTypes.filter((item, index) => artTypes.indexOf(item) >= index)
+        this.setState({ 
+          art: parsedArt,
+          filtersAvailable
+        })
+      }
+      this.setState({ isFetchingArt: false })
     }).catch(err => {
       this.setState({ isFetchingArt: false })
-      throw new err
+      console.log('Error fetching art:', err)
     })
   }
   shouldShowDetailedView = (detailedViewArt) => {

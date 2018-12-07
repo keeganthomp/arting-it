@@ -4,7 +4,12 @@ import App from './components/App'
 import './styles/index.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import registerServiceWorker from './registerServiceWorker'
+import { Provider } from 'react-redux'
+import configureStore from './store/store'
 
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <Provider store={configureStore()}>
+    <App />
+  </Provider>, document.getElementById('root'))
 registerServiceWorker()

@@ -29,10 +29,6 @@ const env = getClientEnvironment(publicUrl)
 // The production configuration is different and lives in a separate file.
 module.exports = {
   mode: 'development',
-  resolve: {
-    root: path.resolve('../src'),
-    extensions: ['', '.js']
-  },
   // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
   // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
   devtool: 'cheap-module-source-map',
@@ -79,10 +75,7 @@ module.exports = {
     // We placed these paths second because we want `node_modules` to 'win'
     // if there are any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
-    modules: ['node_modules', paths.appNodeModules].concat(
-      // It is guaranteed to exist because we tweak it in `env.js`
-      process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
-    ),
+    modules: [ path.resolve(__dirname, '../src'), 'node_modules'],
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:

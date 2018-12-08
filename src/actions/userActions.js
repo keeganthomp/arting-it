@@ -1,5 +1,4 @@
-export const getUser = ({ payload }) => dispatch => {
-  console.log('WEE PAYLOAD:D:', payload)
+export const saveUser = ({ payload }) => dispatch => {
   dispatch({
     type: 'GET_USER',
     payload

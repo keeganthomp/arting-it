@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { logout } from '../api'
 
 
 export default class Navigation extends Component {
@@ -21,6 +22,7 @@ export default class Navigation extends Component {
         <Link to='/login'>
           <button>Login</button>
         </Link>
+        <button onClick={logout}>Logout</button>
       </div>
     )
   }

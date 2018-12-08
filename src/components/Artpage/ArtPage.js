@@ -26,6 +26,7 @@ class ArtPage extends Component {
       url: `http://${process.env.NODE_ENV === 'production' ? '142.93.241.62' : 'localhost'}:8080/api/art`
     }).then(axiosResult => {
       const art = axiosResult.data && axiosResult.data.art
+      console.log('ARTTT', art)
       if (art) {
         const parsedArt = art.map(artPiece => JSON.parse(artPiece))
         const artTypes = parsedArt.map(art => art.type)

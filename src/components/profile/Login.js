@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField'
 import { login } from '../../api'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { getUser } from '../../actions/userActions'
+import { saveUser } from '../../actions/userActions'
 
 class Login extends Component {
   constructor(){
@@ -17,19 +17,24 @@ class Login extends Component {
   componentDidMount () {
     this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state })
   }
-  getUserData = (userData) => {
-    this.props.getUser({ payload: userData })
-    sessionStorage.setItem('user', JSON.stringify(userData))
+  saveUserData = (userData) => {
+    this.props.saveUser({ payload: {
+      artist: userData.artist,
+      token: userData.token
+    }
+    })
+    sessionStorage.setItem('user', JSON.stringify(userData.artist))
+    sessionStorage.setItem('token', JSON.stringify(userData.token))
     this.props.history.push({
       pathname: '/profile',
-      state: userData
+      state: userData.artist
     })
   }
   handleApiErrors = (apiError) => {
     this.setState({ apiError })
   }
   login = data => {
-    login(data, this.getUserData, this.handleApiErrors)
+    login(data, this.saveUserData, this.handleApiErrors)
   }
   render() {
     return(<div className='Login-container container'>
@@ -75,11 +80,12 @@ class Login extends Component {
 
 Login.propTypes = {
   location: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
+  saveUser: PropTypes.func
 }
 
 const mapDispatchToProps = {
-  getUser
+  saveUser
 }
 
 export default connect(null, mapDispatchToProps)(Login)

@@ -5,6 +5,8 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Artpiece from './profile/Artpiece'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { checkForValidUser } from '../helpers/auth'
+
 
 class Profile extends Component {
   constructor() {
@@ -12,13 +14,23 @@ class Profile extends Component {
     this.state = {
       artist: {},
       art: [],
-      isUpdating: false
+      isUpdating: false,
+      isValidUser: false,
+      isCheckingForValidUser: false
     }
+  }
+  callBackForValidUser = () => {
+    this.setState({ isValidUser: true, isCheckingForValidUser: false })
+  }
+  callBackForInValidUser = () => {
+    this.props.history.push('login')
+    this.setState({ isCheckingForValidUser: false })
   }
   componentDidMount() {
     const { artist } = this.props
     const userFromSession = JSON.parse(sessionStorage.getItem('user'))
-    console.log('USER FROM SESSION:', userFromSession)
+    this.setState({ isCheckingForValidUser: true })
+    checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
     if (userFromSession) {
       this.setState({ artist: userFromSession })
     } else if (artist) {
@@ -72,15 +84,20 @@ class Profile extends Component {
           isUpdating: false
         })
         res.data.updatedPortfolio && this.setState({ art: [...res.data.updatedPortfolio] })
+        const currentUserFromSession = JSON.parse(sessionStorage.getItem('user'))
+        const updatedArtist = {...currentUserFromSession}
+        updatedArtist.art = [...res.data.updatedPortfolio]
+        sessionStorage.setItem('user', JSON.stringify(updatedArtist))
+        this.setState({ artist: updatedArtist })
       })
     }
   }
 
   render () {
     const { artist, isUpdating, art } = this.state
-    console.log('ARTIST::', artist)
+    console.log('THIS STATE:E', this.state)
     return(
-      artist !== {} && <Fragment>
+      <Fragment>
         <h3>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
         {this.state.source && <img src={this.state.source} alt='' />}
         <FileUploader noPreview className='profile_avatar' onDrop={this.saveAvatar}>
@@ -95,7 +112,7 @@ class Profile extends Component {
         <FileUploader onDrop={this.updateArtPortfolio} isLoading={isUpdating}/>
         <p>Below are your current pieces for sale:</p>
         {artist && !isUpdating && <div className='profile_available-art-container'>
-          {(art && art.length > 0) || (this.state.artist && this.state.artist.art && this.state.artist.art.length > 0) && art.map(artPiece => {
+          {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
             const parsedArt = JSON.parse(artPiece)
             return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
           })}

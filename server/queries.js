@@ -1,6 +1,9 @@
+const { generateToken } = require('./helpers/utils')
+
 const omit = require('lodash/omit')
 const Sequelize = require('sequelize')
 const path = require('path')
+const jwt = require('jsonwebtoken')
 
 const sequelize = new Sequelize('tart', 'keegan', 'hu8jmn3', {
   host: 'localhost',
@@ -17,6 +20,7 @@ const fs = require('fs')
 const AWS = require('aws-sdk')
 const uuidv1 = require('uuid/v1')
 const s3 = new AWS.S3()
+
 
 const Artist = sequelize.define('artist', {
   username: {
@@ -99,9 +103,11 @@ const getArtistLogin = (req, res) => {
     if (artist && validPassword(password, artist.dataValues.password)) {
       const artistData = omit(artist.dataValues, ['password']) 
       req.session.user = artistData
+      const token = generateToken(artistData)
       res.json({
         status: 200,
-        artist: artistData
+        artist: artistData,
+        token
       })
     } else {
       res.status(400).json({
@@ -293,6 +299,34 @@ const getAllArt = (req, res) => {
   })
 }
 
+const verifyUser = (req, res) => {
+  // check header or url parameters or post parameters for token
+  var token = req.body.token || req.query.token
+  if (!token) {
+    return res.status(401).json({message: 'Must pass token'})
+  }
+  // Check token that was passed by decoding token using secret
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) throw err
+    //return user using the id from w/in JWTToken
+    Artist.findByPk(user.id, (err, user) => {
+      if (err) throw err
+      //Note: you can renew token by creating new token(i.e.    
+      //refresh it)w/ new expiration time at this point, but I’m 
+      //passing the old token back.
+      // var token = utils.generateToken(user)
+      res.json({
+        user: user,
+        token: token
+      })
+    })
+  })
+}
+
+const logout = (req, res) => {
+  req.session.destroy()
+}
+
 module.exports = {
   getAllArtists,
   createArtist,
@@ -301,5 +335,7 @@ module.exports = {
   updateArtist,
   fileUpload,
   updateArt,
-  getAllArt
+  getAllArt,
+  verifyUser,
+  logout
 }

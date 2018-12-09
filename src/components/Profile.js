@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import FileUploader from './ui/fileUploader'
 import { uploadThing } from '../api'
 import CircularProgress from '@material-ui/core/CircularProgress'
-// import Artpiece from './profile/Artpiece'
+import Artpiece from './profile/Artpiece'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { checkForValidUser } from '../helpers/auth'
@@ -32,7 +32,7 @@ class Profile extends Component {
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
     if (isUserFromSession) {
-      // this.setState({ artist: JSON.parse(sessionStorage.getItem('user')) })
+      this.setState({ artist: JSON.parse(sessionStorage.getItem('user')) })
     } else if (artist) {
       this.setState({ artist })
     }
@@ -84,12 +84,12 @@ class Profile extends Component {
           isUpdating: false
         })
         res.data.updatedPortfolio && this.setState({ art: [...res.data.updatedPortfolio] })
-        // const isUserInSession = Boolean(sessionStorage.getItem('user'))
-        // const currentUserFromSession = isUserInSession && JSON.parse(sessionStorage.getItem('user'))
-        // const updatedArtist = {...currentUserFromSession}
-        // updatedArtist.art = [...res.data.updatedPortfolio]
-        // sessionStorage.setItem('user', JSON.stringify(updatedArtist))
-        // this.setState({ artist: updatedArtist })
+        const isUserInSession = Boolean(sessionStorage.getItem('user'))
+        const currentUserFromSession = isUserInSession && JSON.parse(sessionStorage.getItem('user'))
+        const updatedArtist = {...currentUserFromSession}
+        updatedArtist.art = [...res.data.updatedPortfolio]
+        sessionStorage.setItem('user', JSON.stringify(updatedArtist))
+        this.setState({ artist: updatedArtist })
       })
     }
   }
@@ -112,10 +112,10 @@ class Profile extends Component {
         <FileUploader onDrop={this.updateArtPortfolio} isLoading={isUpdating}/>
         <p>Below are your current pieces for sale:</p>
         {artist && !isUpdating && <div className='profile_available-art-container'>
-          {/* {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
+          {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
             const parsedArt = JSON.parse(artPiece)
             return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
-          })} */}
+          })}
         </div> || <CircularProgress />}
       </Fragment> 
     )

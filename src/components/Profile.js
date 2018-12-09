@@ -32,7 +32,7 @@ class Profile extends Component {
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
     if (isUserFromSession) {
-      this.setState({ artist: JSON.parse(sessionStorage.getItem('user')) })
+      // this.setState({ artist: JSON.parse(sessionStorage.getItem('user')) })
     } else if (artist) {
       this.setState({ artist })
     }
@@ -113,8 +113,8 @@ class Profile extends Component {
         <p>Below are your current pieces for sale:</p>
         {artist && !isUpdating && <div className='profile_available-art-container'>
           {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
-            const parsedArt = JSON.parse(artPiece)
-            return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
+            // const parsedArt = JSON.parse(artPiece)
+            // return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
           })}
         </div> || <CircularProgress />}
       </Fragment> 

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import FileUploader from './ui/fileUploader'
 import { uploadThing } from '../api'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Artpiece from './profile/Artpiece'
+// import Artpiece from './profile/Artpiece'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { checkForValidUser } from '../helpers/auth'
@@ -95,7 +95,7 @@ class Profile extends Component {
   }
 
   render () {
-    const { artist, isUpdating, art, isValidUser } = this.state
+    const { artist, isUpdating, isValidUser } = this.state
     return(
       isValidUser && <Fragment>
         <h3>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
@@ -112,10 +112,10 @@ class Profile extends Component {
         <FileUploader onDrop={this.updateArtPortfolio} isLoading={isUpdating}/>
         <p>Below are your current pieces for sale:</p>
         {artist && !isUpdating && <div className='profile_available-art-container'>
-          {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
-            // const parsedArt = JSON.parse(artPiece)
-            // return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
-          })}
+          {/* {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
+            const parsedArt = JSON.parse(artPiece)
+            return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
+          })} */}
         </div> || <CircularProgress />}
       </Fragment> 
     )

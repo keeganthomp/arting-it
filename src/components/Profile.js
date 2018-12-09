@@ -84,7 +84,8 @@ class Profile extends Component {
           isUpdating: false
         })
         res.data.updatedPortfolio && this.setState({ art: [...res.data.updatedPortfolio] })
-        const currentUserFromSession = JSON.parse(sessionStorage.getItem('user'))
+        const isUserInSession = Boolean(sessionStorage.getItem('user'))
+        const currentUserFromSession = isUserInSession && JSON.parse(sessionStorage.getItem('user'))
         const updatedArtist = {...currentUserFromSession}
         updatedArtist.art = [...res.data.updatedPortfolio]
         sessionStorage.setItem('user', JSON.stringify(updatedArtist))

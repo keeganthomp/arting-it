@@ -95,7 +95,7 @@ class Profile extends Component {
   }
 
   render () {
-    const { artist, isUpdating, isValidUser } = this.state
+    const { artist, isUpdating, isValidUser, art } = this.state
     return(
       isValidUser && <Fragment>
         <h3>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>

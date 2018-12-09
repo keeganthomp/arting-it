@@ -28,11 +28,11 @@ class Profile extends Component {
   componentDidMount() {
     const { artist } = this.props
     const isUserFromSession = Boolean(sessionStorage.getItem('user'))
-    const userFromSession = isUserFromSession && JSON.parse(sessionStorage.getItem('user'))
+    // const userFromSession = isUserFromSession && JSON.parse(sessionStorage.getItem('user'))
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
-    if (userFromSession) {
-      this.setState({ artist: userFromSession })
+    if (isUserFromSession) {
+      this.setState({ artist: JSON.parse(sessionStorage.getItem('user')) })
     } else if (artist) {
       this.setState({ artist })
     }

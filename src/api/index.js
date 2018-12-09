@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 export const makeTartApiRequest = ({ method, location, body = {}, callbackOnSuccess,  callbackOnFailure }) => {
-  const token = JSON.parse(sessionStorage.getItem('token'))
+  const isUserFromSession = Boolean(sessionStorage.getItem('token'))
+  const token = isUserFromSession && JSON.parse(sessionStorage.getItem('token'))
   return new Promise((resolve, reject) => {
     return axios({
       method: method,

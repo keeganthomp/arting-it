@@ -27,7 +27,8 @@ class Profile extends Component {
   }
   componentDidMount() {
     const { artist } = this.props
-    const userFromSession = JSON.parse(sessionStorage.getItem('user'))
+    const isUserFromSession = Boolean(sessionStorage.getItem('user'))
+    const userFromSession = isUserFromSession && JSON.parse(sessionStorage.getItem('user'))
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
     if (userFromSession) {

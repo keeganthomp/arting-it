@@ -306,21 +306,37 @@ const verifyUser = (req, res) => {
     return res.status(401).json({message: 'Must pass token'})
   }
   // Check token that was passed by decoding token using secret
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
     if (err) throw err
+
     //return user using the id from w/in JWTToken
-    Artist.findByPk(user.id, (err, user) => {
-      if (err) throw err
-      //Note: you can renew token by creating new token(i.e.    
-      //refresh it)w/ new expiration time at this point, but I’m 
-      //passing the old token back.
-      // var token = utils.generateToken(user)
-      res.json({
-        user: user,
-        token: token
-      })
+    const artist = await Artist.findByPk(user.id)
+    res.json(artist)
+  })
+}
+
+const getArtInfo = (req, res) => {
+  const artId = req.params.id
+  Artist.findAll().then((data) => {
+    const artists = data
+    const allArt = artists.reduce((art, currentArtist) => {
+      if (currentArtist.art && currentArtist.art.length > 0) {
+        return art.concat(currentArtist.art.map(artPiece => {
+          const parsedArtPiece = JSON.parse(artPiece)
+          const normalizedArtist = omit(currentArtist.dataValues, ['password'])
+          return { ...parsedArtPiece, artist: normalizedArtist }
+        }))
+      }
+    }, [])
+    console.log('ALL ARTTTTL', allArt)
+    const selectedArt = allArt.find(art => art.id === artId)
+    res.json({
+      status: 200,
+      message: 'Successfully retrieved art info',
+      artPiece: selectedArt
     })
   })
+
 }
 
 const logout = (req, res) => {
@@ -337,5 +353,6 @@ module.exports = {
   updateArt,
   getAllArt,
   verifyUser,
+  getArtInfo,
   logout
 }

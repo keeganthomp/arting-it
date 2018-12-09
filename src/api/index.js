@@ -82,6 +82,15 @@ export const verifyUser = (token, callbackOnSuccess, callbackOnFailure) => {
   })
 }
 
+export const getArtInfo = (id, callbackOnSuccess, callbackOnFailure) => {
+  makeTartApiRequest({
+    method: 'GET',
+    location: `/api/art/${id}`,
+    callbackOnSuccess,
+    callbackOnFailure
+  })
+}
+
 export const logout = () => {
   localStorage.clear()
   sessionStorage.clear()

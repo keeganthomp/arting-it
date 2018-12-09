@@ -5,7 +5,8 @@ import ArtpageLeftColumn from './ArtpageLeftColumn'
 import ArtDetail from './ArtDetail'
 import PropTypes from 'prop-types'
 import CircularProgress from '@material-ui/core/CircularProgress'
-// import { isLoggedIn } from '../../helpers/auth'
+import { checkForValidUser } from '../../helpers/auth'
+
 
 class ArtPage extends Component {
   constructor() {
@@ -19,14 +20,13 @@ class ArtPage extends Component {
       art: []
     }
   }
-  componentDidMount() {
-    this.setState({ isFetchingArt: true })
+
+  fetchArt = () => {
     axios({
       method: 'GET',
       url: `http://${process.env.NODE_ENV === 'production' ? '142.93.241.62' : 'localhost'}:8080/api/art`
     }).then(axiosResult => {
       const art = axiosResult.data && axiosResult.data.art
-      console.log('ARTTT', art)
       if (art) {
         const parsedArt = art.map(artPiece => JSON.parse(artPiece))
         const artTypes = parsedArt.map(art => art.type)
@@ -41,6 +41,15 @@ class ArtPage extends Component {
       this.setState({ isFetchingArt: false })
       console.log('Error fetching art:', err)
     })
+  }
+
+  callBackForInValidUser = () => {
+    this.props.history.push('login')
+  }
+
+  componentDidMount() {
+    this.setState({ isFetchingArt: true })
+    checkForValidUser(this.fetchArt, this.callBackForInValidUser)
   }
   shouldShowDetailedView = (detailedViewArt) => {
     this.setState({ detailedViewArt })

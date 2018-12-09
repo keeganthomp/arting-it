@@ -20,11 +20,10 @@ class Profile extends Component {
     }
   }
   callBackForValidUser = () => {
-    this.setState({ isValidUser: true, isCheckingForValidUser: false })
+    this.setState({ isValidUser: true })
   }
   callBackForInValidUser = () => {
     this.props.history.push('login')
-    this.setState({ isCheckingForValidUser: false })
   }
   componentDidMount() {
     const { artist } = this.props
@@ -94,10 +93,9 @@ class Profile extends Component {
   }
 
   render () {
-    const { artist, isUpdating, art } = this.state
-    console.log('THIS STATE:E', this.state)
+    const { artist, isUpdating, art, isValidUser } = this.state
     return(
-      <Fragment>
+      isValidUser && <Fragment>
         <h3>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
         {this.state.source && <img src={this.state.source} alt='' />}
         <FileUploader noPreview className='profile_avatar' onDrop={this.saveAvatar}>

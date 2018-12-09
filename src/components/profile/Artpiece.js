@@ -34,7 +34,7 @@ class Artpiece extends Component {
     e.preventDefault()
     const { allArt, artistId } = this.props
     const { artDescription, artPrice, artPiece, artPieceType } = this.state
-    // const parsedArt = allArt.map(art => JSON.parse(art))
+    const parsedArt = allArt.map(art => JSON.parse(art))
     const artToUpdate = parsedArt.find(element => element.id === artPiece.id)
     const indexOfItemToUpdate = parsedArt.indexOf(artToUpdate)
     const updatedArtPiece = {

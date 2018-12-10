@@ -27,8 +27,7 @@ class Profile extends Component {
   }
   componentDidMount() {
     const { artist } = this.props
-    const isUserFromSession = Boolean(sessionStorage.getItem('user'))
-    // const userFromSession = isUserFromSession && JSON.parse(sessionStorage.getItem('user'))
+    const isUserFromSession = sessionStorage.getItem('user') !== 'undefined'
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
     if (isUserFromSession) {
@@ -84,7 +83,7 @@ class Profile extends Component {
           isUpdating: false
         })
         res.data.updatedPortfolio && this.setState({ art: [...res.data.updatedPortfolio] })
-        const isUserInSession = Boolean(sessionStorage.getItem('user'))
+        const isUserInSession = sessionStorage.getItem('user') !== 'undefined'
         const currentUserFromSession = isUserInSession && JSON.parse(sessionStorage.getItem('user'))
         const updatedArtist = {...currentUserFromSession}
         updatedArtist.art = [...res.data.updatedPortfolio]

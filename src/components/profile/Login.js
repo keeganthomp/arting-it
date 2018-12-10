@@ -25,6 +25,7 @@ class Login extends Component {
     })
     sessionStorage.setItem('user', JSON.stringify(userData.artist))
     sessionStorage.setItem('token', JSON.stringify(userData.token))
+    console.log('TOKEN IN LOGIN FUNC::', JSON.stringify(userData.token))
     this.props.history.push({
       pathname: '/profile',
       state: userData.artist

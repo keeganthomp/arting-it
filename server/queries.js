@@ -181,6 +181,7 @@ const uploadToS3 = (props) => {
     s3.createBucket({ Bucket: myBucket }, (err) => {
       const imageToUpload = fs.createReadStream(path.join(__dirname + `/temp/${fileName}`))
       if (err) {
+        console.log('ERRRORR111:', err)
         res.status(400).json({
           error: 'Unable to upload image'
         })
@@ -194,6 +195,7 @@ const uploadToS3 = (props) => {
         }
         s3.upload(params, (err, data) => {
           if (err) {
+            console.log('ERRRORR222:', err)
             res.status(400).json({
               error: 'Unable to upload image'
             })

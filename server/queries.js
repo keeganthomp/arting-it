@@ -138,6 +138,10 @@ const getArtist = (req, res) => {
 
 const updateArtist = (req, res) => {
   const bufffer = Buffer.from(req.body.avatar, 'base64')
+  const  tempDirectory = './temp'
+  if (!fs.existsSync(tempDirectory)){
+    fs.mkdirSync(tempDirectory)
+  }
   fs.writeFile('./temp/test.jpeg', bufffer, (err) => {
     if(err) {
       console.log('err', err)

@@ -18,6 +18,13 @@ const sequelize = new Sequelize('tart', 'keegan', 'hu8jmn3', {
 const { generateHash, validPassword } = require('./helpers/validation')
 const fs = require('fs')
 const AWS = require('aws-sdk')
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  'region': 'sa-east-1'
+})
+
 const uuidv1 = require('uuid/v1')
 const s3 = new AWS.S3()
 
@@ -180,7 +187,7 @@ const uploadToS3 = (props) => {
   setTimeout(() => {
     s3.createBucket({ Bucket: myBucket }, (err) => {
       const imageToUpload = fs.createReadStream(path.join(__dirname + `/temp/${fileName}`))
-      if (err) {
+      if (err && err.code !== 'BucketAlreadyOwnedByYou') {
         console.log('ERRRORR111:', err)
         res.status(400).json({
           error: 'Unable to upload image'

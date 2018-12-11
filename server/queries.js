@@ -170,6 +170,10 @@ const uploadToS3 = (props) => {
   const { base64encodedImage, fileName, bucket, res, userId } = props
   const myBucket = bucket
   const imageForDisk = base64encodedImage.split(';base64,').pop()
+  const  tempDirectory = __dirname + '/temp'
+  if (!fs.existsSync(tempDirectory)){
+    fs.mkdirSync(tempDirectory)
+  }
   fs.writeFile(path.join(__dirname + `/temp/${fileName}`), imageForDisk, { encoding: 'base64' }, (err) => {
     err && console.log('ERROR WRITING FILE:', err)
   })

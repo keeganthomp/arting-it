@@ -95,7 +95,7 @@ export const getArtInfo = (id, callbackOnSuccess, callbackOnFailure) => {
 export const logout = () => {
   localStorage.clear()
   sessionStorage.clear()
-  window.location = 'http://localhost:5300/login'
+  window.location = `http://${process.env.NODE_ENV === 'production' ? '142.93.241.62' : 'localhost'}:8080/login`
   makeTartApiRequest({
     method: 'POST',
     location: '/api/logout'

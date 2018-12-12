@@ -7,12 +7,11 @@ import Homepage from './Home'
 import Signup from './profile/Signup'
 import Login from './profile/Login'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import { HashRouter } from 'react-router-dom'
 
 class App extends Component {
   render () {
     return (
-      <HashRouter>
+      <BrowserRouter>
         <div className='homepage-conatiner'>
           <Navigation />
           <h1 className='homepage-header'>Nashville Local Art Title</h1>
@@ -25,7 +24,7 @@ class App extends Component {
             <Route exact path='/login' component={Login} />
           </Switch>
         </div>
-      </HashRouter>
+      </BrowserRouter>
     )
   }
 }

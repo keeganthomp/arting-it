@@ -188,7 +188,6 @@ const uploadToS3 = (props) => {
     s3.createBucket({ Bucket: myBucket }, (err) => {
       const imageToUpload = fs.createReadStream(path.join(__dirname + `/temp/${fileName}`))
       if (err && err.code !== 'BucketAlreadyOwnedByYou') {
-        console.log('ERRRORR111:', err)
         res.status(400).json({
           error: 'Unable to upload image'
         })
@@ -202,7 +201,6 @@ const uploadToS3 = (props) => {
         }
         s3.upload(params, (err, data) => {
           if (err) {
-            console.log('ERRRORR222:', err)
             res.status(400).json({
               error: 'Unable to upload image'
             })
@@ -290,7 +288,7 @@ const updateArt = (req, res) => {
       res.json({
         status: 200,
         message: 'Successfully updated art',
-        updatedPortfolio: artistWithUpdatedPortfolio.art
+        artistWithUpdatedArt: artistWithUpdatedPortfolio
       })
     } else {
       res.status(400).json({
@@ -345,7 +343,6 @@ const getArtInfo = (req, res) => {
         }))
       }
     }, [])
-    console.log('ALL ARTTTTL', allArt)
     const selectedArt = allArt.find(art => art.id === artId)
     res.json({
       status: 200,

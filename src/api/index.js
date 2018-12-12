@@ -63,11 +63,12 @@ export const uploadThing = (body, id) => {
   })
 }
 
-export const updateArt = (body, id) => {
+export const updateArt = (body, id, callbackOnSuccess) => {
   makeTartApiRequest({
     method: 'PATCH',
     location: `/api/update/art/${id}`,
-    body
+    body,
+    callbackOnSuccess
   })
 }
 

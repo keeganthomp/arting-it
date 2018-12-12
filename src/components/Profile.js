@@ -27,7 +27,7 @@ class Profile extends Component {
   }
   componentDidMount() {
     const { artist } = this.props
-    const isUserFromSession = sessionStorage.getItem('user') !== 'undefined'
+    const isUserFromSession = sessionStorage.getItem('user') && sessionStorage.getItem('user') !== 'undefined'
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
     if (isUserFromSession) {
@@ -37,6 +37,8 @@ class Profile extends Component {
     }
     if (artist && artist.art && artist.art.length > 0) {
       this.setState({ art: artist.art })
+    } else if (isUserFromSession && JSON.parse(sessionStorage.getItem('user')).art && JSON.parse(sessionStorage.getItem('user')).art.length > 0) {
+      this.setState({ art: JSON.parse(sessionStorage.getItem('user')).art })
     }
   }
   onDrop = (file) => {

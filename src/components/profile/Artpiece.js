@@ -30,6 +30,9 @@ class Artpiece extends Component {
       })
     }
   }
+  saveUpdatedUserToSession = (dataFromApi) => {
+    sessionStorage.setItem('user', JSON.stringify(dataFromApi.artistWithUpdatedArt))
+  }
   updateArtPieceMeta = (e) => {
     e.preventDefault()
     const { allArt, artistId } = this.props
@@ -45,7 +48,7 @@ class Artpiece extends Component {
     }
     parsedArt[indexOfItemToUpdate] = updatedArtPiece
     const artForDb = parsedArt.map(art => JSON.stringify(art))
-    updateArt(artForDb, artistId)
+    updateArt(artForDb, artistId, this.saveUpdatedUserToSession)
   }
   render() {
     const { artDescription, artPrice, artPiece, artPieceType } = this.state

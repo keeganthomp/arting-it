@@ -26,6 +26,7 @@ class ArtPage extends Component {
       method: 'GET',
       url: `http://${process.env.NODE_ENV === 'production' ? '142.93.241.62' : 'localhost'}:8080/api/art`
     }).then(axiosResult => {
+      console.log('AXIOS RESULTS:', axiosResult)
       const art = axiosResult.data && axiosResult.data.art
       if (art.length > 0) {
         const parsedArt = art.map(artPiece => JSON.parse(artPiece))

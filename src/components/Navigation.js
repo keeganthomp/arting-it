@@ -16,12 +16,14 @@ export default class Navigation extends Component {
       'navigation-menu-icon-animate': this.state.mobileNavIsOpen
     })
     return(
-      <div 
-        className={menuIconClasses}
-        onClick={() => this.setState({ mobileNavIsOpen: !this.state.mobileNavIsOpen })}>
-        <div className='navigation-menu-icon-barOne'></div>
-        <div className='navigation-menu-icon-barTwo'></div>
-        <div className='navigation-menu-icon-barThree'></div>
+      <div className='navigation-menu-icon-continer'>
+        <div 
+          className={menuIconClasses}
+          onClick={() => this.setState({ mobileNavIsOpen: !this.state.mobileNavIsOpen })}>
+          <div className='navigation-menu-icon-barOne'></div>
+          <div className='navigation-menu-icon-barTwo'></div>
+          <div className='navigation-menu-icon-barThree'></div>
+        </div>
       </div>
     )
   }

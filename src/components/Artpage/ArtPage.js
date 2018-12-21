@@ -68,7 +68,7 @@ class ArtPage extends Component {
   render () {
     const { art, isFetchingArt, filtersAvailable, selectedFilters } = this.state
     return !isFetchingArt && (
-      <div className='artpage-container container'>
+      <div className='artpage-container'>
         {this.state.detailedViewArt && <ArtDetail shouldShowDetailedView={this.shouldShowDetailedView} image={this.state.detailedViewArt} />}
         {!this.state.detailedViewArt && <div className='row no-gutters'>
           <div className='col-sm-12 col-lg-4'>

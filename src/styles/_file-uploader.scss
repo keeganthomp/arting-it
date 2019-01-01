@@ -12,4 +12,19 @@
   &_image-preview {
     max-width: 12rem;
   }
+  &_container {
+    margin: 1rem 0;
+    overflow: hidden;
+  }
+  &_default-overlay {
+    width: 100%;
+    top: -2rem;
+    position: absolute;
+    transition: .25s ease;
+    background-color:rgba(0,0,0,0.1);
+    color: white;
+    &--active {
+      top: 0rem;
+    }
+  }
 }

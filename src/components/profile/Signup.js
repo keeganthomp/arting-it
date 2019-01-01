@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import * as Yup from 'yup'
 import { createArtist } from '../../api'
 import PropTypes from 'prop-types'
+import Button from '@material-ui/core/Button'
 
 class Signup extends Component {
   createArtist = data => {
@@ -16,15 +17,14 @@ class Signup extends Component {
   }
   render () {
     return (<div className='signup-container container'>
-      <h1>Signup page</h1>
+      <h1 className='signup-header'>Signup page</h1>
       <Formik
         validationSchema={
           Yup.object().shape({
-            username: Yup.string().min(5).required(),
-            password: Yup.string().min(5).required(),
-            first_name: Yup.string().required(),
-            last_name: Yup.string().required(),
-            sex: Yup.string().required()
+            username: Yup.string().min(5).required('Username is required'),
+            password: Yup.string().min(5).required('Password is required'),
+            first_name: Yup.string().required('First Name is required'),
+            last_name: Yup.string().required('Last Name is required')
           })
         }
         onSubmit={(values) => this.createArtist(values)}
@@ -140,8 +140,8 @@ class Signup extends Component {
                 onChange={handleChange}
               />
             </div>
-            <div className='col-12'>
-              <button type='submit'>SUBMIT</button>
+            <div className='col-12' style={{ marginTop: '1rem' }}>
+              <Button type='submit' variant='contained' color='primary' >signup</Button>
             </div>
           </form>
         )}

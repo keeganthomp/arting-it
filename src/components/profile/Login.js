@@ -5,6 +5,7 @@ import { login } from '../../api'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { saveUser } from '../../actions/userActions'
+import Button from '@material-ui/core/Button'
 
 class Login extends Component {
   constructor(){
@@ -38,7 +39,7 @@ class Login extends Component {
   }
   render() {
     return(<div className='Login-container container'>
-      <h1>Login page</h1>
+      <h1 className='login-header'>Login page</h1>
       <Formik
         onSubmit={(values) => this.login(values)}
         render={({
@@ -67,8 +68,8 @@ class Login extends Component {
               />
             </div>
             {this.state.apiError && <div className='col-12' style={{ color: 'red' }} >Incorrect User Name or Password.</div>}
-            <div className='col-12'>              
-              <button type='submit'>SUBMIT</button>
+            <div className='col-12' style={{ marginTop: '1rem' }}>              
+              <Button type='submit' variant='contained' color='primary' >Login</Button>
             </div>
           </form>
         )}

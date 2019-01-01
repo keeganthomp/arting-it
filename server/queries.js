@@ -186,8 +186,10 @@ const uploadToS3 = (props) => {
   })
   setTimeout(() => {
     s3.createBucket({ Bucket: myBucket }, (err) => {
+      // image names cannot have '+' signs in the file name
+      console.log('ERRRORRR:', err)
       const imageToUpload = fs.createReadStream(path.join(__dirname + `/temp/${fileName}`))
-      if (err && err.code !== 'BucketAlreadyOwnedByYou') {
+      if (err && (err.code !== 'BucketAlreadyOwnedByYou' || err.BucketAlreadyOwnedByYou)) {
         res.status(400).json({
           error: 'Unable to upload image'
         })
@@ -197,10 +199,12 @@ const uploadToS3 = (props) => {
           Key: fileName,
           Body: imageToUpload,
           ContentEncoding: 'base64',
-          type: 'image/jpeg'
+          type: 'image/jpeg',
+          region: 'us-east-1'
         }
         s3.upload(params, (err, data) => {
           if (err) {
+            console.log('ERRRR:', err)
             res.status(400).json({
               error: 'Unable to upload image'
             })
@@ -301,6 +305,8 @@ const updateArt = (req, res) => {
 const getAllArt = (req, res) => {
   Artist.findAll().then((data) => {
     const artists = data
+    console.log('ARTISTTTT:', artists)
+    console.log('DATAAAAA:', data)
     const allArt = artists.reduce((art, currentArtist) => {
       if (currentArtist.art && currentArtist.art.length > 0) {
         return art.concat(currentArtist.art.map(artPiece => artPiece))

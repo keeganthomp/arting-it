@@ -6,6 +6,7 @@ import Artpiece from './profile/Artpiece'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { checkForValidUser } from '../helpers/auth'
+import classnames from 'classnames'
 
 
 class Profile extends Component {
@@ -16,7 +17,8 @@ class Profile extends Component {
       art: [],
       isUpdating: false,
       isValidUser: false,
-      isCheckingForValidUser: false
+      isCheckingForValidUser: false,
+      isAvatarOverlayActive: false
     }
   }
   callBackForValidUser = () => {
@@ -27,6 +29,7 @@ class Profile extends Component {
   }
   componentDidMount() {
     const { artist } = this.props
+    console.log('ARTISTTTTTL', artist)
     const isUserFromSession = sessionStorage.getItem('user') && sessionStorage.getItem('user') !== 'undefined'
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
@@ -47,7 +50,7 @@ class Profile extends Component {
     this.saveAvatar(file)
   }
   saveAvatar = (file) => {
-    this.setState({ isUpdating: true })
+    this.setState({ isUpdatingAvatar: true })
     const { artist } = this.state
     const reader = new FileReader()
     reader.readAsDataURL(file[0])
@@ -61,9 +64,15 @@ class Profile extends Component {
           artist: { 
             ...artist,
             avatar: res.data.updatedProfileImage }, 
-          isUpdating: false,
+          isUpdatingAvatar: false,
           art: artist.art
         })
+        const isUserInSession = sessionStorage.getItem('user') !== 'undefined'
+        const currentUserFromSession = isUserInSession && JSON.parse(sessionStorage.getItem('user'))
+        const updatedArtist = {...currentUserFromSession}
+        updatedArtist.avatar = res.data.updatedProfileImage
+        sessionStorage.setItem('user', JSON.stringify(updatedArtist))
+        this.setState({ artist: updatedArtist })
       })
     }
   }
@@ -78,7 +87,7 @@ class Profile extends Component {
       uploadThing({
         isProfilePicture: false,        
         base64encodedImage: reader.result,
-        fileName: file[0].name,
+        fileName: file[0].name.replace('+', '_'),
         image: file
       }, artist.id).then(res => {
         this.setState({ 
@@ -96,28 +105,44 @@ class Profile extends Component {
   }
 
   render () {
-    const { artist, isUpdating, isValidUser, art } = this.state
+    const { artist, isUpdating, isValidUser, art, isUpdatingAvatar } = this.state
+    const avatarOverlayClasses = classnames('profile_avatar-image-overlay', {
+      'profile_avatar-image-overlay--active': this.state.isAvatarOverlayActive
+    })
+    const avatarOverlayPencilIconClasses = classnames('profile_avatar-edit-icon', {
+      'profile_avatar-edit-icon--active': this.state.isAvatarOverlayActive
+    })
     return(
       isValidUser && <Fragment>
-        <h3>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
-        {this.state.source && <img src={this.state.source} alt='' />}
-        <FileUploader noPreview className='profile_avatar' onDrop={this.saveAvatar}>
-          <div>
-            {artist.avatar && <img className='profile_avatar-image' src={artist.avatar}/> ||
-            <i className='fas fa-user-alt profile_avatar-icon' />}
-          </div>
-        </FileUploader>
-        <div>
-          Would you like to add more art to be sold?
+        <h3 className='profile-header'>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
+        <div className='profile-main-content'>
+          {this.state.source && <img src={this.state.source} alt='' />}
+          {!isUpdatingAvatar && <FileUploader noPreview className='profile_avatar' onDrop={this.saveAvatar}>
+            <div
+              className='profile_avatar-image-container'
+              onMouseEnter={() => this.setState({ isAvatarOverlayActive: true })}
+              onMouseLeave={() => this.setState({ isAvatarOverlayActive: false })}>
+              <div className={avatarOverlayClasses}>
+                <i className={`fas fa-pencil-alt ${avatarOverlayPencilIconClasses}`} />
+              </div>
+              {artist.avatar && <img
+                className='profile_avatar-image' src={artist.avatar}/> ||
+              <i
+                className='fas fa-user-alt profile_avatar-icon' />}
+            </div>
+          </FileUploader> || <CircularProgress />}
+          {!isUpdating && <FileUploader className='profile_art-upload-zone' onDrop={this.updateArtPortfolio} isLoading={isUpdating}/> || <Fragment>
+            <CircularProgress />
+            <p>Adding Art</p>
+          </Fragment>}
+          <p>{isUpdating ? '' : 'Below are your current pieces for sale:'}</p>
+          {artist && <div className='profile_available-art-container'>
+            {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
+              const parsedArt = JSON.parse(artPiece)
+              return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
+            })}
+          </div>}
         </div>
-        <FileUploader onDrop={this.updateArtPortfolio} isLoading={isUpdating}/>
-        <p>Below are your current pieces for sale:</p>
-        {artist && !isUpdating && <div className='profile_available-art-container'>
-          {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
-            const parsedArt = JSON.parse(artPiece)
-            return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
-          })}
-        </div> || <CircularProgress />}
       </Fragment> 
     )
   }

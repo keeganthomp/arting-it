@@ -12,9 +12,8 @@ class App extends Component {
   render () {
     return (
       <BrowserRouter>
-        <div className='homepage-conatiner'>
+        <div className='homepage-container'>
           <Navigation />
-          <h1 className='homepage-header'>Nashville Local Art Title</h1>
           <Switch>
             <Route exact path='/' component={Homepage} />
             <Route exact path='/profile' component={Profile} />

@@ -305,8 +305,6 @@ const updateArt = (req, res) => {
 const getAllArt = (req, res) => {
   Artist.findAll().then((data) => {
     const artists = data
-    console.log('ARTISTTTT:', artists)
-    console.log('DATAAAAA:', data)
     const allArt = artists.reduce((art, currentArtist) => {
       if (currentArtist.art && currentArtist.art.length > 0) {
         return art.concat(currentArtist.art.map(artPiece => artPiece))

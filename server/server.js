@@ -2,14 +2,22 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const cors = require('cors')
-const path = require('path')
+// const path = require('path')
 
 const router = express.Router()
 const app = express()
+const https = require('https')
+const http = require('http')
 const db = require('./queries')
 const jwt = require('jsonwebtoken')
+const fs = require('fs')
 
 const port = process.env.PORT || 8080
+
+const httpsOptions = {
+  key: fs.existsSync('../../..client-key.pem') ? fs.readFileSync('../../client-key.pem') : '',
+  cert: fs.existsSync('../../client-key.pem') ? fs.readFileSync('../../client-key.pem') : ''
+}
 
 app.use((req, res, next) => {
   const isSignupRoute = req.path === '/api/artist/signup'
@@ -70,6 +78,9 @@ app.post('/api/logout', db.logout)
 app.patch('/api/artist/:id', db.fileUpload)
 app.patch('/api/update/art/:artistId', db.updateArt)
 
+console.log('HTTPS OPTIONSS:', httpsOptions)
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+http.createServer(app).listen(port)
+https.createServer(httpsOptions ,app).listen(443)
+// app.listen(port, () => console.log(`Listening on port ${port}`))
 module.exports = router

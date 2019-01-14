@@ -14,9 +14,11 @@ const fs = require('fs')
 
 const port = process.env.PORT || 8080
 
+console.log('')
+
 const httpsOptions = {
-  key: fs.existsSync('../../../client-key.pem') ? fs.readFileSync('../../../client-key.pem') : '',
-  cert: fs.existsSync('../../../client-cert.pem') ? fs.readFileSync('../../../client-cert.pem') : ''
+  key: fs.existsSync('../../client-key.pem') ? fs.readFileSync('../../client-key.pem') : '',
+  cert: fs.existsSync('../../client-cert.pem') ? fs.readFileSync('../../client-cert.pem') : ''
 }
 
 app.use((req, res, next) => {

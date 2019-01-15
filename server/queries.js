@@ -357,6 +357,11 @@ const getArtInfo = (req, res) => {
 
 }
 
+const getPlaidAccessToken = (req, res) => {
+  console.log('WOOOOOOO THS IS WHERE::√')
+  console.log('ACCESS TOKEN IS BEING SET ON BACKEND::', req.body)
+}
+
 const logout = (req, res) => {
   req.session.destroy()
 }
@@ -372,5 +377,6 @@ module.exports = {
   getAllArt,
   verifyUser,
   getArtInfo,
-  logout
+  logout,
+  getPlaidAccessToken
 }

@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import FileUploader from './ui/fileUploader'
-import { uploadThing } from '../api'
+import { uploadThing, getPlaidAccessToken } from '../api'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Artpiece from './profile/Artpiece'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { checkForValidUser } from '../helpers/auth'
 import classnames from 'classnames'
-
+import PlaidLink from 'react-plaid-link'
 
 class Profile extends Component {
   constructor() {
@@ -29,7 +29,6 @@ class Profile extends Component {
   }
   componentDidMount() {
     const { artist } = this.props
-    console.log('ARTISTTTTTL', artist)
     const isUserFromSession = sessionStorage.getItem('user') && sessionStorage.getItem('user') !== 'undefined'
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
@@ -106,6 +105,7 @@ class Profile extends Component {
 
   render () {
     const { artist, isUpdating, isValidUser, art, isUpdatingAvatar } = this.state
+    const plaidDevSecret = process.env.REACT_APP_PLAID_DEV_SECRET
     const avatarOverlayClasses = classnames('profile_avatar-image-overlay', {
       'profile_avatar-image-overlay--active': this.state.isAvatarOverlayActive
     })
@@ -131,6 +131,15 @@ class Profile extends Component {
                 className='fas fa-user-alt profile_avatar-icon' />}
             </div>
           </FileUploader> || <CircularProgress />}
+          <PlaidLink
+            clientName='Teal Eel'
+            env='development'
+            product={['auth', 'transactions']}
+            publicKey={plaidDevSecret}
+            onExit={() => getPlaidAccessToken('MMOC KTOKENNNNN')}
+            onSuccess={(token) => console.log('TOKEN BABYYYY:', token)}>
+            Open Link and connect your bank!
+          </PlaidLink>
           {!isUpdating && <FileUploader className='profile_art-upload-zone' onDrop={this.updateArtPortfolio} isLoading={isUpdating}/> || <Fragment>
             <CircularProgress />
             <p>Adding Art</p>

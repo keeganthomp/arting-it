@@ -102,3 +102,13 @@ export const logout = () => {
     location: '/api/logout'
   })
 }
+
+export const getPlaidAccessToken = (accessToken) => {
+  makeTartApiRequest({
+    method: 'POST',
+    location: '/api/get_access_token',
+    body: {
+      accessToken
+    }
+  })
+}

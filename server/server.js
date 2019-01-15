@@ -17,8 +17,8 @@ const port = process.env.PORT || 8080
 console.log('')
 
 const httpsOptions = {
-  key: fs.existsSync(__dirname + '/../../arting-it-api.key') ? fs.readFileSync(__dirname + '/../../arting-it-api.key') : '',
-  cert: fs.existsSync(__dirname + '/../../arting-it-api.crt') ? fs.readFileSync(__dirname + '/../../arting-it-api.crt') : ''
+  key: fs.existsSync(__dirname + '/../../key.pem') ? fs.readFileSync(__dirname + '/../../key.pem') : '',
+  cert: fs.existsSync(__dirname + '/../../cert.pem') ? fs.readFileSync(__dirname + '/../../cert.pem') : ''
 }
 
 app.use((req, res, next) => {

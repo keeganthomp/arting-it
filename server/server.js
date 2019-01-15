@@ -17,8 +17,8 @@ const port = process.env.PORT || 8080
 console.log('')
 
 const httpsOptions = {
-  key: fs.existsSync(__dirname + '/../../client-key.pem') ? fs.readFileSync(__dirname + '/../../client-key.pem') : '',
-  cert: fs.existsSync(__dirname + '/../../client-cert.pem') ? fs.readFileSync(__dirname + '/../../client-cert.pem') : ''
+  key: fs.existsSync(__dirname + '/../../arting-it-api.key') ? fs.readFileSync(__dirname + '/../../arting-it-api.key') : '',
+  cert: fs.existsSync(__dirname + '/../../arting-it-api.crt') ? fs.readFileSync(__dirname + '/../../arting-it-api.crt') : ''
 }
 
 app.use((req, res, next) => {
@@ -42,6 +42,7 @@ app.use((req, res, next) => {
     }
   })
 })
+
 app.use(session({
   key: 'user_sid',
   secret: 'ilovescotchscotchyscotchscotch',
@@ -80,7 +81,7 @@ app.post('/api/logout', db.logout)
 app.patch('/api/artist/:id', db.fileUpload)
 app.patch('/api/update/art/:artistId', db.updateArt)
 
-console.log('HTTPS OPTIONSS:', httpsOptions)
+console.log('HTTPS OPTIONSS 11:', httpsOptions)
 
 http.createServer(app).listen(port)
 https.createServer(httpsOptions ,app).listen(443)

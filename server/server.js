@@ -84,6 +84,6 @@ app.patch('/api/update/art/:artistId', db.updateArt)
 console.log('HTTPS OPTIONSS 11:', httpsOptions)
 
 http.createServer(app).listen(port)
-https.createServer(httpsOptions ,app).listen(443)
+https.createServer(httpsOptions, app).listen(8443)
 // app.listen(port, () => console.log(`Listening on port ${port}`))
 module.exports = router

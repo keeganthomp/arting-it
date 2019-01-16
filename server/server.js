@@ -57,6 +57,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(express.static(__dirname + '/public'))
 app.use( express.static( `${__dirname}/../build` ))
+app.use(express.static(__dirname, { dotfiles: 'allow' } ));
 
 // app.get('/*', (req, res) => {
 //   res.sendFile(path.join(__dirname, '../build/index.html'), (err) => {

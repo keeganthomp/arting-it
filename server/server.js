@@ -17,8 +17,9 @@ const port = process.env.PORT || 80
 console.log('')
 
 const httpsOptions = {
-  key: fs.existsSync(__dirname + '/../../key.pem') ? fs.readFileSync(__dirname + '/../../key.pem') : '',
-  cert: fs.existsSync(__dirname + '/../../cert.pem') ? fs.readFileSync(__dirname + '/../../cert.pem') : ''
+  key: fs.existsSync(__dirname + '/../../privkey.pem') ? fs.readFileSync(__dirname + '/../../privkey.pem') : '',
+  cert: fs.existsSync(__dirname + '/../../cert.pem') ? fs.readFileSync(__dirname + '/../../cert.pem') : '',
+  ca: fs.existsSync(__dirname + '/../../chain.pem.pem') ? fs.readFileSync(__dirname + '/../../chain.pem.pem') : ''
 }
 
 app.use((req, res, next) => {

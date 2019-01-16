@@ -12,7 +12,7 @@ const db = require('./queries')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 80
 
 console.log('')
 
@@ -85,6 +85,6 @@ app.patch('/api/update/art/:artistId', db.updateArt)
 console.log('HTTPS OPTIONSS 11:', httpsOptions)
 
 http.createServer(app).listen(port)
-https.createServer(httpsOptions, app).listen(8443)
+https.createServer(httpsOptions, app).listen(443)
 // app.listen(port, () => console.log(`Listening on port ${port}`))
 module.exports = router

@@ -12,13 +12,14 @@ const db = require('./queries')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 80
 
 console.log('')
 
 const httpsOptions = {
-  key: fs.existsSync(__dirname + '/../../key.pem') ? fs.readFileSync(__dirname + '/../../key.pem') : '',
-  cert: fs.existsSync(__dirname + '/../../cert.pem') ? fs.readFileSync(__dirname + '/../../cert.pem') : ''
+  key: fs.existsSync(__dirname + '/../../privkey.pem') ? fs.readFileSync(__dirname + '/../../privkey.pem') : '',
+  cert: fs.existsSync(__dirname + '/../../cert.pem') ? fs.readFileSync(__dirname + '/../../cert.pem') : '',
+  ca: fs.existsSync(__dirname + '/../../chain.pem.pem') ? fs.readFileSync(__dirname + '/../../chain.pem.pem') : ''
 }
 
 app.use((req, res, next) => {
@@ -86,6 +87,6 @@ app.patch('/api/update/art/:artistId', db.updateArt)
 console.log('HTTPS OPTIONSS 11:', httpsOptions)
 
 http.createServer(app).listen(port)
-https.createServer(httpsOptions, app).listen(8443)
+https.createServer(httpsOptions, app).listen(443)
 // app.listen(port, () => console.log(`Listening on port ${port}`))
 module.exports = router

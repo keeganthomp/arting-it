@@ -6,7 +6,7 @@ export const makeTartApiRequest = ({ method, location, body = {}, callbackOnSucc
   return new Promise((resolve, reject) => {
     return axios({
       method: method,
-      url: `http://${process.env.NODE_ENV === 'production' ? '142.93.241.62' : 'localhost'}:8080${location}`,
+      url: `http://${process.env.NODE_ENV === 'production' ? 'tealeel-api.com' : 'localhost'}${location}`,
       headers: { 
         'Content-Type': 'application/json',
         'Authorization' : `Bearer ${token}`
@@ -96,7 +96,7 @@ export const getArtInfo = (id, callbackOnSuccess, callbackOnFailure) => {
 export const logout = () => {
   localStorage.clear()
   sessionStorage.clear()
-  window.location = `http://${process.env.NODE_ENV === 'production' ? '142.93.241.62' : 'localhost'}:8080/login`
+  window.location = `http://${process.env.NODE_ENV === 'production' ? 'tealeel.com' : 'localhost:5300'}/login`
   makeTartApiRequest({
     method: 'POST',
     location: '/api/logout'

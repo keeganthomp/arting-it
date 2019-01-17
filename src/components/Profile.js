@@ -131,7 +131,7 @@ class Profile extends Component {
                 className='fas fa-user-alt profile_avatar-icon' />}
             </div>
           </FileUploader> || <CircularProgress />}
-          <PlaidLink
+          {/* <PlaidLink
             clientName='Teal Eel'
             env='development'
             product={['auth', 'transactions']}
@@ -139,7 +139,7 @@ class Profile extends Component {
             onExit={() => getPlaidAccessToken('MMOC KTOKENNNNN')}
             onSuccess={(token) => console.log('TOKEN BABYYYY:', token)}>
             Open Link and connect your bank!
-          </PlaidLink>
+          </PlaidLink> */}
           {!isUpdating && <FileUploader className='profile_art-upload-zone' onDrop={this.updateArtPortfolio} isLoading={isUpdating}/> || <Fragment>
             <CircularProgress />
             <p>Adding Art</p>

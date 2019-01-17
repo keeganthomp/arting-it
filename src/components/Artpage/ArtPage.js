@@ -24,7 +24,7 @@ class ArtPage extends Component {
   fetchArt = () => {
     axios({
       method: 'GET',
-      url: `http://${process.env.NODE_ENV === 'production' ? 'tealeel-api.com' : 'localhost:8080'}/api/art`
+      url: `http://${process.env.NODE_ENV === 'production' ? 'tealeel-api.com' : 'localhost:80'}/api/art`
     }).then(axiosResult => {
       console.log('AXIOS RESULTS:', axiosResult)
       const art = axiosResult.data && axiosResult.data.art

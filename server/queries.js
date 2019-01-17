@@ -341,13 +341,11 @@ const getArtInfo = (req, res) => {
   Artist.findAll().then((data) => {
     const artists = data
     const allArt = artists.reduce((art, currentArtist) => {
-      if (currentArtist.art && currentArtist.art.length > 0) {
-        return art.concat(currentArtist.art.map(artPiece => {
-          const parsedArtPiece = JSON.parse(artPiece)
-          const normalizedArtist = omit(currentArtist.dataValues, ['password'])
-          return { ...parsedArtPiece, artist: normalizedArtist }
-        }))
-      }
+      return art.concat(currentArtist.art.map(artPiece => {
+        const parsedArtPiece = JSON.parse(artPiece)
+        const normalizedArtist = omit(currentArtist.dataValues, ['password'])
+        return { ...parsedArtPiece, artist: normalizedArtist }
+      }))
     }, [])
     const selectedArt = allArt.find(art => art.id === artId)
     res.json({

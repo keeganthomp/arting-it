@@ -58,7 +58,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(express.static(__dirname + '/public'))
 app.use( express.static( `${__dirname}/../build` ))
-app.use(express.static(__dirname, { dotfiles: 'allow' } ));
+app.use(express.static(__dirname, { dotfiles: 'allow' } ))
 
 // app.get('/*', (req, res) => {
 //   res.sendFile(path.join(__dirname, '../build/index.html'), (err) => {
@@ -79,6 +79,7 @@ app.post('/api/artist/signup', db.createArtist)
 app.post('/api/artist/login', db.getArtistLogin)
 app.post('/api/me/from/token', db.verifyUser)
 app.post('/api/logout', db.logout)
+app.post('/api/get_access_token', db.getPlaidAccessToken)
 
 app.patch('/api/artist/:id', db.fileUpload)
 app.patch('/api/update/art/:artistId', db.updateArt)

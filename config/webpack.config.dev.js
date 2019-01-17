@@ -23,7 +23,6 @@ const publicUrl = ''
 const env = getClientEnvironment(publicUrl)
 
 
-
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.

@@ -84,7 +84,11 @@ const createArtist = (req, res) => {
     !req.body[key] && delete req.body[key]
   })
   const payloadWithoutPassword = omit(req.body, ['password'])
-  const payload = { ...payloadWithoutPassword, password: generateHash(req.body.password)}
+  const payload = { 
+    ...payloadWithoutPassword,
+    password: generateHash(req.body.password),
+    art: []
+  }
   Artist.create(payload).then(newArtist => {
     if (newArtist) {
       res.status(200)
@@ -306,9 +310,7 @@ const getAllArt = (req, res) => {
   Artist.findAll().then((data) => {
     const artists = data
     const allArt = artists.reduce((art, currentArtist) => {
-      if (currentArtist.art && currentArtist.art.length > 0) {
-        return art.concat(currentArtist.art.map(artPiece => artPiece))
-      }
+      return art.concat(currentArtist.art.map(art => art))
     }, [])
     res.json({
       status: 200,
@@ -357,6 +359,11 @@ const getArtInfo = (req, res) => {
 
 }
 
+const getPlaidAccessToken = (req, res) => {
+  console.log('WOOOOOOO THS IS WHERE::√')
+  console.log('ACCESS TOKEN IS BEING SET ON BACKEND::', req.body)
+}
+
 const logout = (req, res) => {
   req.session.destroy()
 }
@@ -372,5 +379,6 @@ module.exports = {
   getAllArt,
   verifyUser,
   getArtInfo,
-  logout
+  logout,
+  getPlaidAccessToken
 }

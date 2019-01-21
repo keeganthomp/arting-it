@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getArtInfo } from '../../api'
+import Button from '@material-ui/core/Button'
 
 class ArtDetail extends Component {
   constructor(props) {
@@ -29,15 +30,16 @@ class ArtDetail extends Component {
         <div className='art-detail_image-wrapper'>
           <img src={artInfo.artImage} alt={artInfo.description} />
         </div>
-        <div>
-          <p>{artInfo.description}</p>
-          <p>Asking: {artInfo.price}</p>
+        <div className='art-detail-content'>
+          <p className='art-detail_description'>{artInfo.description}</p>
+          <p>asking: {artInfo.price}</p>
           <p>created by : {artist.first_name} {artist.last_name}</p>
+          {artist.avatar && <img onClick={() => history.push(`/artist/${artist.id}`)} className='art-detail_artist-avatar' src={artist.avatar} />}
           <p>username: {artist.username}</p>
-          <button>make offer</button>
+          <Button variant='contained' color='primary'>make offer</Button>
         </div>
-        <div>      
-          <button onClick={() => history.push('/art')}>go back</button>
+        <div className='art-detail_back-button-container'>
+          <Button className='art-detail_back-button' color='primary' onClick={() => history.push('/art')}>back to art</Button>
         </div>
       </div> || <p>Loading...</p>
     )

@@ -76,6 +76,10 @@ class Profile extends Component {
     }
   }
 
+  savePlaidTokenToLocalStorage = (token) => {
+    sessionStorage.setItem('bankToken', token)
+  }
+
   updateArtPortfolio = (file) => {
     this.setState({ isUpdating: true })
     const { artist } = this.state
@@ -106,6 +110,7 @@ class Profile extends Component {
   render () {
     const { artist, isUpdating, isValidUser, art, isUpdatingAvatar } = this.state
     const plaidDevSecret = process.env.REACT_APP_PLAID_DEV_SECRET
+    const bankToken = sessionStorage.getItem('bankToken')
     const avatarOverlayClasses = classnames('profile_avatar-image-overlay', {
       'profile_avatar-image-overlay--active': this.state.isAvatarOverlayActive
     })
@@ -131,15 +136,15 @@ class Profile extends Component {
                 className='fas fa-user-alt profile_avatar-icon' />}
             </div>
           </FileUploader> || <CircularProgress />}
-          {/* <PlaidLink
+          {/* can use onExit prop to fire when the user exits plaid plugin */}
+          {!bankToken && <PlaidLink
             clientName='Teal Eel'
-            env='development'
+            env='sandbox'
             product={['auth', 'transactions']}
             publicKey={plaidDevSecret}
-            onExit={() => getPlaidAccessToken('MMOC KTOKENNNNN')}
-            onSuccess={(token) => console.log('TOKEN BABYYYY:', token)}>
+            onSuccess={token => this.savePlaidTokenToLocalStorage(token)}>
             Open Link and connect your bank!
-          </PlaidLink> */}
+          </PlaidLink> || <p>Your bank account has been linked. Feel free to begin bidding on art.</p>}
           {!isUpdating && <FileUploader className='profile_art-upload-zone' onDrop={this.updateArtPortfolio} isLoading={isUpdating}/> || <Fragment>
             <CircularProgress />
             <p>Adding Art</p>

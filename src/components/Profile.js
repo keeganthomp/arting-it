@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import FileUploader from './ui/fileUploader'
-import { uploadThing, getPlaidAccessToken } from '../api'
+import { uploadThing } from '../api'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Artpiece from './profile/Artpiece'
 import PropTypes from 'prop-types'

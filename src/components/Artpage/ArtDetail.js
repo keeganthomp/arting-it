@@ -34,7 +34,7 @@ class ArtDetail extends Component {
           <p className='art-detail_description'>{artInfo.description}</p>
           <p>asking: {artInfo.price}</p>
           <p>created by : {artist.first_name} {artist.last_name}</p>
-          {artist.avatar && <img onClick={() => history.push(`/artist/${artist.id}`)} className='art-detail_artist-avatar' src={artist.avatar} />}
+          {artist.avatar && <img onClick={() => history.push(`/artist/${artist.username}`)} className='art-detail_artist-avatar' src={artist.avatar} />}
           <p>username: {artist.username}</p>
           <Button variant='contained' color='primary'>make offer</Button>
         </div>

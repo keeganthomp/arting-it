@@ -71,7 +71,7 @@ app.use(express.static(__dirname, { dotfiles: 'allow' } ))
 //   response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 // })
 app.get('/api/artists', db.getAllArtists)
-app.get('/api/artist/:id', db.getArtist)
+app.get('/api/artist/:username', db.getArtist)
 app.get('/api/art', db.getAllArt)
 app.get('/api/art/:id', db.getArtInfo)
 

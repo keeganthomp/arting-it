@@ -78,6 +78,7 @@ class Profile extends Component {
 
   savePlaidTokenToLocalStorage = (token) => {
     sessionStorage.setItem('bankToken', token)
+    this.setState({ bankToken: token })
   }
 
   updateArtPortfolio = (file) => {
@@ -149,7 +150,7 @@ class Profile extends Component {
             <CircularProgress />
             <p>Adding Art</p>
           </Fragment>}
-          <p>{isUpdating ? '' : 'Below are your current pieces for sale:'}</p>
+          <p>{isUpdating ? '' : artist.art.length > 0 ? 'Below are your current pieces for sale:' : 'It looks like you have not uploaded any art yet.'}</p>
           {artist && <div className='profile_available-art-container'>
             {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
               const parsedArt = JSON.parse(artPiece)

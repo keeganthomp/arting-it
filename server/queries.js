@@ -131,7 +131,7 @@ const getArtistLogin = (req, res) => {
 const getArtist = (req, res) => {
   Artist.findOne({
     where: {
-      id: req.params.id
+      username: req.params.username
     }
   }).then(artist => {
     if (artist) {

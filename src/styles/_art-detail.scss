@@ -1,10 +1,36 @@
 .art-detail-container {
   display: flex;
   flex-direction: column;
+  margin-top: 1.5rem;
 }
 
-.art-detail_image-wrapper {
-  img {
-    max-width: 22rem
+.art-detail-content {
+  font-weight: 100;
+}
+
+.art-detail {
+  &_description {
+    font-style: italic;
+  }
+  &_back-button-container {
+    margin-top: .5rem;
+  }
+  &_image-wrapper {
+    img {
+      max-width: 22rem;
+      margin-bottom: 1rem;
+    }
+  }
+  &_artist-avatar {
+    max-width: 3rem;
+    border-radius: 50%;
+    transition: box-shadow 0.3s ease-in-out;
+    &:hover {
+      cursor: pointer;
+      -webkit-box-shadow: 4px 5px 12px -5px rgba(0,0,0,0.75);
+      -moz-box-shadow: 4px 5px 12px -5px rgba(0,0,0,0.75);
+      box-shadow: 4px 5px 12px -5px rgba(0,0,0,0.75);
+    }
   }
 }
+

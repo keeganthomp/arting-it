@@ -71,10 +71,10 @@ class BidPage extends Component {
   }
   
   render () {
-    const { isFetchingArt, artInfo, bidPrice } = this.state
+    const { isFetchingArt, artInfo } = this.state
     // const bidPriceClasses = classnames('bidding-page_bid-input', {
-      'bidding-page_bid-input--default' : !bidPrice || bidPrice === artInfo.price
-    })
+    //   'bidding-page_bid-input--default' : !bidPrice || bidPrice === artInfo.price
+    // })
     return !isFetchingArt && !R.isEmpty(artInfo) && (<div>
       <h1>Bidding Page</h1>
       <p>{artInfo.artist.username} is asking {artInfo.price}</p>

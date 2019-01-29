@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { getArtInfo } from '../../api'
 import * as R from 'ramda'
 // import NumberFormat from 'react-number-format'
-import classnames from 'classnames'
+// import classnames from 'classnames'
 import Button from '@material-ui/core/Button'
 import PubNubReact from 'pubnub-react'
 

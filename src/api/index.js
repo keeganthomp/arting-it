@@ -113,3 +113,7 @@ export const getPlaidAccessToken = (accessToken) => {
     }
   })
 }
+
+export const placeBid = () => {
+  console.log('WEE')
+}

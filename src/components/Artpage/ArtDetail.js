@@ -36,7 +36,7 @@ class ArtDetail extends Component {
           <p>created by : {artist.first_name} {artist.last_name}</p>
           {artist.avatar && <img onClick={() => history.push(`/artist/${artist.username}`)} className='art-detail_artist-avatar' src={artist.avatar} />}
           <p>username: {artist.username}</p>
-          <Button variant='contained' color='primary'>make offer</Button>
+          <Button onClick={() => history.push(`/bid/${artInfo.id}`)} variant='contained' color='primary'>make offer</Button>
         </div>
         <div className='art-detail_back-button-container'>
           <Button className='art-detail_back-button' color='primary' onClick={() => history.push('/art')}>back to art</Button>

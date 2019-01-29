@@ -1,0 +1,22 @@
+.bidding-page{ 
+  &_art-image {
+    max-width: 10rem;
+  }
+  &_bid-input {
+    border: none;
+    border-bottom: 1px solid black;
+    text-align: center;
+    &--default {
+      color: lightgray;
+    }
+    &:focus, &:active {
+      outline: none;
+    }
+  }
+  &_art-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { getArtInfo, placeBid } from '../../api'
+import { getArtInfo } from '../../api'
 import * as R from 'ramda'
-import NumberFormat from 'react-number-format'
+// import NumberFormat from 'react-number-format'
 import classnames from 'classnames'
 import Button from '@material-ui/core/Button'
 import PubNubReact from 'pubnub-react'
@@ -29,7 +29,7 @@ class BidPage extends Component {
     const { artId } = this.state
     this.setState({ isFetchingArt: true })
     getArtInfo(artId, this.saveArtInfo)
-    const messages = this.pubnub.getMessage('art')
+    // const messages = this.pubnub.getMessage('art')
 
     this.pubnub.subscribe({
       channels: ['art'],
@@ -37,7 +37,6 @@ class BidPage extends Component {
       restore: true
     })
     this.pubnub.getMessage('art', (msg) => {
-      var data = localStorage.getItem('username')
       this.last_message = msg.message
     })
     
@@ -73,7 +72,7 @@ class BidPage extends Component {
   
   render () {
     const { isFetchingArt, artInfo, bidPrice } = this.state
-    const bidPriceClasses = classnames('bidding-page_bid-input', {
+    // const bidPriceClasses = classnames('bidding-page_bid-input', {
       'bidding-page_bid-input--default' : !bidPrice || bidPrice === artInfo.price
     })
     return !isFetchingArt && !R.isEmpty(artInfo) && (<div>

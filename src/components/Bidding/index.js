@@ -46,7 +46,7 @@ class BidPage extends Component {
     getArtInfo(artId, this.saveArtInfo)
     this.pubnub.subscribe({
       channels: [artId],
-      withPresence: false,
+      withPresence: true,
       restore: true
     })
   }
@@ -67,13 +67,14 @@ class BidPage extends Component {
             // handle error
             console.log(status)
           } else {
-            console.log('message Published w/ timetoken', response.timetoken)
+            console.log('message published:', response)
           }
         })
       } else {
         alert('Enter value between Starting Bid and 1000000!')
       }
     }
+    this.setState({ bidAmount: '' })
     event.preventDefault()
   }
   handleChange = name => event => {
@@ -83,26 +84,29 @@ class BidPage extends Component {
   }
   
   render () {
-    const { isFetchingArt, artInfo, numberformat, artId, user } = this.state
+    const { isFetchingArt, artInfo, bidAmount, artId, user } = this.state
     return !isFetchingArt && !R.isEmpty(artInfo) && (<div>
       <h1>Bidding Page</h1>
       <p>{artInfo.artist.username} is asking {artInfo.price}</p>
       <div className='bidding-page_art-content'>
-        <FormControl>
-          <img className='bidding-page_art-image' src={artInfo.artImage} />
-          <TextField
-            label='Bid Amount'
-            value={numberformat}
-            onChange={this.handleChange('bidAmount')}
-            id='formatted-numberformat-input'
-            InputProps={{
-              inputComponent: NumberFormatCustom
-            }}
-          />
-        </FormControl>
-        <div className='bidding-page_submit-button-wrapper'>
-          <Button onClick={(e) => this.handleSubmit(e)} variant='contained' color='primary' disabled={this.state.bidAmount === ''}>Place Bid</Button>
-        </div>
+        {/* wrapping in a form to get the submit on enter press easily */}
+        <form>
+          <FormControl>
+            <img className='bidding-page_art-image' src={artInfo.artImage} />
+            <TextField
+              label='Bid Amount'
+              value={bidAmount}
+              onChange={this.handleChange('bidAmount')}
+              id='formatted-numberformat-input'
+              InputProps={{
+                inputComponent: NumberFormatCustom
+              }}
+            />
+            <div className='bidding-page_submit-button-wrapper'>
+              <Button type='submit' onClick={(e) => this.handleSubmit(e)} variant='contained' color='primary' disabled={this.state.bidAmount === ''}>Place Bid</Button>
+            </div>
+          </FormControl>
+        </form>
       </div>
       <BidStream user={user} channelId={artId}/>
     </div>

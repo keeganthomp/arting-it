@@ -20,7 +20,7 @@ class BidStream extends Component {
     this.setState({ fetchingBids: true })
     this.pubnub.subscribe({
       channels: [channelId],
-      withPresence: false,
+      withPresence: true,
       restore: true
     })
     this.pubnub.history(
@@ -32,6 +32,11 @@ class BidStream extends Component {
         this.setState({ fetchingBids: false })
       }
     )
+    this.pubnub.addListener({
+      presence: function(presenceEvent) {
+        console.log('presence event came in: ', presenceEvent)
+      }
+    })
     this.pubnub.getMessage(channelId, (msg) => {
       const bidder = msg.message.split(':')[0].replace(/\s/g, '')
       const bid = msg.message.split(':')[1].replace(/\s/g, '')
@@ -63,7 +68,7 @@ class BidStream extends Component {
     const { user } = this.props
     return(!fetchingBids && <div>
       <h1>Bid Stream</h1>
-      {currentBids.slice(Math.max(currentBids.length - 5, 1)).reverse().map((bid, i) => (<div className={bid.bidder === user.username ? 'bid-stream-bid--own-bid' : 'bid-stream-bid'} key={i}>
+      {currentBids.slice(Math.max(currentBids.length - 5, 0)).reverse().map((bid, i) => (<div className={bid.bidder === user.username ? 'bid-stream-bid--own-bid' : 'bid-stream-bid'} key={i}>
         <p>Bidder: {bid.bidder}</p>
         <p>Bid: {bid.bid}</p>
       </div>))}

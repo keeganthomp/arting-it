@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { getArtInfo } from '../../api'
 import Button from '@material-ui/core/Button'
+import { checkForValidUser } from '../../helpers/auth'
 
 class ArtDetail extends Component {
   constructor(props) {
@@ -11,6 +12,9 @@ class ArtDetail extends Component {
       artInfo: {},
       isFetchingArt: false
     }
+    checkForValidUser({
+      callbackOnFailure: () => this.props.history.push('/login')
+    })
   }
   saveArtInfo = (artInfo) => {
     this.setState({ artInfo: artInfo.artPiece })
@@ -25,8 +29,8 @@ class ArtDetail extends Component {
     const { artInfo, isFetchingArt } = this.state
     const { history } = this.props
     const artist = artInfo.artist
-    return(
-      !isFetchingArt && artist && <div className='art-detail-container'>
+    return(<Fragment>
+      {!isFetchingArt && artist && <div className='art-detail-container'>
         <div className='art-detail_image-wrapper'>
           <img src={artInfo.artImage} alt={artInfo.description} />
         </div>
@@ -41,8 +45,8 @@ class ArtDetail extends Component {
         <div className='art-detail_back-button-container'>
           <Button className='art-detail_back-button' color='primary' onClick={() => history.push('/art')}>back to art</Button>
         </div>
-      </div> || <p>Loading...</p>
-    )
+      </div> || <p>Loading...</p>}
+    </Fragment>)
   }
 }
 

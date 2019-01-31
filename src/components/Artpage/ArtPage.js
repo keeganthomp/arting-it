@@ -26,7 +26,6 @@ class ArtPage extends Component {
       method: 'GET',
       url: `http://${process.env.NODE_ENV === 'production' ? 'tealeel-api.com' : 'localhost:80'}/api/art`
     }).then(axiosResult => {
-      console.log('AXIOS RESULTS:', axiosResult)
       const art = axiosResult.data && axiosResult.data.art
       if (art.length > 0) {
         const parsedArt = art.map(artPiece => JSON.parse(artPiece))
@@ -50,7 +49,10 @@ class ArtPage extends Component {
 
   componentDidMount() {
     this.setState({ isFetchingArt: true })
-    checkForValidUser(this.fetchArt, this.callBackForInValidUser)
+    checkForValidUser({ 
+      callbackOnSuccess: this.fetchArt,
+      callbackOnFailure: this.callBackForInValidUser
+    })
   }
   shouldShowDetailedView = (detailedViewArt) => {
     this.setState({ detailedViewArt })

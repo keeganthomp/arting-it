@@ -13,10 +13,13 @@ export const makeTartApiRequest = ({ method, location, body = {}, callbackOnSucc
       },
       data: body
     }).then(axiosResult => {
-      if (callbackOnSuccess) callbackOnSuccess(axiosResult.data)
-      else resolve(axiosResult)
+      if (callbackOnSuccess) {
+        callbackOnSuccess(axiosResult.data)
+      } else {
+        resolve(axiosResult)
+      }
     }).catch(err => {
-      callbackOnFailure && callbackOnFailure(err)
+      err && callbackOnFailure && callbackOnFailure(err)
       reject(err)
     })
   })
@@ -73,7 +76,7 @@ export const updateArt = (body, id, callbackOnSuccess) => {
   })
 }
 
-export const verifyUser = (token, callbackOnSuccess, callbackOnFailure) => {
+export const verifyUser = ({ token, callbackOnSuccess, callbackOnFailure }) => {
   makeTartApiRequest({
     method: 'POST',
     location: '/api/me/from/token',
@@ -112,8 +115,4 @@ export const getPlaidAccessToken = (accessToken) => {
       accessToken
     }
   })
-}
-
-export const placeBid = () => {
-  console.log('WEE')
 }

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import PubNubReact from 'pubnub-react'
+import PropTypes from 'prop-types'
+import { checkForValidUser } from '../../helpers/auth'
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -16,6 +18,14 @@ export default class Dashboard extends Component {
     this.pubnub.init(this)
   }
   componentDidMount() {
+    checkForValidUser({
+      callbackOnSuccess: this.pubnub.addListener({
+        presence: function(presenceEvent) {
+          console.log('presence event came in: ', presenceEvent)
+        }
+      }), 
+      callbackOnFailure: this.props.history.push('/login')
+    })
     this.pubnub.addListener({
       presence: function(presenceEvent) {
         console.log('presence event came in: ', presenceEvent)
@@ -82,4 +92,8 @@ export default class Dashboard extends Component {
       </div>
     )
   }
+}
+
+Dashboard.propTypes = {
+  history: PropTypes.object
 }

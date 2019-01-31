@@ -19,4 +19,14 @@
     justify-content: center;
     flex-direction: column;
   }
+  &_submit-button-wrapper {
+    margin-top: 1rem;
+  }
+}
+
+.bid-stream-bid {
+  &--own-bid {
+    color: rgb(15, 218, 133);
+    font-weight: bold;
+  }
 }

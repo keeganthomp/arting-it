@@ -2,10 +2,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getArtInfo } from '../../api'
 import * as R from 'ramda'
-// import NumberFormat from 'react-number-format'
 // import classnames from 'classnames'
 import Button from '@material-ui/core/Button'
 import PubNubReact from 'pubnub-react'
+import BidStream from '../Bidding/BidStream'
+import { checkForValidUser } from '../../helpers/auth'
+import TextField from '@material-ui/core/TextField'
+import NumberFormatCustom from '../ui/formattedNumberInput'
+import FormControl from '@material-ui/core/FormControl'
+
 
 class BidPage extends Component {
   constructor(props) {
@@ -13,13 +18,23 @@ class BidPage extends Component {
     this.state = {
       artId: props.match.params.id,
       artInfo: {},
-      isFetchingArt: false
+      isFetchingArt: false,
+      user: {},
+      bidAmount: ''
     }
     this.pubnub = new PubNubReact({
       publishKey: process.env.REACT_APP_PUBNUB_PUBLISH_KEY,
       subscribeKey: process.env.REACT_APP_PUBNUB_SUBSCRIBE_KEY
     })
     this.pubnub.init(this)
+    checkForValidUser({
+      callbackOnSuccess: () => this.setUser(),
+      callbackOnFailure: () => this.props.history.push('/login')
+    })
+  }
+  setUser = () => {
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    this.setState({ user })
   }
   saveArtInfo = (artInfo) => {
     this.setState({ artInfo: artInfo.artPiece })
@@ -29,30 +44,24 @@ class BidPage extends Component {
     const { artId } = this.state
     this.setState({ isFetchingArt: true })
     getArtInfo(artId, this.saveArtInfo)
-    // const messages = this.pubnub.getMessage('art')
-
     this.pubnub.subscribe({
-      channels: ['art'],
+      channels: [artId],
       withPresence: false,
       restore: true
     })
-    this.pubnub.getMessage('art', (msg) => {
-      this.last_message = msg.message
-    })
-    
   }
 
   handleSubmit(event) {
-    var startingBid = 30
-    var data = this.state.biddingName
-    console.log('THIS STAE::', this.state)
-    var message = data +' : '+ this.state.bidAmount
-    if(data != null) {
+    const { user, artId } = this.state
+    // need to find highest bid and use that in place of startingBid placeholder
+    const startingBid = 0
+    const bidder = user.username
+    const message = bidder +' : '+ this.state.bidAmount
+    if(bidder !== null) {
       if(this.state.bidAmount > startingBid && this.state.bidAmount < 1000000) {
-        console.log('EOWOOWEORWEORWEOROWERO')
         this.pubnub.publish({
-          message: message,
-          channel: 'art'
+          message,
+          channel: artId
         }, (status, response) => {
           if (status.error) {
             // handle error
@@ -64,30 +73,38 @@ class BidPage extends Component {
       } else {
         alert('Enter value between Starting Bid and 1000000!')
       }
-    } else {
-      alert('Enter username!')
     }
     event.preventDefault()
   }
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value
+    })
+  }
   
   render () {
-    const { isFetchingArt, artInfo } = this.state
-    // const bidPriceClasses = classnames('bidding-page_bid-input', {
-    //   'bidding-page_bid-input--default' : !bidPrice || bidPrice === artInfo.price
-    // })
+    const { isFetchingArt, artInfo, numberformat, artId, user } = this.state
     return !isFetchingArt && !R.isEmpty(artInfo) && (<div>
       <h1>Bidding Page</h1>
       <p>{artInfo.artist.username} is asking {artInfo.price}</p>
       <div className='bidding-page_art-content'>
-        <img className='bidding-page_art-image' src={artInfo.artImage} />
-        {/* <NumberFormat class={bidPriceClasses} value={this.state.bidPrice || artInfo.price} thousandSeparator={true} prefix={'$'} onValueChange={(values) => {
-          const {formattedValue} = values
-          this.setState({ bidPrice: formattedValue })
-        }}/> */}
-        <input onChange={(e) => this.setState({ biddingName: e.target.value })}type='text' />
-        <input onChange={(e) => this.setState({ bidAmount: e.target.value })} type='number' />
-        <Button onClick={(e) => this.handleSubmit(e)} variant='contained' color='primary'>Enter Bidding</Button>
+        <FormControl>
+          <img className='bidding-page_art-image' src={artInfo.artImage} />
+          <TextField
+            label='Bid Amount'
+            value={numberformat}
+            onChange={this.handleChange('bidAmount')}
+            id='formatted-numberformat-input'
+            InputProps={{
+              inputComponent: NumberFormatCustom
+            }}
+          />
+        </FormControl>
+        <div className='bidding-page_submit-button-wrapper'>
+          <Button onClick={(e) => this.handleSubmit(e)} variant='contained' color='primary' disabled={this.state.bidAmount === ''}>Place Bid</Button>
+        </div>
       </div>
+      <BidStream user={user} channelId={artId}/>
     </div>
     ) || <p>Getting Art shit...</p>
   }
@@ -98,7 +115,8 @@ BidPage.propTypes = {
   push: PropTypes.func,
   art: PropTypes.array,
   isFetchingArt: PropTypes.bool,
-  selectedFilters: PropTypes.array
+  selectedFilters: PropTypes.array,
+  history: PropTypes.object
 }
 
 export default BidPage

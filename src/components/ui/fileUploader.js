@@ -30,7 +30,7 @@ class FileUploader extends Component {
     })
     return(
       <div className='file-uploader_container'>
-        <Dropzone onDrop={this.onDrop} onDropAccepted={this.onDropAccepted} className={`${className ? className : 'file-uploader'}`}>
+        <Dropzone accept='image/jpeg, image/png' onDrop={this.onDrop} onDropAccepted={this.onDropAccepted} className={`${className ? className : 'file-uploader'}`}>
           {children || <div 
             onMouseEnter={() => this.setState({ isHoveringOnDropZone: true })}
             onMouseLeave={() => this.setState({ isHoveringOnDropZone: false })}

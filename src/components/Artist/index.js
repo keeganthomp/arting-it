@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getArtist } from '../../api'
+import { checkForValidUser } from '../../helpers/auth'
 
 class ArtistPage extends Component {
   constructor() {
@@ -9,6 +10,9 @@ class ArtistPage extends Component {
       isFetchingArtist: false,
       artist: {}
     }
+    checkForValidUser({
+      callbackOnFailure: () => this.props.history.push('/login')
+    })
   }
   saveArtistToState = (artist) => {
     this.setState({ 

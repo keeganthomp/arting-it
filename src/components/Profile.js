@@ -31,7 +31,10 @@ class Profile extends Component {
     const { artist } = this.props
     const isUserFromSession = sessionStorage.getItem('user') && sessionStorage.getItem('user') !== 'undefined'
     this.setState({ isCheckingForValidUser: true })
-    checkForValidUser(this.callBackForValidUser, this.callBackForInValidUser)
+    checkForValidUser({
+      callbackOnSuccess: this.callBackForValidUser,
+      callbackOnFailure: this.callBackForInValidUser
+    })
     if (isUserFromSession) {
       this.setState({ artist: JSON.parse(sessionStorage.getItem('user')) })
     } else if (artist) {
@@ -85,6 +88,7 @@ class Profile extends Component {
     this.setState({ isUpdating: true })
     const { artist } = this.state
     this.setState({ file: file })
+    
     const reader = new FileReader()
     reader.readAsDataURL(file[0])
     reader.onload = () => {

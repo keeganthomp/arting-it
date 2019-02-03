@@ -13,10 +13,10 @@ class FlipCard extends Component {
   render () {
     const { className, cardWidth, cardHeight, children } = this.props
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
-    const flipCardMobileClassNames = classnames('flip-card-mobile', {
-      'flip-card-mobile--flipped' : isMobile && this.state.isFlipped
+    const flipCardMobileClassNames = 'flip-card-mobile'
+    const flipCardInnerMobileClassNames = classnames('flip-card-inner-mobile', {
+      'flip-card-inner-mobile--flipped' : isMobile && this.state.isFlipped
     })
-    const flipCardInnerMobileClassNames = 'flip-card-inner-mobile'
     return(
       <div className={isMobile ? flipCardMobileClassNames : 'flip-card'} onClick={() => isMobile && this.setState({ isFlipped: !this.state.isFlipped })} style={{ width: cardWidth, height: cardHeight }}>
         <div className={isMobile ? flipCardInnerMobileClassNames : 'flip-card-inner'}>

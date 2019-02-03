@@ -4,7 +4,6 @@
   height: 300px;
   perspective: 1000px;
   margin: 5px;
-  
 }
 
 .flip-card-inner, .flip-card-inner-mobile {
@@ -17,7 +16,7 @@
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
-.flip-card:hover .flip-card-inner, .flip-card-mobile--flipped .flip-card-inner-mobile {
+.flip-card:hover .flip-card-inner, .flip-card-inner-mobile--flipped {
   transform: rotateY(180deg);
 }
 

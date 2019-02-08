@@ -6,54 +6,14 @@ export const Homepage = () => {
     <div>
       <h1 className='homepage-header'>Teal Eel</h1>
       <div className='homepage-content-container'>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
-        <FlipCard cardHeight='200px' className='homepage-content_image-container'>
-          <img className='homepage-content_image' src='assets/pup.jpeg' />
-        </FlipCard>
+        <FlipCard imageClass='homepage-content_image' imageSource='assets/pup.jpeg' />
+        <FlipCard imageClass='homepage-content_image' imageSource='assets/pup.jpeg' />
+        <FlipCard imageClass='homepage-content_image' imageSource='assets/pup.jpeg' />
+        <FlipCard imageClass='homepage-content_image' imageSource='assets/pup.jpeg' />
+        <FlipCard imageClass='homepage-content_image' imageSource='assets/pup.jpeg' />
+        <FlipCard imageClass='homepage-content_image' imageSource='assets/pup.jpeg' />
+        <FlipCard imageClass='homepage-content_image' imageSource='assets/pup.jpeg' />
+        
       </div>
     </div>
   )

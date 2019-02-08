@@ -1,36 +1,62 @@
 import React, { Component } from 'react'
-import Button from '@material-ui/core/Button'
-import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import ReactCardFlip from 'react-card-flip'
+import Button from '@material-ui/core/Button'
 
 class FlipCard extends Component {
   constructor () {
     super ()
     this.state = {
-      isFlipped: false
+      isFlipped: false,
+      dimensions : {}
     }
   }
-  render () {
-    const { className, cardWidth, cardHeight, children } = this.props
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
-    const flipCardMobileClassNames = 'flip-card-mobile'
-    const flipCardInnerMobileClassNames = classnames('flip-card-inner-mobile', {
-      'flip-card-inner-mobile--flipped' : isMobile && this.state.isFlipped
+
+  componentDidMount() {
+    const { imageClass } = this.props
+    const img = document.getElementsByClassName(imageClass)[0]
+    img && window.addEventListener('resize', this.getImageDimensions({ target: img }))
+  }
+
+  componentWillUnmount() {
+    const { imageClass } = this.props
+    const img = document.getElementsByClassName(imageClass)[0]
+    window.removeEventListener('resize', this.getImageDimensions({ target: img }))
+  }
+
+  handleClick = (e) => {
+    e.preventDefault()
+    this.setState(prevState => ({ isFlipped: !prevState.isFlipped }))
+  }
+
+  getImageDimensions = ({ target: img }) => {
+    this.setState({ 
+      dimensions:{ 
+        height: img.offsetHeight,
+        width: img.offsetWidth
+      }
     })
+  }
+
+
+  render () {
+    const { dimensions, isFlipped } = this.state
+    const { imageClass, imageSource } = this.props
     return(
-      <div className={isMobile ? flipCardMobileClassNames : 'flip-card'} onClick={() => isMobile && this.setState({ isFlipped: !this.state.isFlipped })} style={{ width: cardWidth, height: cardHeight }}>
-        <div className={isMobile ? flipCardInnerMobileClassNames : 'flip-card-inner'}>
-          <div className={`flip-card-front ${className ? className : ''}`}>
-            {children}
+      <div style={{ ...dimensions }} className='flip-card-container'>
+        <ReactCardFlip isFlipped={isFlipped}>
+          <div style={{ ...dimensions }}  className='flip-card-front' onClick={this.handleClick} key='front'>
+            <img
+              className={imageClass}
+              onLoad={this.getImageDimensions}
+              src={imageSource} />
           </div>
-          <div className='flip-card-back'>
-            <div className='flip-card-back_content'>
-              <p>Created by: someone</p> 
-              <p>asking: $55</p> 
-              <Button type='submit' variant='contained' color='primary' >Make Offer</Button>
-            </div>
+          <div style={{ ...dimensions }} className='flip-card-back' onClick={this.handleClick} key='back'>
+            <p>Created By: Tommy</p>
+            <p>Adking: $6.66</p>
+            <Button variant="contained" color="primary" >Make Offer</Button>
           </div>
-        </div>
+        </ReactCardFlip>
       </div>
     )
   }
@@ -38,10 +64,8 @@ class FlipCard extends Component {
 
 FlipCard.propTypes = {
   artInfo: PropTypes.object,
-  className: PropTypes.string,
-  cardWidth: PropTypes.string,
-  cardHeight: PropTypes.string,
-  children: PropTypes.object
+  imageClass: PropTypes.string,
+  imageSource: PropTypes.string
 }
 
 export default FlipCard

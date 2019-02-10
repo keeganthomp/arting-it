@@ -1,17 +1,24 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import PubNubReact from 'pubnub-react'
+import BidTimer from './BidTimer'
 
 class BidStream extends Component {
   constructor() {
     super()
     this.state = {
       currentBids: [],
-      fetchingBids: false
+      fetchingBids: false,
+      highestBid: ''
     }
     this.pubnub = new PubNubReact({
       publishKey: process.env.REACT_APP_PUBNUB_PUBLISH_KEY,
       subscribeKey: process.env.REACT_APP_PUBNUB_SUBSCRIBE_KEY
+    })
+    this.formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
     })
     this.pubnub.init(this)
   }
@@ -59,18 +66,32 @@ class BidStream extends Component {
       return formattedBids.concat(formmattedBid)
     }, [])
     this.setState({ currentBids: parsedBids })
+    this.getHighestBid({ currentBids: parsedBids })
+  }
+  getHighestBid = ({ currentBids }) => {
+    const highestBid = currentBids.reduce((previousBid, currentBid) => {
+      return (Number(currentBid.bid) > Number(previousBid.bid))
+        ? currentBid
+        : previousBid
+    },{
+      bid: '0'
+    })
+    this.setState({ highestBid })
   }
   saveNewBid = (newBid) => {
     this.setState({ currentBids: [...this.state.currentBids, newBid] })
+    this.getHighestBid({ currentBids: this.state.currentBids })
   }
   render () {
-    const { currentBids, fetchingBids } = this.state
+    const { currentBids, fetchingBids, highestBid } = this.state
     const { user } = this.props
     return(!fetchingBids && <div>
+      <BidTimer currentBids={currentBids} />
+      {highestBid && <div>Highest Bidder is {highestBid.bidder} with a bid of {highestBid.bid}</div>}
       <h1>Bid Stream</h1>
       {currentBids.slice(Math.max(currentBids.length - 5, 0)).reverse().map((bid, i) => (<div className={bid.bidder === user.username ? 'bid-stream-bid--own-bid' : 'bid-stream-bid'} key={i}>
         <p>Bidder: {bid.bidder}</p>
-        <p>Bid: {bid.bid}</p>
+        <p>Bid: {this.formatter.format(bid.bid)}</p>
       </div>))}
     </div> || <p>Fetching Bids...</p>)
   }

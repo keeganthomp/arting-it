@@ -10,7 +10,7 @@ import { checkForValidUser } from '../../helpers/auth'
 import TextField from '@material-ui/core/TextField'
 import NumberFormatCustom from '../ui/formattedNumberInput'
 import FormControl from '@material-ui/core/FormControl'
-
+import { getArtistArt } from 'api/index'
 
 class BidPage extends Component {
   constructor(props) {
@@ -20,7 +20,8 @@ class BidPage extends Component {
       artInfo: {},
       isFetchingArt: false,
       user: {},
-      bidAmount: ''
+      bidAmount: '',
+      currentArtistArt: []
     }
     this.pubnub = new PubNubReact({
       publishKey: process.env.REACT_APP_PUBNUB_PUBLISH_KEY,
@@ -32,14 +33,27 @@ class BidPage extends Component {
       callbackOnFailure: () => this.props.history.push('/login')
     })
   }
+
+  saveParsedArt = ({ art }) => {
+    const parsedArt = art.map(artPiece => JSON.parse(artPiece))
+    this.setState({ currentArtistArt: parsedArt })
+  }
+
   setUser = () => {
     const user = JSON.parse(sessionStorage.getItem('user'))
     this.setState({ user })
   }
+
   saveArtInfo = (artInfo) => {
     this.setState({ artInfo: artInfo.artPiece })
     this.setState({ isFetchingArt: false })
+    const userWhoMadeTheArt = artInfo.artPiece.artist.username
+    getArtistArt({
+      username: userWhoMadeTheArt,
+      callbackOnSuccess: data => this.saveParsedArt({ art: data.artistArt })
+    })
   }
+
   componentDidMount() {
     const { artId } = this.state
     this.setState({ isFetchingArt: true })
@@ -103,12 +117,12 @@ class BidPage extends Component {
               }}
             />
             <div className='bidding-page_submit-button-wrapper'>
-              <Button type='submit' onClick={(e) => this.handleSubmit(e)} variant='contained' color='primary' disabled={this.state.bidAmount === ''}>Place Bid</Button>
+              <Button type='submit'onClick={(e) => this.handleSubmit(e)} variant='contained' color='primary' disabled={this.state.bidAmount === ''}>Place Bid</Button>
             </div>
           </FormControl>
         </form>
       </div>
-      <BidStream user={user} channelId={artId}/>
+      {this.state.currentArtistArt.length > 0 && <BidStream currentArtistArt={this.state.currentArtistArt} artInfo={artInfo} user={user} channelId={artId}/>}
     </div>
     ) || <p>Getting Art shit...</p>
   }

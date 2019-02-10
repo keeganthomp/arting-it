@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import PubNubReact from 'pubnub-react'
 import BidTimer from './BidTimer'
+import { updateArt } from 'api/index'
+import moment from 'moment'
 
 class BidStream extends Component {
   constructor() {
@@ -53,8 +55,36 @@ class BidStream extends Component {
       }
       this.saveNewBid(formmattedBid)
     })
-    
+
+    const timeFromServer = moment().unix()
+    const stopTime = moment(timeFromServer).add(1, 'day')
+    const diff = stopTime - timeFromServer
+    const duration = moment.duration(diff, 'milliseconds')
+    const seconds = parseInt(duration.asSeconds())
+    const  format =  Math.floor(moment.duration(seconds,'seconds').asHours()) + ':' + moment.duration(seconds,'seconds').minutes() + ':' + moment.duration(seconds,'seconds').seconds()
+    this.updateArtWithBidTime({ bidTime: '' })
   }
+
+  updateArtWithBidTime = ({ bidTime }) => {
+    const { currentArtistArt, artInfo } = this.props
+    const artForDb = [ ...currentArtistArt ]
+    const artId = this.props.channelId
+    const artistId = artInfo.artist.id
+    const artToUpdate = currentArtistArt.find(element => element.id === artId)
+    const indexOfItemToUpdate = currentArtistArt.indexOf(artToUpdate)
+    const artPieceWithBiddingStartTime = {
+      ...artToUpdate,
+      biddingStartTime: moment().unix()
+    }
+    artForDb[indexOfItemToUpdate] = artPieceWithBiddingStartTime
+    const stringifiedArtForDb = artForDb.map(art => JSON.stringify(art))
+    updateArt(stringifiedArtForDb, artistId, this.saveArtWithBidTime)
+  }
+
+  saveArtWithBidTime = () => {
+    // console.log('WOOOOOOOO ART WITH BID TIME SAVEDDDDDDDDD')
+  }
+
   getBidderAndbid = (message) => {
     const parsedBids = message.reduce((formattedBids, currentBid) => {
       const bidder = currentBid.entry.split(':')[0].replace(/\s/g, '')
@@ -74,7 +104,7 @@ class BidStream extends Component {
         ? currentBid
         : previousBid
     },{
-      bid: '0'
+      bid: ''
     })
     this.setState({ highestBid })
   }
@@ -85,9 +115,10 @@ class BidStream extends Component {
   render () {
     const { currentBids, fetchingBids, highestBid } = this.state
     const { user } = this.props
+    const doesHighestBidExist = highestBid.bid && highestBid.bid !== ''
     return(!fetchingBids && <div>
       <BidTimer currentBids={currentBids} />
-      {highestBid && <div>Highest Bidder is {highestBid.bidder} with a bid of {highestBid.bid}</div>}
+      {doesHighestBidExist && <div>Highest Bidder is {highestBid.bidder} with a bid of ${highestBid.bid}</div>}
       <h1>Bid Stream</h1>
       {currentBids.slice(Math.max(currentBids.length - 5, 0)).reverse().map((bid, i) => (<div className={bid.bidder === user.username ? 'bid-stream-bid--own-bid' : 'bid-stream-bid'} key={i}>
         <p>Bidder: {bid.bidder}</p>
@@ -104,7 +135,9 @@ BidStream.propTypes = {
   isFetchingArt: PropTypes.bool,
   selectedFilters: PropTypes.array,
   channelId: PropTypes.string,
-  user: PropTypes.object
+  user: PropTypes.object,
+  artInfo: PropTypes.object,
+  currentArtistArt: PropTypes.object
 }
 
 export default BidStream

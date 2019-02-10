@@ -53,7 +53,8 @@ class ArtDetail extends Component {
 ArtDetail.propTypes = {
   image: PropTypes.string,
   history: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
+  getArtistArt: PropTypes.func
 }
 
 export default ArtDetail

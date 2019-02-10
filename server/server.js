@@ -14,8 +14,6 @@ const fs = require('fs')
 
 const port = process.env.PORT || 80
 
-console.log('')
-
 const httpsOptions = {
   key: fs.existsSync(__dirname + '/../../privkey.pem') ? fs.readFileSync(__dirname + '/../../privkey.pem') : '',
   cert: fs.existsSync(__dirname + '/../../cert.pem') ? fs.readFileSync(__dirname + '/../../cert.pem') : '',
@@ -74,6 +72,7 @@ app.get('/api/artists', db.getAllArtists)
 app.get('/api/artist/:username', db.getArtist)
 app.get('/api/art', db.getAllArt)
 app.get('/api/art/:id', db.getArtInfo)
+app.get('/api/artist/:username/art', db.getArtistArt)
 
 app.post('/api/artist/signup', db.createArtist)
 app.post('/api/artist/login', db.getArtistLogin)
@@ -84,9 +83,6 @@ app.post('/api/get_access_token', db.getPlaidAccessToken)
 app.patch('/api/artist/:id', db.fileUpload)
 app.patch('/api/update/art/:artistId', db.updateArt)
 
-console.log('HTTPS OPTIONSS 11:', httpsOptions)
-
 http.createServer(app).listen(port)
 https.createServer(httpsOptions, app).listen(443)
-// app.listen(port, () => console.log(`Listening on port ${port}`))
 module.exports = router

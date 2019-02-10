@@ -51,6 +51,14 @@ export const getArtist = (username, callbackOnSuccess) => {
   })
 }
 
+export const getArtistArt = ({ username, callbackOnSuccess }) => {
+  return makeTartApiRequest({
+    method: 'GET',
+    location: `/api/artist/${username}/art`,
+    callbackOnSuccess
+  })
+}
+
 export const updateArtist = (body, id) => {
   makeTartApiRequest({
     method: 'PATCH',

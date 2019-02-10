@@ -191,7 +191,6 @@ const uploadToS3 = (props) => {
   setTimeout(() => {
     s3.createBucket({ Bucket: myBucket }, (err) => {
       // image names cannot have '+' signs in the file name
-      console.log('ERRRORRR:', err)
       const imageToUpload = fs.createReadStream(path.join(__dirname + `/temp/${fileName}`))
       if (err && (err.code !== 'BucketAlreadyOwnedByYou' || err.BucketAlreadyOwnedByYou)) {
         res.status(400).json({
@@ -320,6 +319,25 @@ const getAllArt = (req, res) => {
   })
 }
 
+const getArtistArt = (req, res) => {
+  Artist.findOne({
+    where: {
+      username: req.params.username
+    }
+  }).then(artist => {
+    if (artist) {
+      res.json({
+        status: 200,
+        artistArt: omit(artist.dataValues, ['password']).art
+      })
+    } else {
+      res.status(400).json({
+        error: 'No Artist Found'
+      })
+    }
+  })
+}
+
 const verifyUser = (req, res) => {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token
@@ -354,12 +372,10 @@ const getArtInfo = (req, res) => {
       artPiece: selectedArt
     })
   })
-
 }
 
 const getPlaidAccessToken = (req, res) => {
-  console.log('WOOOOOOO THS IS WHERE::√')
-  console.log('ACCESS TOKEN IS BEING SET ON BACKEND::', req.body)
+  
 }
 
 const logout = (req, res) => {
@@ -378,5 +394,6 @@ module.exports = {
   verifyUser,
   getArtInfo,
   logout,
-  getPlaidAccessToken
+  getPlaidAccessToken,
+  getArtistArt
 }

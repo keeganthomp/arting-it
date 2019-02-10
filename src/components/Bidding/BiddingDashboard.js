@@ -56,9 +56,6 @@ export default class Dashboard extends Component {
       {
         channels: ['art'],
         includeState: true
-      },
-      function(status, response) {
-        console.log('WOOPER:', response)
       }
     )
   }

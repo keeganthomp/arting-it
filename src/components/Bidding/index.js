@@ -11,6 +11,9 @@ import TextField from '@material-ui/core/TextField'
 import NumberFormatCustom from '../ui/formattedNumberInput'
 import FormControl from '@material-ui/core/FormControl'
 import { getArtistArt } from 'api/index'
+import { startBidding } from 'actions/biddingActions'
+import { connect } from 'react-redux'
+import moment from 'moment'
 
 class BidPage extends Component {
   constructor(props) {
@@ -21,7 +24,8 @@ class BidPage extends Component {
       isFetchingArt: false,
       user: {},
       bidAmount: '',
-      currentArtistArt: []
+      currentArtistArt: [],
+      biddingIsOpen: true
     }
     this.pubnub = new PubNubReact({
       publishKey: process.env.REACT_APP_PUBNUB_PUBLISH_KEY,
@@ -32,6 +36,10 @@ class BidPage extends Component {
       callbackOnSuccess: () => this.setUser(),
       callbackOnFailure: () => this.props.history.push('/login')
     })
+  }
+
+  closeBidding = () => {
+    this.setState({ biddingIsOpen: false })
   }
 
   saveParsedArt = ({ art }) => {
@@ -66,6 +74,7 @@ class BidPage extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault()
     const { user, artId } = this.state
     // need to find highest bid and use that in place of startingBid placeholder
     const startingBid = 0
@@ -88,8 +97,11 @@ class BidPage extends Component {
         alert('Enter value between Starting Bid and 1000000!')
       }
     }
+    this.props.startBidding({ payload: {
+      artId,
+      startTime: moment().unix()
+    } })
     this.setState({ bidAmount: '' })
-    event.preventDefault()
   }
   handleChange = name => event => {
     this.setState({
@@ -122,7 +134,12 @@ class BidPage extends Component {
           </FormControl>
         </form>
       </div>
-      {this.state.currentArtistArt.length > 0 && <BidStream currentArtistArt={this.state.currentArtistArt} artInfo={artInfo} user={user} channelId={artId}/>}
+      {this.state.currentArtistArt.length > 0 && <BidStream
+        currentArtistArt={this.state.currentArtistArt}
+        artInfo={artInfo}
+        user={user}
+        channelId={artId}
+      />}
     </div>
     ) || <p>Getting Art shit...</p>
   }
@@ -134,7 +151,12 @@ BidPage.propTypes = {
   art: PropTypes.array,
   isFetchingArt: PropTypes.bool,
   selectedFilters: PropTypes.array,
-  history: PropTypes.object
+  history: PropTypes.object,
+  startBidding: PropTypes.func
 }
 
-export default BidPage
+const mapDispatchToProps = {
+  startBidding
+}
+
+export default connect(null, mapDispatchToProps)(BidPage)

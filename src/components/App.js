@@ -8,7 +8,6 @@ import Homepage from './Home'
 import Signup from './profile/Signup'
 import Login from './profile/Login'
 import BidPage from './Bidding'
-import BiddingDashboard from './Bidding/BiddingDashboard'
 import noRouteFound from './ui/404'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
@@ -24,7 +23,6 @@ class App extends Component {
             <Route exact path='/art' component={ArtPage} />
             <Route exact path='/art/:id' component={ArtDetail} />
             <Route exact path='/bid/:id' component={BidPage} />
-            <Route exact path='/bidding/dash' component={BiddingDashboard} />
             <Route exact path='/artist/:username' component={ArtistPage} />
             <Route exact path='/signup' component={Signup} />
             <Route exact path='/login' component={Login} />

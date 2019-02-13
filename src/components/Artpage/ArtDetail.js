@@ -28,7 +28,7 @@ class ArtDetail extends Component {
   render () {
     const { artInfo, isFetchingArt } = this.state
     const { history } = this.props
-    const artist = artInfo.artist
+    const artist = artInfo && artInfo.artist
     return(<Fragment>
       {!isFetchingArt && artist && <div className='art-detail-container'>
         <div className='art-detail_image-wrapper'>

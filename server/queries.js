@@ -62,7 +62,7 @@ const Artist = sequelize.define('artist', {
     type: Sequelize.STRING
   },
   art: {
-    type: Sequelize.ARRAY(Sequelize.STRING)
+    type: Sequelize.ARRAY(Sequelize.STRING(2000))
   }
 })
 

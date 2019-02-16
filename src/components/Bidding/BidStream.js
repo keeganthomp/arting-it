@@ -142,7 +142,12 @@ class BidStream extends Component {
         closeBid={this.closeBid}
         artInfo={artInfo}
       />
-      {doesHighestBidExist && <div>Highest Bidder is {highestBid.bidder} with a bid of ${highestBid.bid}</div>}
+      {doesHighestBidExist && <div>
+        <p>{`${highestBid.bidder === user.username
+          ? `You are the highest bidder with a bid of $${highestBid.bid}`
+          : `Highest Bidder is ${highestBid.bidder} with a bid of $${highestBid.bid}`
+        }`}</p>
+      </div>}
       <h1>Bid Stream</h1>
       {currentBids.slice(Math.max(currentBids.length - 5, 0)).reverse().map((bid, i) => (<div className={bid.bidder === user.username ? 'bid-stream-bid--own-bid' : 'bid-stream-bid'} key={i}>
         <p>Bidder: {bid.bidder}</p>

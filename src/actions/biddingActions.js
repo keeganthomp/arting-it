@@ -1,5 +1,6 @@
 const CLOSE_BIDDING = 'CLOSE_BIDDING'
 const START_BIDDING = 'START_BIDDING'
+const SET_TIME_TO_CLOSE = 'SET_TIME_TO_CLOSE'
 
 export const closeBidding = ({ payload }) => dispatch => {
   dispatch({
@@ -11,6 +12,13 @@ export const closeBidding = ({ payload }) => dispatch => {
 export const startBidding = ({ payload }) => dispatch => {
   dispatch({
     type: START_BIDDING,
+    payload
+  })
+}
+
+export const setTimeToClose = ({ payload }) => dispatch => {
+  dispatch({
+    type: SET_TIME_TO_CLOSE,
     payload
   })
 }

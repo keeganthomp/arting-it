@@ -25,8 +25,18 @@
 }
 
 .bid-stream-bid {
+  display: flex;
+  justify-content: center;
+  p {
+    margin: 0 .25rem;
+  }
   &--own-bid {
+    display: flex;
+  justify-content: center;
     color: rgb(15, 218, 133);
     font-weight: bold;
+    p {
+      margin: 0 .25rem;
+    }
   }
 }

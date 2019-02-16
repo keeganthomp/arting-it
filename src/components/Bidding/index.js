@@ -155,8 +155,15 @@ BidPage.propTypes = {
   startBidding: PropTypes.func
 }
 
+const mapStateToProps = (state, props) => {
+  const artId = props.match.params.id
+  return {
+    timeLeftToBid: state.bid[artId] && state.bid[artId].timeToClose
+  }
+}
+
 const mapDispatchToProps = {
   startBidding
 }
 
-export default connect(null, mapDispatchToProps)(BidPage)
+export default connect(mapStateToProps, mapDispatchToProps)(BidPage)

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Countdown from 'react-countdown-now'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { closeBidding } from 'actions/biddingActions'
+import { closeBidding, setTimeToClose } from 'actions/biddingActions'
 
 class BidTimer extends Component {
   constructor() {
@@ -19,7 +19,6 @@ class BidTimer extends Component {
     } else {
       // Render a countdown
       return (<div>
-        <button onClick={() => this.handleClosingBid()}>Close bidding</button>
         <p>Time left to bid on this art piece: <span>{hours}:{minutes}:{seconds}</span></p>
       </div>
       )
@@ -33,15 +32,28 @@ class BidTimer extends Component {
   }
 
   render() {
-    const { startTime, bidInfo, isBiddingClosed } = this.props
+    const { startTime, bidInfo, isBiddingClosed, setTimeToClose, artInfo } = this.props
     const shouldBiddingBeClosed = isBiddingClosed || (bidInfo && bidInfo.isBiddingClosed)
     const biddingStartTime = (bidInfo && bidInfo.startTime) || startTime
-    const twentyFourHoursFromBiddingStartTime = biddingStartTime && new Date(biddingStartTime*1000).getTime() + (24 * 60 * 60 * 1000)
+    const twentyFourHoursFromBiddingStartTime = biddingStartTime && new Date(biddingStartTime*1000).getTime() + (60 * 1000)
     return (biddingStartTime && !shouldBiddingBeClosed
       ? <div>
         <Countdown
           renderer={this.renderTimer}
           date={twentyFourHoursFromBiddingStartTime}
+          onTick={timeToClose => {
+            if (timeToClose.total === 0) {
+              this.handleClosingBid()
+            } else {
+              setTimeToClose({ 
+                payload: { 
+                  artId: artInfo.id,
+                  timeToClose: timeToClose.total
+                } 
+              })
+            }
+          }
+          }
         />
       </div>
       : shouldBiddingBeClosed
@@ -57,7 +69,9 @@ BidTimer.propTypes = {
   artId: PropTypes.string,
   bidInfo: PropTypes.object,
   isBiddingClosed: PropTypes.number,
-  closeBid: PropTypes.func
+  closeBid: PropTypes.func,
+  setTimeToClose: PropTypes.func,
+  artInfo: PropTypes.object
 }
 
 const mapStateToProps = (state, props) => {
@@ -67,7 +81,8 @@ const mapStateToProps = (state, props) => {
 }
 
 const mapDispatchToProps = {
-  closeBidding
+  closeBidding,
+  setTimeToClose
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BidTimer)

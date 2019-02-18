@@ -28,6 +28,7 @@ class BidTimer extends Component {
 
   handleClosingBid = () => {
     const { closeBid, closeBidding, artId, highestBidderProfile } = this.props
+    console.log('CLOSINGGG:')
     const winnersPhoneNumber = highestBidderProfile.phone
     closeBid()
     closeBidding({ payload: artId })
@@ -41,7 +42,7 @@ class BidTimer extends Component {
     const { startTime, bidInfo, isBiddingClosed, setTimeToClose, artInfo } = this.props
     const shouldBiddingBeClosed = isBiddingClosed || (bidInfo && bidInfo.isBiddingClosed)
     const biddingStartTime = (bidInfo && bidInfo.startTime) || startTime
-    const twentyFourHoursFromBiddingStartTime = biddingStartTime && new Date(biddingStartTime*1000).getTime() + (1000 * 1000)
+    const twentyFourHoursFromBiddingStartTime = biddingStartTime && new Date(biddingStartTime*1000).getTime() + (10 * 1000)
     return (biddingStartTime && !shouldBiddingBeClosed
       ? <div>
         <Countdown

@@ -131,6 +131,7 @@ export const getPlaidAccessToken = (accessToken) => {
 }
 
 export const sendTextMessage = ({ phoneNumber, message }) => {
+  console.log('SENDING TEXT::')
   makeTartApiRequest({
     method: 'POST',
     location: '/api/message',

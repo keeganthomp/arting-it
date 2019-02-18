@@ -28,7 +28,6 @@ class BidTimer extends Component {
 
   handleClosingBid = () => {
     const { closeBid, closeBidding, artId, highestBidderProfile } = this.props
-    console.log('CLOSINGGG:')
     const winnersPhoneNumber = highestBidderProfile.phone
     closeBid()
     closeBidding({ payload: artId })

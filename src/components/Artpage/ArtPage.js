@@ -1,12 +1,12 @@
 import axios from 'axios'
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import ArtGrid from './ArtGrid'
-import ArtpageLeftColumn from './ArtpageLeftColumn'
+import ArtPageFilters from './ArtPageFilters'
 import ArtDetail from './ArtDetail'
 import PropTypes from 'prop-types'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { checkForValidUser } from '../../helpers/auth'
-
+import {checkForValidUser} from '../../helpers/auth'
+import Accordian from 'components/ui/Accordian'
 
 class ArtPage extends Component {
   constructor() {
@@ -24,75 +24,81 @@ class ArtPage extends Component {
   fetchArt = () => {
     axios({
       method: 'GET',
-      url: `http://${process.env.NODE_ENV === 'production' ? 'tealeel-api.com' : 'localhost:80'}/api/art`
+      url: `http://${process.env.NODE_ENV === 'production'
+        ? 'tealeel-api.com'
+        : 'localhost:80'}/api/art`
     }).then(axiosResult => {
       const art = axiosResult.data && axiosResult.data.art
       if (art.length > 0) {
         const parsedArt = art.map(artPiece => JSON.parse(artPiece))
         const artTypes = parsedArt.map(art => art.type)
         const filtersAvailable = artTypes.filter((item, index) => artTypes.indexOf(item) >= index)
-        this.setState({ 
-          art: parsedArt,
-          filtersAvailable
-        })
+        this.setState({art: parsedArt, filtersAvailable})
       }
-      this.setState({ isFetchingArt: false })
+      this.setState({isFetchingArt: false})
     }).catch(err => {
-      this.setState({ isFetchingArt: false })
+      this.setState({isFetchingArt: false})
       console.log('Error fetching art:', err)
     })
   }
 
   callBackForInValidUser = () => {
-    this.props.history.push('login')
+    this
+      .props
+      .history
+      .push('login')
   }
 
   componentDidMount() {
-    this.setState({ isFetchingArt: true })
-    checkForValidUser({ 
-      callbackOnSuccess: this.fetchArt,
-      callbackOnFailure: this.callBackForInValidUser
-    })
+    this.setState({isFetchingArt: true})
+    checkForValidUser({callbackOnSuccess: this.fetchArt, callbackOnFailure: this.callBackForInValidUser})
   }
   shouldShowDetailedView = (detailedViewArt) => {
-    this.setState({ detailedViewArt })
+    this.setState({detailedViewArt})
   }
   updatesSelectedFilters = (filterToAdd) => {
-    const { selectedFilters } = this.state
+    const {selectedFilters} = this.state
     const isAlreadySelected = selectedFilters.includes(filterToAdd)
     if (!isAlreadySelected) {
-      this.setState({ selectedFilters: [...selectedFilters, filterToAdd] })
+      this.setState({
+        selectedFilters: [
+          ...selectedFilters,
+          filterToAdd
+        ]
+      })
     } else {
       const filterToDeselect = selectedFilters.filter(filter => filterToAdd !== filter)
-      this.setState({ selectedFilters: filterToDeselect })
+      this.setState({selectedFilters: filterToDeselect})
     }
   }
-  render () {
-    const { art, isFetchingArt, filtersAvailable, selectedFilters } = this.state
+  render() {
+    const {art, isFetchingArt, filtersAvailable, selectedFilters} = this.state
     return !isFetchingArt && (
       <div className='artpage-container'>
-        {this.state.detailedViewArt && <ArtDetail shouldShowDetailedView={this.shouldShowDetailedView} image={this.state.detailedViewArt} />}
-        {!this.state.detailedViewArt && <div className='row no-gutters'>
-          <div className='col-sm-12 col-lg-4'>
-            <ArtpageLeftColumn
-              filters={filtersAvailable}
-              isFetchingArt={isFetchingArt}
-              updatesSelectedFilters={this.updatesSelectedFilters}
-              selectedFilters={selectedFilters}
-            />
+        {this.state.detailedViewArt && <ArtDetail
+          shouldShowDetailedView={this.shouldShowDetailedView}
+          image={this.state.detailedViewArt}/>}
+        {!this.state.detailedViewArt && <div>
+          <div className='artpage_filter-wrapper'>
+            <Accordian>
+              <ArtPageFilters
+                filters={filtersAvailable}
+                isFetchingArt={isFetchingArt}
+                updatesSelectedFilters={this.updatesSelectedFilters}
+                selectedFilters={selectedFilters}/>
+            </Accordian>
           </div>
-          <div className='col-sm-12 col-lg-8'>
-            <ArtGrid 
+          <div className='artpage_art-container'>
+            <ArtGrid
               push={this.props.history.push}
               shouldShowDetailedView={this.shouldShowDetailedView}
-              art={art} 
+              art={art}
               isFetchingArt={isFetchingArt}
-              selectedFilters={selectedFilters}
-            />
+              selectedFilters={selectedFilters}/>
           </div>
         </div>}
       </div>
-    ) || <CircularProgress />
+    ) || <CircularProgress/>
   }
 }
 

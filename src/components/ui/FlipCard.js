@@ -41,7 +41,7 @@ class FlipCard extends Component {
 
   render () {
     const { dimensions, isFlipped } = this.state
-    const { imageClass, imageSource } = this.props
+    const { imageClass, artPiece, push } = this.props
     return(
       <div style={{ ...dimensions }} className='flip-card-container'>
         <ReactCardFlip isFlipped={isFlipped}>
@@ -49,12 +49,12 @@ class FlipCard extends Component {
             <img
               className={imageClass}
               onLoad={this.getImageDimensions}
-              src={imageSource} />
+              src={artPiece.artImage} />
           </div>
           <div style={{ ...dimensions }} className='flip-card-back' onClick={this.handleClick} key='back'>
             <p>Created By: Tommy</p>
             <p>Adking: $6.66</p>
-            <Button variant="contained" color="primary" >Make Offer</Button>
+            <Button onClick={() => push(`/bid/${artPiece.id}`)} variant="contained" color="primary" >Make Offer</Button>
           </div>
         </ReactCardFlip>
       </div>
@@ -65,7 +65,8 @@ class FlipCard extends Component {
 FlipCard.propTypes = {
   artInfo: PropTypes.object,
   imageClass: PropTypes.string,
-  imageSource: PropTypes.string
+  artPiece: PropTypes.object,
+  push: PropTypes.func
 }
 
 export default FlipCard

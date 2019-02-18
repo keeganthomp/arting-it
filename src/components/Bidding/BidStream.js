@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import PubNubReact from 'pubnub-react'
 import BidTimer from './BidTimer'
-import { updateArt } from 'api/index'
+import { updateArt, getArtist } from 'api'
 import { startBidding } from 'actions/biddingActions'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -123,6 +123,10 @@ class BidStream extends Component {
       bid: ''
     })
     this.setState({ highestBid })
+    highestBid && getArtist(highestBid.bidder, (data) => {
+      const highestBidder = data.artist
+      this.setState({ highestBidderProfile: highestBidder })
+    })
   }
   saveNewBid = (newBid) => {
     this.setState({ currentBids: [...this.state.currentBids, newBid] })
@@ -130,7 +134,7 @@ class BidStream extends Component {
     !(this.props.artInfo && this.props.artInfo.biddingStartTime) && this.updateArtBidInfo({ isClosingBidding: false })
   }
   render () {
-    const { currentBids, fetchingBids, highestBid } = this.state
+    const { currentBids, fetchingBids, highestBid, highestBidderProfile } = this.state
     const { user, artInfo } = this.props
     const doesHighestBidExist = highestBid.bid && highestBid.bid !== ''
     return(!fetchingBids && <div>
@@ -141,6 +145,7 @@ class BidStream extends Component {
         artId={artInfo.id}
         closeBid={this.closeBid}
         artInfo={artInfo}
+        highestBidderProfile={highestBidderProfile}
       />
       {doesHighestBidExist && <div>
         <p>{`${highestBid.bidder === user.username

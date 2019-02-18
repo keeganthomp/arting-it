@@ -4,6 +4,9 @@ const omit = require('lodash/omit')
 const Sequelize = require('sequelize')
 const path = require('path')
 const jwt = require('jsonwebtoken')
+const accountSid = process.env.REACT_APP_TWILIO_SID
+const authToken = process.env.REACT_APP_TWILIO_AUTH_TOKEN
+const twilioClient = require('twilio')(accountSid, authToken)
 
 const sequelize = new Sequelize('tart', 'keegan', 'hu8jmn3', {
   host: 'localhost',
@@ -41,13 +44,17 @@ const Artist = sequelize.define('artist', {
     type: Sequelize.STRING,
     allowNull: false
   },
+  phone: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
   first_name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   last_name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   specialty: {
     type: Sequelize.STRING
@@ -234,7 +241,7 @@ const uploadToS3 = (props) => {
                 id: uuidv1(),
                 price: '$6.66',
                 description: 'Some description about the art',
-                artImage: `https://s3.amazonaws.com/${bucket}/${data.key}`,
+                artImage: `https://s3.amazonaws.com/${bucket}/${data.key || data.Key}`,
                 type: 'painting'
               })
               Artist.update(
@@ -258,6 +265,8 @@ const uploadToS3 = (props) => {
           }
         })
       }
+    }).on('httpUploadProgress', progress => {
+      console.log(progress.loaded + " of " + progress.total + " bytes")
     })
   },2000)
 }
@@ -382,6 +391,16 @@ const logout = (req, res) => {
   req.session.destroy()
 }
 
+const sendText = (req, res) => {
+  const { phoneNumber, message } = req.body
+  twilioClient.messages
+    .create({
+      body: message,
+      from: '+16152056956',
+      to: `+${phoneNumber}`
+    }).then(message => console.log('MESSAGE SENTTTTT:', message))
+}
+
 module.exports = {
   getAllArtists,
   createArtist,
@@ -395,5 +414,6 @@ module.exports = {
   getArtInfo,
   logout,
   getPlaidAccessToken,
-  getArtistArt
+  getArtistArt,
+  sendText
 }

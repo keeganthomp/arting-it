@@ -11,7 +11,12 @@ export const makeTartApiRequest = ({ method, location, body = {}, callbackOnSucc
         'Content-Type': 'application/json',
         'Authorization' : `Bearer ${token}`
       },
-      data: body
+      data: body,
+      onUploadProgress: progressEvent => {
+        if (progressEvent.lengthComputable) {
+          console.log(progressEvent.loaded + ' ' + progressEvent.total)
+        }
+      }
     }).then(axiosResult => {
       if (callbackOnSuccess) {
         callbackOnSuccess(axiosResult.data)
@@ -121,6 +126,17 @@ export const getPlaidAccessToken = (accessToken) => {
     location: '/api/get_access_token',
     body: {
       accessToken
+    }
+  })
+}
+
+export const sendTextMessage = ({ phoneNumber, message }) => {
+  makeTartApiRequest({
+    method: 'POST',
+    location: '/api/message',
+    body: {
+      phoneNumber,
+      message
     }
   })
 }

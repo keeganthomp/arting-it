@@ -71,6 +71,17 @@
       top: .25rem;
     }
   }
+  &_loader {
+    margin: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+  &_file-upload-wrapper {
+    height: 11rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .profile-header {

@@ -134,7 +134,7 @@ class BidPage extends Component {
           </FormControl>
         </form>
       </div>
-      {this.state.currentArtistArt.length > 0 && <BidStream
+      {<BidStream
         currentArtistArt={this.state.currentArtistArt}
         artInfo={artInfo}
         user={user}

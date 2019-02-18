@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import { checkForValidUser } from '../helpers/auth'
 import classnames from 'classnames'
 import PlaidLink from 'react-plaid-link'
+import Spinner from 'react-spinkit'
 
 class Profile extends Component {
   constructor() {
@@ -127,7 +128,10 @@ class Profile extends Component {
         <h3 className='profile-header'>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
         <div className='profile-main-content'>
           {this.state.source && <img src={this.state.source} alt='' />}
-          {!isUpdatingAvatar && <FileUploader noPreview className='profile_avatar' onDrop={this.saveAvatar}>
+          {!isUpdatingAvatar && <FileUploader
+            noPreview
+            className='profile_avatar'
+            onDrop={this.saveAvatar}>
             <div
               className='profile_avatar-image-container'
               onMouseEnter={() => this.setState({ isAvatarOverlayActive: true })}
@@ -147,16 +151,24 @@ class Profile extends Component {
             env='sandbox'
             product={['auth', 'transactions']}
             publicKey={plaidDevSecret}
+            className='weee'
             onSuccess={token => this.savePlaidTokenToLocalStorage(token)}>
-            Open Link and connect your bank!
+            <span><i className='fas fa-dollar-sign' />Click Here to link your bank account</span>
           </PlaidLink> || <p>Your bank account has been linked. Feel free to begin bidding on art.</p>}
-          {!isUpdating && <FileUploader className='profile_art-upload-zone' onDrop={this.updateArtPortfolio} isLoading={isUpdating}/> || <Fragment>
-            <CircularProgress />
-            <p>Adding Art</p>
-          </Fragment>}
+          <div className='profile_file-upload-wrapper'>
+            {!isUpdating && <FileUploader
+              className='profile_art-upload-zone'
+              onDrop={this.updateArtPortfolio}
+              isLoading={isUpdating}
+            /> || <Fragment>
+              <div className='profile_loader'>
+                <Spinner name="ball-triangle-path" fadeIn='none' />
+              </div>
+            </Fragment>}
+          </div>
           <p>{isUpdating ? '' : artist.art.length > 0 ? 'Below are your current pieces for sale:' : 'It looks like you have not uploaded any art yet.'}</p>
           {artist && <div className='profile_available-art-container'>
-            {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.map(artPiece => {
+            {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.reverse().map(artPiece => {
               const parsedArt = JSON.parse(artPiece)
               return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
             })}

@@ -3,6 +3,7 @@ import Countdown from 'react-countdown-now'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { closeBidding, setTimeToClose } from 'actions/biddingActions'
+import { sendTextMessage } from 'api/index'
 
 class BidTimer extends Component {
   constructor() {
@@ -26,34 +27,36 @@ class BidTimer extends Component {
   }
 
   handleClosingBid = () => {
-    const { closeBid, closeBidding, artId } = this.props
+    const { closeBid, closeBidding, artId, highestBidderProfile } = this.props
+    const winnersPhoneNumber = highestBidderProfile.phone
     closeBid()
     closeBidding({ payload: artId })
+    sendTextMessage({ 
+      phoneNumber: winnersPhoneNumber,
+      message: `WOO ${highestBidderProfile.username}, YOU FREAKING WON THE ART PIECE!`
+    })
   }
 
   render() {
     const { startTime, bidInfo, isBiddingClosed, setTimeToClose, artInfo } = this.props
     const shouldBiddingBeClosed = isBiddingClosed || (bidInfo && bidInfo.isBiddingClosed)
     const biddingStartTime = (bidInfo && bidInfo.startTime) || startTime
-    const twentyFourHoursFromBiddingStartTime = biddingStartTime && new Date(biddingStartTime*1000).getTime() + (60 * 1000)
+    const twentyFourHoursFromBiddingStartTime = biddingStartTime && new Date(biddingStartTime*1000).getTime() + (1000 * 1000)
     return (biddingStartTime && !shouldBiddingBeClosed
       ? <div>
         <Countdown
           renderer={this.renderTimer}
           date={twentyFourHoursFromBiddingStartTime}
           onTick={timeToClose => {
-            if (timeToClose.total === 0) {
-              this.handleClosingBid()
-            } else {
-              setTimeToClose({ 
-                payload: { 
-                  artId: artInfo.id,
-                  timeToClose: timeToClose.total
-                } 
-              })
-            }
+            setTimeToClose({ 
+              payload: { 
+                artId: artInfo.id,
+                timeToClose: timeToClose.total
+              } 
+            })
           }
           }
+          onComplete={() => this.handleClosingBid()}
         />
       </div>
       : shouldBiddingBeClosed
@@ -71,7 +74,8 @@ BidTimer.propTypes = {
   isBiddingClosed: PropTypes.number,
   closeBid: PropTypes.func,
   setTimeToClose: PropTypes.func,
-  artInfo: PropTypes.object
+  artInfo: PropTypes.object,
+  highestBidderProfile: PropTypes.object
 }
 
 const mapStateToProps = (state, props) => {

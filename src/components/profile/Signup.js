@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import { createArtist } from '../../api'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
+import 'react-phone-number-input/style.css'
 
 class Signup extends Component {
   createArtist = data => {
@@ -23,8 +24,9 @@ class Signup extends Component {
           Yup.object().shape({
             username: Yup.string().min(5).required('Username is required'),
             password: Yup.string().min(5).required('Password is required'),
-            first_name: Yup.string().required('First Name is required'),
-            last_name: Yup.string().required('Last Name is required')
+            phone: Yup.string().required('Phone number is required')
+            // first_name: Yup.string().required('First Name is required'),
+            // last_name: Yup.string().required('Last Name is required')
           })
         }
         onSubmit={(values) => this.createArtist(values)}
@@ -61,6 +63,17 @@ class Signup extends Component {
             </div>
             <div className='col-12'>
               <TextField
+                error={errors.phone && true}
+                label='Phone'
+                type='phone'
+                name='phone'
+                value={values.phone}
+                onChange={handleChange}
+              />
+              {errors.phone && <div className='signup-form_error'>{errors.phone}</div>}
+            </div>
+            {/* <div className='col-12'>
+              <TextField
                 label='First Name'
                 type='text'
                 name='first_name'
@@ -78,7 +91,7 @@ class Signup extends Component {
                 onChange={handleChange}
               />
               {errors.last_name && <div className='signup-form_error'>{errors.last_name}</div>}
-            </div>
+            </div> */}
             <div className='col-12'>
               <FormControl>
                 <InputLabel shrink htmlFor='sex-input-signup'>

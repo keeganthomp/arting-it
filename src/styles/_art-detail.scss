@@ -2,10 +2,17 @@
   display: flex;
   flex-direction: column;
   margin-top: 1.5rem;
+  p {
+    margin-bottom: 0;
+  }
 }
 
 .art-detail-content {
   font-weight: 100;
+  margin: .5rem 0;
+  button {
+    margin-top: .75rem;
+  }
 }
 
 .art-detail {

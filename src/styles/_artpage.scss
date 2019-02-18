@@ -1,7 +1,19 @@
 .artpage {
-  &_left-column {
+  &_filter-wrapper {
+    background: whitesmoke;
+  }
+  &_filter-container {
     display: flex;
-    flex-direction: column;
-    align-items: self-start
+    align-items: center;
+    justify-content: center;
+  }
+
+  &_art-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    @media only screen and (max-width: 715px) {
+      margin: 0 10px;
+    }
   }
 }

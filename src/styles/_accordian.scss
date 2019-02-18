@@ -1,0 +1,25 @@
+.accordian-content {
+  transition: height .5s;
+  height: 0;
+  overflow: hidden;
+  &--open {
+    height: 3rem;
+  }
+}
+
+.accordian-header-wrapper {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.accordian-arrow-icon {
+  font-size: 1.75rem;
+  transition: transform .5s;
+  &--open {
+    transform: rotate(180deg);
+  }
+}

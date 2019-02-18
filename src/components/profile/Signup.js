@@ -10,7 +10,6 @@ import * as Yup from 'yup'
 import { createArtist } from '../../api'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
-import 'react-phone-number-input/style.css'
 
 class Signup extends Component {
   createArtist = data => {

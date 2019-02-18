@@ -6,7 +6,7 @@ import ArtDetail from './ArtDetail'
 import PropTypes from 'prop-types'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import {checkForValidUser} from '../../helpers/auth'
-import Accordian from 'components/ui/Accordian'
+import Accordian from '../ui/Accordian'
 
 class ArtPage extends Component {
   constructor() {

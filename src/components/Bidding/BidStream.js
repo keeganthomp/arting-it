@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import PubNubReact from 'pubnub-react'
 import BidTimer from './BidTimer'
-import { updateArt, getArtist } from 'api'
-import { startBidding } from 'actions/biddingActions'
+import { updateArt, getArtist, scheduleTextMessage } from 'api'
+import { startBidding, setHighestBidder } from 'actions/biddingActions'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
@@ -122,11 +122,26 @@ class BidStream extends Component {
     },{
       bid: ''
     })
-    this.setState({ highestBid })
-    highestBid && getArtist(highestBid.bidder, (data) => {
-      const highestBidder = data.artist
-      this.setState({ highestBidderProfile: highestBidder })
-    })
+    if (this.state.highestBid !== highestBid) {
+      this.setState({ highestBid })
+      if (highestBid) {
+        highestBid.bidder && getArtist(highestBid.bidder, (data) => {
+          const highestBidder = data.artist
+          this.setState({ highestBidderProfile: highestBidder })
+          this.props.setHighestBidder({
+            payload: {
+              highestBidder,
+              artId: this.props.artInfo.id
+            }
+          })
+          this.props.bidInfo && scheduleTextMessage({
+            phoneNumber: highestBidder.phone,
+            message: `WOOOO ${highestBidder.username}!! You freaking won the art auction. Please go to https://www.tealeel.com/ to finalize the purchase.`,
+            time: this.props.bidInfo.startTime
+          })
+        })
+      }
+    }
   }
   saveNewBid = (newBid) => {
     this.setState({ currentBids: [...this.state.currentBids, newBid] })
@@ -172,11 +187,20 @@ BidStream.propTypes = {
   user: PropTypes.object,
   artInfo: PropTypes.object,
   currentArtistArt: PropTypes.array,
-  startBidding: PropTypes.func
+  startBidding: PropTypes.func,
+  setHighestBidder: PropTypes.func,
+  bidInfo: PropTypes.object
+}
+
+const mapStateToProps = (state, props) => {
+  return {
+    bidInfo: state.bid[props.artInfo.id]
+  }
 }
 
 const mapDispatchToProps = {
-  startBidding
+  startBidding,
+  setHighestBidder
 }
 
-export default connect(null, mapDispatchToProps)(BidStream)
+export default connect(mapStateToProps, mapDispatchToProps)(BidStream)

@@ -4,6 +4,7 @@ const omit = require('lodash/omit')
 const Sequelize = require('sequelize')
 const path = require('path')
 const jwt = require('jsonwebtoken')
+const schedule = require('node-schedule')
 const accountSid = process.env.REACT_APP_TWILIO_SID
 const authToken = process.env.REACT_APP_TWILIO_AUTH_TOKEN
 const twilioClient = require('twilio')(accountSid, authToken)
@@ -391,14 +392,18 @@ const logout = (req, res) => {
   req.session.destroy()
 }
 
-const sendText = (req, res) => {
-  const { phoneNumber, message } = req.body
-  twilioClient.messages
-    .create({
-      body: message,
-      from: '+16152056956',
-      to: `+${phoneNumber}`
-    }).then(message => console.log('MESSAGE SENTTTTT:', message))
+const scheduleText = (req, res) => {
+  const { phoneNumber, message, time } = req.body
+  const sendTextMessage = () => {
+    twilioClient.messages
+      .create({
+        body: message,
+        from: '+16152056956',
+        to: `+${phoneNumber}`
+      }).then(message => console.log('MESSAGE SENTTTTT:', message))
+  }
+  const biddengEndTime = new Date(time*1000).getTime() + (100 * 1000)
+  schedule.scheduleJob(biddengEndTime, () => sendTextMessage())
 }
 
 module.exports = {
@@ -415,5 +420,5 @@ module.exports = {
   logout,
   getPlaidAccessToken,
   getArtistArt,
-  sendText
+  scheduleText
 }

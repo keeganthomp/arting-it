@@ -3,7 +3,6 @@ import Countdown from 'react-countdown-now'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { closeBidding, setTimeToClose } from 'actions/biddingActions'
-import { sendTextMessage } from 'api/index'
 
 class BidTimer extends Component {
   constructor() {
@@ -27,21 +26,16 @@ class BidTimer extends Component {
   }
 
   handleClosingBid = () => {
-    const { closeBid, closeBidding, artId, highestBidderProfile } = this.props
-    const winnersPhoneNumber = highestBidderProfile.phone
+    const { closeBid, closeBidding, artId } = this.props
     closeBid()
     closeBidding({ payload: artId })
-    sendTextMessage({ 
-      phoneNumber: winnersPhoneNumber,
-      message: `WOO ${highestBidderProfile.username}, YOU FREAKING WON THE ART PIECE!`
-    })
   }
 
   render() {
     const { startTime, bidInfo, isBiddingClosed, setTimeToClose, artInfo } = this.props
     const shouldBiddingBeClosed = isBiddingClosed || (bidInfo && bidInfo.isBiddingClosed)
     const biddingStartTime = (bidInfo && bidInfo.startTime) || startTime
-    const twentyFourHoursFromBiddingStartTime = biddingStartTime && new Date(biddingStartTime*1000).getTime() + (10 * 1000)
+    const twentyFourHoursFromBiddingStartTime = biddingStartTime && new Date(biddingStartTime*1000).getTime() + (100 * 1000)
     return (biddingStartTime && !shouldBiddingBeClosed
       ? <div>
         <Countdown

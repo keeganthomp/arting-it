@@ -79,7 +79,7 @@ app.post('/api/artist/login', db.getArtistLogin)
 app.post('/api/me/from/token', db.verifyUser)
 app.post('/api/logout', db.logout)
 app.post('/api/get_access_token', db.getPlaidAccessToken)
-app.post('/api/message', db.sendText)
+app.post('/api/schedule/message', db.scheduleText)
 
 app.patch('/api/artist/:id', db.fileUpload)
 app.patch('/api/update/art/:artistId', db.updateArt)

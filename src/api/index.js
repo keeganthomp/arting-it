@@ -130,14 +130,15 @@ export const getPlaidAccessToken = (accessToken) => {
   })
 }
 
-export const sendTextMessage = ({ phoneNumber, message }) => {
+export const scheduleTextMessage = ({ phoneNumber, message, time }) => {
   console.log('SENDING TEXT::')
   makeTartApiRequest({
     method: 'POST',
-    location: '/api/message',
+    location: '/api/schedule/message',
     body: {
       phoneNumber,
-      message
+      message,
+      time
     }
   })
 }

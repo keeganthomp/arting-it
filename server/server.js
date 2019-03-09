@@ -2,33 +2,42 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const cors = require('cors')
-// const path = require('path')
-
 const router = express.Router()
 const app = express()
 const https = require('https')
 const http = require('http')
-const db = require('./queries')
 const jwt = require('jsonwebtoken')
-const fs = require('fs')
+
+const artistQueries = require('./queries/artistQueries')
+const artQueries = require('./queries/artQueries')
+const { fileUpload } = require('./helpers/upload')
+const validation = require('./helpers/validation')
+const { grabStripeToken } = require('./helpers/stripe')
+const { scheduleTextMessage } = require('./helpers/smsScheduler')
+const { httpsOptions } = require('./helpers/utils')
+
+// importing db models
+const { Art } = require('./models/Art')
+const { Artist } = require('./models/Artist')
 
 const port = process.env.PORT || 80
 
-const httpsOptions = {
-  key: fs.existsSync(__dirname + '/../../privkey.pem') ? fs.readFileSync(__dirname + '/../../privkey.pem') : '',
-  cert: fs.existsSync(__dirname + '/../../cert.pem') ? fs.readFileSync(__dirname + '/../../cert.pem') : '',
-  ca: fs.existsSync(__dirname + '/../../chain.pem.pem') ? fs.readFileSync(__dirname + '/../../chain.pem.pem') : ''
-}
+// adding model associations and syncing DB tables
+Art.belongsTo(Artist, {
+  as: 'artist',
+  foreignKey: 'artistId'
+})
+Artist.sync({ force: true }).then(() => 'Artists Table Ready')
+Art.sync({ force: true }).then(() => 'Art Table Ready')
 
+// requiring token to make any API call
 app.use((req, res, next) => {
   const isSignupRoute = req.path === '/api/artist/signup'
   const isLoginRoute = req.path ==='/api/artist/login'
   // check header or url parameters or post parameters for token
   let token = req.headers['authorization']
   if (!token) return next() //if no token, continue
-
   token = token.replace('Bearer ', '')
-
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err && !isSignupRoute && !isLoginRoute) {
       return res.status(401).json({
@@ -36,7 +45,8 @@ app.use((req, res, next) => {
         message: 'Please register Log in using a valid email to submit posts'
       })
     } else {
-      req.user = user //set the user to req so other routes can use it
+      //set the user to req so other routes can use it
+      req.user = user 
       next()
     }
   })
@@ -51,6 +61,7 @@ app.use(session({
     expires: 600000
   }
 }))
+
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
@@ -58,32 +69,24 @@ app.use(express.static(__dirname + '/public'))
 app.use( express.static( `${__dirname}/../build` ))
 app.use(express.static(__dirname, { dotfiles: 'allow' } ))
 
-// app.get('/*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../build/index.html'), (err) => {
-//     if (err) {
-//       res.status(500).send(err)
-//     }
-//   })
-// })
-// app.get('*', function (request, response){
-//   response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-// })
-app.get('/api/artists', db.getAllArtists)
-app.get('/api/artist/:username', db.getArtist)
-app.get('/api/art', db.getAllArt)
-app.get('/api/art/:id', db.getArtInfo)
-app.get('/api/artist/:username/art', db.getArtistArt)
+app.get('/api/artists', artistQueries.getAllArtists)
+app.get('/api/artist/:username', artistQueries.getArtist)
+app.get('/api/art', artQueries.getAllArt)
+app.get('/api/art/:id', artQueries.getArtInfo)
+app.get('/api/artist/:username/art', artistQueries.getArtistArt)
 
-app.post('/api/artist/signup', db.createArtist)
-app.post('/api/artist/login', db.getArtistLogin)
-app.post('/api/me/from/token', db.verifyUser)
-app.post('/api/logout', db.logout)
-app.post('/api/get_access_token', db.getPlaidAccessToken)
-app.post('/api/schedule/message', db.scheduleText)
+app.post('/api/artist/signup', artistQueries.createArtist)
+app.post('/api/artist/login', artistQueries.getArtistLogin)
+app.post('/api/me/from/token', validation.verifyUser)
+app.post('/api/logout', validation.logout)
+// app.post('/api/get_access_token', db.getPlaidAccessToken)
+app.post('/api/schedule/message', scheduleTextMessage)
+app.post('/api/get_stripe_token', grabStripeToken)
 
-app.patch('/api/artist/:id', db.fileUpload)
-app.patch('/api/update/art/:artistId', db.updateArt)
+app.patch('/api/artist/:id', fileUpload)
+app.patch('/api/update/art/:artistId', artQueries.updateArt)
 
 http.createServer(app).listen(port)
 https.createServer(httpsOptions, app).listen(443)
+
 module.exports = router

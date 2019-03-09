@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import FileUploader from './ui/fileUploader'
-import { uploadThing } from '../api'
+import { uploadThing, getStripeToken } from '../api'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Artpiece from './profile/Artpiece'
 import PropTypes from 'prop-types'
@@ -62,7 +62,7 @@ class Profile extends Component {
         isProfilePicture: true,
         base64encodedImage: reader.result,
         fileName: file[0].name
-      }, artist.id).then(res => {
+      }, artist.artistId).then(res => {
         this.setState({ 
           artist: { 
             ...artist,
@@ -80,9 +80,15 @@ class Profile extends Component {
     }
   }
 
-  savePlaidTokenToLocalStorage = (token) => {
-    sessionStorage.setItem('bankToken', token)
-    this.setState({ bankToken: token })
+  exchangePlaidTokenForStripeBankToken = (token, metaData) => {
+    const accountId = metaData.account_id
+    this.setState({
+      bankToken: token,
+      accountId
+    })
+    getStripeToken({ accountId, accesToken: token }).then(response => {
+      console.log('RESPONSE:', response)
+    })
   }
 
   updateArtPortfolio = (file) => {
@@ -98,7 +104,7 @@ class Profile extends Component {
         base64encodedImage: reader.result,
         fileName: file[0].name.replace('+', '_'),
         image: file
-      }, artist.id).then(res => {
+      }, artist.artistId).then(res => {
         this.setState({ 
           isUpdating: false
         })
@@ -152,7 +158,7 @@ class Profile extends Component {
             product={['auth', 'transactions']}
             publicKey={plaidDevSecret}
             className='weee'
-            onSuccess={token => this.savePlaidTokenToLocalStorage(token)}>
+            onSuccess={(token, metaData) => this.exchangePlaidTokenForStripeBankToken(token, metaData)}>
             <span><i className='fas fa-dollar-sign' />Click Here to link your bank account</span>
           </PlaidLink> || <p>Your bank account has been linked. Feel free to begin bidding on art.</p>}
           <div className='profile_file-upload-wrapper'>

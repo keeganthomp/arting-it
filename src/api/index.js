@@ -142,3 +142,14 @@ export const scheduleTextMessage = ({ phoneNumber, message, time }) => {
     }
   })
 }
+
+export const getStripeToken = ({ accesToken, accountId }) => {
+  return makeTartApiRequest({
+    method: 'POST',
+    location: '/api/get_stripe_token',
+    body: {
+      accesToken,
+      accountId
+    }
+  })
+}

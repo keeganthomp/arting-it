@@ -1,0 +1,29 @@
+const Sequelize = require('sequelize')
+const { sequelize } = require('../database/Tart')
+
+const Art = sequelize.define('artpieces', {
+  artId: {
+    allowNull: false,
+    primaryKey: true,
+    type: Sequelize.UUID
+  },
+  artistId: {
+    type: Sequelize.UUID
+  },
+  description: {
+    type: Sequelize.STRING
+  },
+  price: {
+    type: Sequelize.FLOAT
+  },
+  artImage: {
+    type: Sequelize.STRING
+  },
+  type: {
+    type: Sequelize.STRING
+  }
+})
+
+module.exports = {
+  Art
+}

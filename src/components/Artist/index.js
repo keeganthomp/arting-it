@@ -45,10 +45,10 @@ class ArtistPage extends Component {
     getArtist(artistUsername, this.saveArtistToState).then(test => console.log('WOOOO', test))
   }
   render () {
-    const { isFetchingArtist, art } = this.state
+    const { isFetchingArtist, art, artist } = this.state
     return(
       !isFetchingArtist && <div className='artist-detail-container'>
-        <h1 className='artist-detail_header-text'>all art from {art.username}</h1>
+        <h1 className='artist-detail_header-text'>all art from {artist.username}</h1>
         {art.length > 0 && art.map(art => {
           return this.renderArt(art)
         })}

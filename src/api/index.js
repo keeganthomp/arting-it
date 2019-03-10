@@ -56,6 +56,13 @@ export const getArtist = (artistId, callbackOnSuccess) => {
   })
 }
 
+export const getArtistFromId = ({ artistId }) => {
+  return makeTartApiRequest({
+    method: 'GET',
+    location: `/api/artist/id/${artistId}`
+  })
+}
+
 export const getArtistArt = ({ callbackOnSuccess, artistId }) => {
   return makeTartApiRequest({
     method: 'GET',
@@ -130,7 +137,6 @@ export const getPlaidAccessToken = (accessToken) => {
 }
 
 export const scheduleTextMessage = ({ phoneNumber, message, time }) => {
-  console.log('SENDING TEXT::')
   makeTartApiRequest({
     method: 'POST',
     location: '/api/schedule/message',

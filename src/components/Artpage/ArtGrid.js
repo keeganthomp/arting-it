@@ -10,7 +10,8 @@ class ArtGrid extends Component {
           <img
             onClick={() => this.props.push(`art/${artPiece.artId}`)}
             alt=''
-            className='artgrid-art' src={artPiece.artImage} />
+            className='artgrid-art'
+            src={artPiece.artImage} />
           <div className='artgrid-price-wrapper'>
             <p>{artPiece.price}</p>
           </div>

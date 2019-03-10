@@ -10,6 +10,8 @@ import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import Snackbar from '@material-ui/core/Snackbar'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import { addArt } from 'actions/artActions'
+import { connect } from 'react-redux'
 
 class Artpiece extends Component {
   constructor() {
@@ -23,7 +25,8 @@ class Artpiece extends Component {
     }
   }
   componentDidMount() {
-    const { artPiece } = this.props
+    const { artPiece, art } = this.props
+    console.log('ART:', art)
     this.setState({
       artPiece,
       artPrice: artPiece.price,
@@ -41,19 +44,13 @@ class Artpiece extends Component {
       description: artDescription || artPiece.description,
       type: artPieceType || artPiece.type
     }
+    this.props.addArt({
+      payload: updatedArtPiece
+    })
     updateArt({
       body: updatedArtPiece,
       id: artPiece.artId
     }).then(result => {
-      const artFromSession = JSON.parse(sessionStorage.getItem('art'))
-      const updatedArt = artFromSession.reduce((acc, artpieceFromSession) => {
-        if (artpieceFromSession.artId === updatedArtPiece.artId) {
-          return acc.concat(updatedArtPiece)
-        } else{
-          return acc.concat(artpieceFromSession)
-        }
-      }, [])
-      sessionStorage.setItem('art', JSON.stringify([ ...updatedArt ]))
       const updatedArtpiece = result.data.updatedArtpiece
       this.setState({
         artPiece: updatedArtpiece,
@@ -134,7 +131,19 @@ class Artpiece extends Component {
 Artpiece.propTypes = {
   artPiece: PropTypes.object,
   allArt: PropTypes.array,
-  artistId: PropTypes.number
+  artistId: PropTypes.number,
+  addArt: PropTypes.func,
+  art: PropTypes.array
 }
 
-export default Artpiece
+const mapStateToProps = (state) => {
+  return {
+    art: state.art.artPieces
+  }
+}
+
+const mapDispatchToProps = {
+  addArt
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Artpiece)

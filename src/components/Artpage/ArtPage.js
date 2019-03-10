@@ -74,32 +74,34 @@ class ArtPage extends Component {
   }
   render() {
     const {art, isFetchingArt, filtersAvailable, selectedFilters} = this.state
-    return !isFetchingArt && (
-      <div className='artpage-container'>
-        {this.state.detailedViewArt && <ArtDetail
-          shouldShowDetailedView={this.shouldShowDetailedView}
-          image={this.state.detailedViewArt}/>}
-        {!this.state.detailedViewArt && <div>
-          <div className='artpage_filter-wrapper'>
-            <Accordian>
-              <ArtPageFilters
-                filters={filtersAvailable}
+    return !isFetchingArt 
+      ? (
+        <div className='artpage-container'>
+          {this.state.detailedViewArt && <ArtDetail
+            shouldShowDetailedView={this.shouldShowDetailedView}
+            image={this.state.detailedViewArt}/>}
+          {!this.state.detailedViewArt && <div>
+            <div className='artpage_filter-wrapper'>
+              <Accordian>
+                <ArtPageFilters
+                  filters={filtersAvailable}
+                  isFetchingArt={isFetchingArt}
+                  updatesSelectedFilters={this.updatesSelectedFilters}
+                  selectedFilters={selectedFilters}/>
+              </Accordian>
+            </div>
+            <div className='artpage_art-container'>
+              <ArtGrid
+                push={this.props.history.push}
+                shouldShowDetailedView={this.shouldShowDetailedView}
+                art={art}
                 isFetchingArt={isFetchingArt}
-                updatesSelectedFilters={this.updatesSelectedFilters}
                 selectedFilters={selectedFilters}/>
-            </Accordian>
-          </div>
-          <div className='artpage_art-container'>
-            <ArtGrid
-              push={this.props.history.push}
-              shouldShowDetailedView={this.shouldShowDetailedView}
-              art={art}
-              isFetchingArt={isFetchingArt}
-              selectedFilters={selectedFilters}/>
-          </div>
-        </div>}
-      </div>
-    ) || <CircularProgress/>
+            </div>
+          </div>}
+        </div>
+      ) 
+      : <CircularProgress/>
   }
 }
 

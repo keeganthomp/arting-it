@@ -10,13 +10,14 @@ import classnames from 'classnames'
 import PlaidLink from 'react-plaid-link'
 import Spinner from 'react-spinkit'
 import { addArt } from '../actions/artActions'
+import { getArtistArt } from 'api'
 
 class Profile extends Component {
-  constructor() {
+  constructor(props) {
     super()
     this.state = {
       artist: {},
-      art: [],
+      art: props.art || [],
       isUpdating: false,
       isValidUser: false,
       isCheckingForValidUser: false,
@@ -30,9 +31,8 @@ class Profile extends Component {
     this.props.history.push('login')
   }
   componentDidMount() {
-    const { artist } = this.props
+    const { artist } = this.props.artist
     const isUserFromSession = sessionStorage.getItem('user') && (sessionStorage.getItem('user') !== 'undefined')
-    const isArtInSession = sessionStorage.getItem('art') && (sessionStorage.getItem('art') !== '[]')
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser({
       callbackOnSuccess: this.callBackForValidUser,
@@ -43,10 +43,13 @@ class Profile extends Component {
     } else if (artist) {
       this.setState({ artist })
     }
-    if (isArtInSession) {
-      const artFromSession = JSON.parse(sessionStorage.getItem('art'))
-      this.setState({ art: artFromSession })
-    }
+    getArtistArt({
+      username: artist.username,
+      artistId: artist.artistId
+    }).then(result => {
+      const art = result.data.art
+      this.setState({ art: [ ...art ] })
+    })
   }
   saveAvatar = (file) => {
     this.setState({ isUpdatingAvatar: true })
@@ -111,15 +114,13 @@ class Profile extends Component {
         const currentUserFromSession = isUserInSession && JSON.parse(sessionStorage.getItem('user'))
         const updatedArtist = {...currentUserFromSession}
         updatedArtist.art = [...this.state.art]
-        const artFromSession = JSON.parse(sessionStorage.getItem('art'))
-        sessionStorage.setItem('art', JSON.stringify([ ...artFromSession, newArtPiece ]))
         this.setState({ artist: updatedArtist })
       })
     }
   }
 
   render () {
-    const { artist, isUpdating, isValidUser, art, isUpdatingAvatar } = this.state
+    const { artist, isUpdating, isValidUser, isUpdatingAvatar, art } = this.state
     const plaidDevSecret = process.env.REACT_APP_PLAID_DEV_SECRET
     const bankToken = sessionStorage.getItem('bankToken')
     const avatarOverlayClasses = classnames('profile_avatar-image-overlay', {
@@ -177,7 +178,7 @@ class Profile extends Component {
               ? 'Below are your current pieces for sale:'
               : 'It looks like you have not uploaded any art yet.'}</p>
           {artist && <div className='profile_available-art-container'>
-            {this.state.art.length > 0 && this.state.art.map(artPiece => {
+            {art.length > 0 && art.map(artPiece => {
               return <Artpiece artPiece={artPiece} allArt={art} artistId={artPiece.artistId} key={artPiece.artId}/>
             })}
           </div>}
@@ -191,12 +192,14 @@ Profile.propTypes = {
   location: PropTypes.object,
   history: PropTypes.object,
   artist: PropTypes.object,
-  addArt: PropTypes.func
+  addArt: PropTypes.func,
+  art: PropTypes.array
 }
 
 const mapStateToProps = (state) => {
   return {
-    artist: state.user
+    artist: state.user,
+    art: state.art.artPieces
   }
 }
 

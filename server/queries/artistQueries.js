@@ -87,6 +87,25 @@ const getArtist = (req, res) => {
   })
 }
 
+const getArtistFromId = (req, res) => {
+  Artist.findOne({
+    where: {
+      artistId: req.params.id
+    }
+  }).then(artist => {
+    if (artist) {
+      res.json({
+        status: 200,
+        artist: omit(artist.dataValues, ['password'])
+      })
+    } else {
+      res.status(400).json({
+        error: 'No Artist Found'
+      })
+    }
+  })
+}
+
 const getArtistArt = (req, res) => {
   Art.findAll({
     where: {
@@ -105,6 +124,6 @@ module.exports = {
   createArtist,
   getArtistLogin,
   getArtist,
-  // updateArtist,
+  getArtistFromId,
   getArtistArt
 }

@@ -14,9 +14,8 @@ class Homepage extends Component {
     }).then(axiosResult => {
       const art = axiosResult.data && axiosResult.data.art
       if (art.length > 0) {
-        const parsedArt = art.map(artPiece => JSON.parse(artPiece))
         this.setState({ 
-          art: parsedArt
+          art
         })
       }
       this.setState({ isFetchingArt: false })

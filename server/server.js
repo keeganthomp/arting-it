@@ -71,6 +71,7 @@ app.use(express.static(__dirname, { dotfiles: 'allow' } ))
 
 app.get('/api/artists', artistQueries.getAllArtists)
 app.get('/api/artist/:username', artistQueries.getArtist)
+app.get('/api/artist/id/:id', artistQueries.getArtistFromId)
 app.get('/api/art', artQueries.getAllArt)
 app.get('/api/art/:id', artQueries.getArtInfo)
 app.get('/api/artist/art/:id', artistQueries.getArtistArt)

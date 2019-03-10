@@ -19,7 +19,6 @@ class Login extends Component {
     this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state })
   }
   saveUserData = (userData) => {
-    console.log('USER DATA::', userData)
     this.props.saveUser({ payload: {
       artist: userData.artist,
       token: userData.token

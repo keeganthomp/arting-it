@@ -9,11 +9,16 @@ import MenuItem from '@material-ui/core/MenuItem'
 import * as Yup from 'yup'
 import { createArtist } from '../../api'
 import PropTypes from 'prop-types'
+import InputMask from 'react-input-mask'
 import Button from '@material-ui/core/Button'
 
 class Signup extends Component {
   createArtist = data => {
-    createArtist(data).then(res => res.status === 200 && this.props.history.push('/login'))
+    const formattedData = {
+      ...data,
+      phone: data.phone.replace(/[/\s_()]/g, '')
+    }
+    createArtist(formattedData).then(res => res.status === 200 && this.props.history.push('/login'))
   }
   render () {
     return (<div className='signup-container container'>
@@ -36,8 +41,8 @@ class Signup extends Component {
           handleBlur,
           handleSubmit
         }) => (
-          <form className='signup-form row' onSubmit={handleSubmit}>
-            <div className='col-12'>
+          <form className='signup-form' onSubmit={handleSubmit}>
+            <div className='signup-input-container'>
               <TextField
                 error={errors.username && true}
                 label='Username'
@@ -49,7 +54,7 @@ class Signup extends Component {
               />
               {errors.username && <div className='signup-form_error'>{errors.username}</div>}
             </div>
-            <div className='col-12'>
+            <div className='signup-input-container'>
               <TextField
                 error={errors.password && true}
                 label='Password'
@@ -60,18 +65,23 @@ class Signup extends Component {
               />
               {errors.password && <div className='signup-form_error'>{errors.password}</div>}
             </div>
-            <div className='col-12'>
-              <TextField
-                error={errors.phone && true}
-                label='Phone'
-                type='phone'
-                name='phone'
+            <div className='signup-input-container'>
+              <InputMask
+                mask="(1)999 999 9999"
                 value={values.phone}
                 onChange={handleChange}
-              />
+              >
+                {() => <TextField
+                  error={errors.phone && true}
+                  label='Phone'
+                  type='text'
+                  name='phone'
+                />}
+              </InputMask>
               {errors.phone && <div className='signup-form_error'>{errors.phone}</div>}
             </div>
-            {/* <div className='col-12'>
+            
+            {/* <div className='signup-input-container'>
               <TextField
                 label='First Name'
                 type='text'
@@ -81,7 +91,7 @@ class Signup extends Component {
               />
               {errors.first_name && <div className='signup-form_error'>{errors.first_name}</div>}
             </div>
-            <div className='col-12'>
+            <div className='signup-input-container'>
               <TextField
                 label='Last Name'
                 type='text'
@@ -91,7 +101,7 @@ class Signup extends Component {
               />
               {errors.last_name && <div className='signup-form_error'>{errors.last_name}</div>}
             </div> */}
-            <div className='col-12'>
+            <div className='signup-input-container'>
               <FormControl>
                 <InputLabel shrink htmlFor='sex-input-signup'>
                   Sex
@@ -107,7 +117,7 @@ class Signup extends Component {
               </FormControl>
               {errors.sex && <div className='signup-form_error'>{errors.sex}</div>}
             </div>
-            <div className='col-12'>
+            <div className='signup-input-container'>
               <FormControl>
                 <InputLabel shrink htmlFor='age-input-signup'>
                   Age
@@ -125,7 +135,7 @@ class Signup extends Component {
               </FormControl>
               {errors.age && <div className='signup-form_error'>{errors.age}</div>}
             </div>
-            <div className='col-12'>
+            <div className='signup-input-container'>
               <FormControl>
                 <InputLabel shrink htmlFor='location-input-signup'>
                   Location
@@ -143,7 +153,7 @@ class Signup extends Component {
               </FormControl>
               {errors.location && <div className='signup-form_error'>{errors.location}</div>}
             </div>
-            <div className='col-12'>
+            <div className='signup-input-container'>
               <TextField
                 label='Specialty'
                 type='text'
@@ -152,7 +162,7 @@ class Signup extends Component {
                 onChange={handleChange}
               />
             </div>
-            <div className='col-12' style={{ marginTop: '1rem' }}>
+            <div className='signup-input-container' style={{ marginTop: '1rem' }}>
               <Button type='submit' variant='contained' color='primary' >signup</Button>
             </div>
           </form>

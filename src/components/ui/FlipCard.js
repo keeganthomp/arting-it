@@ -2,20 +2,27 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactCardFlip from 'react-card-flip'
 import Button from '@material-ui/core/Button'
+import { getArtistFromId } from 'api'
 
 class FlipCard extends Component {
   constructor () {
     super ()
     this.state = {
       isFlipped: false,
-      dimensions : {}
+      dimensions : {},
+      artist: {}
     }
   }
 
   componentDidMount() {
-    const { imageClass } = this.props
+    const { imageClass, artPiece } = this.props
     const img = document.getElementsByClassName(imageClass)[0]
     img && window.addEventListener('resize', this.getImageDimensions({ target: img }))
+    const artistId = artPiece.artistId
+    getArtistFromId({ artistId }).then(response => {
+      const artist = response.data.artist
+      this.setState({ artist })
+    })
   }
 
   componentWillUnmount() {
@@ -40,7 +47,7 @@ class FlipCard extends Component {
 
 
   render () {
-    const { dimensions, isFlipped } = this.state
+    const { dimensions, isFlipped, artist } = this.state
     const { imageClass, artPiece, push } = this.props
     return(
       <div style={{ ...dimensions }} className='flip-card-container'>
@@ -52,9 +59,9 @@ class FlipCard extends Component {
               src={artPiece.artImage} />
           </div>
           <div style={{ ...dimensions }} className='flip-card-back' onClick={this.handleClick} key='back'>
-            <p>Created By: Tommy</p>
-            <p>Adking: $6.66</p>
-            <Button onClick={() => push(`/bid/${artPiece.id}`)} variant="contained" color="primary" >Make Offer</Button>
+            <p>{`Created By: ${artist.username}`}</p>
+            <p>{`Asking: $${artPiece.price}`}</p>
+            <Button onClick={() => push(`/bid/${artPiece.artId}`)} variant="contained" color="primary" >Make Offer</Button>
           </div>
         </ReactCardFlip>
       </div>

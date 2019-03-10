@@ -9,7 +9,7 @@ const scheduleTextMessage = (req, res) => {
     twilioClient.messages
       .create({
         body: message,
-        from: '+16152056956',
+        from: `+${process.env.REACT_APP_TWILIO_PHONE_NUMBER}`,
         to: `+${phoneNumber}`
       }).then(message => console.log('message sent:', message))
   }

@@ -3,7 +3,6 @@ const fs = require('fs')
 const AWS = require('aws-sdk')
 const uuidv1 = require('uuid/v1')
 const s3 = new AWS.S3()
-const { sequelize } = require('../database/Tart')
 
 // importing db models
 const { Art } = require('../models/Art')

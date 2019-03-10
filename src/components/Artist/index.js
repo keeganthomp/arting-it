@@ -1,29 +1,39 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { getArtist } from '../../api'
+import { getArtist, getArtistArt } from '../../api'
 import { checkForValidUser } from '../../helpers/auth'
+
 
 class ArtistPage extends Component {
   constructor() {
     super()
     this.state = {
       isFetchingArtist: false,
-      artist: {}
+      artist: {},
+      art: []
     }
     checkForValidUser({
       callbackOnFailure: () => this.props.history.push('/login')
     })
   }
   saveArtistToState = (artist) => {
+    const { artistId, username } = artist.artist
     this.setState({ 
       artist: artist.artist,
       isFetchingArtist: false
+    })
+    getArtistArt({
+      username,
+      artistId 
+    }).then(result => {
+      const art = result.data.art
+      this.setState({ art })
     })
   }
   renderArt = (art) => {
     const { history } = this.props
     return (<div className='artist-detail_art-container'>
-      <img onClick={() => history.push(`/art/${art.id}`)} className='artist-detail_art-image' src={art.artImage} />
+      <img onClick={() => history.push(`/art/${art.artId}`)} className='artist-detail_art-image' src={art.artImage} />
       <p>{art.description}</p>
       <p>{art.price}</p>
     </div>)
@@ -32,18 +42,17 @@ class ArtistPage extends Component {
     const { match } = this.props
     const artistUsername = match.params.username
     this.setState({ isFetchingArtist: true })
-    getArtist(artistUsername, this.saveArtistToState)
+    getArtist(artistUsername, this.saveArtistToState).then(test => console.log('WOOOO', test))
   }
   render () {
-    const { artist, isFetchingArtist } = this.state
+    const { isFetchingArtist, art } = this.state
     return(
-      !isFetchingArtist && artist.art && <div className='artist-detail-container'>
-        <h1 className='artist-detail_header-text'>all art from {artist.username}</h1>
-        {artist.art && artist.art.length > 0 && artist.art.map(art => {
-          const parsedArt = JSON.parse(art)
-          return this.renderArt(parsedArt)
+      !isFetchingArtist && <div className='artist-detail-container'>
+        <h1 className='artist-detail_header-text'>all art from {art.username}</h1>
+        {art.length > 0 && art.map(art => {
+          return this.renderArt(art)
         })}
-      </div> || <p>Fetching Artist...</p>
+      </div> || <p>Fetching Artist art...</p>
     )
   }
 }

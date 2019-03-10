@@ -48,21 +48,18 @@ export const login = (body, callbackOnSuccess, callbackOnFailure) => {
   })
 }
 
-export const getArtist = (username, callbackOnSuccess) => {
+export const getArtist = (artistId, callbackOnSuccess) => {
   return makeTartApiRequest({
     method: 'GET',
-    location: `/api/artist/${username}`,
+    location: `/api/artist/${artistId}`,
     callbackOnSuccess
   })
 }
 
-export const getArtistArt = ({ username, callbackOnSuccess, artistId }) => {
+export const getArtistArt = ({ callbackOnSuccess, artistId }) => {
   return makeTartApiRequest({
     method: 'GET',
-    location: `/api/artist/${username}/art`,
-    body: {
-      artistId
-    },
+    location: `/api/artist/art/${artistId}`,
     callbackOnSuccess
   })
 }

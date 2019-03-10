@@ -1,5 +1,5 @@
 const plaid = require('plaid')
-const stripe = require('stripe')('sk_test_Ja5Jzw6ngHs2DONskiy4xeWH')
+const stripe = require('stripe')(process.env.REACT_APP_STRIPE_KEY)
 
 const createStripeCustomer = (tokenID, res) => {
   stripe.customers.create({
@@ -13,7 +13,11 @@ const createStripeCustomer = (tokenID, res) => {
 
 const grabStripeToken = (req, res) => {
   const { accesToken, accountId } = req.body
-  const plaidClient = new plaid.Client('5c1c34a0736cca0010f4e075', '583ef5ef5765a6f0ecf017092407b4', '86f51a3110f358a66fe814f05de929', plaid.environments.sandbox)
+  const plaidClient = new plaid.Client(
+    process.env.REACT_APP_PLAID_CLIENT_ID,
+    process.env.REACT_APP_PLAID_SECRET,
+    process.env.REACT_APP_PLAID_PUBLIC_KEY,
+    plaid.environments.sandbox)
   plaidClient.exchangePublicToken(accesToken, (exchangeError, exchangeRepsonse) => {
     console.log('ERR:', exchangeError)
     const accessToken = exchangeRepsonse.access_token

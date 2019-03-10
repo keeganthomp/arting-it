@@ -73,7 +73,7 @@ app.get('/api/artists', artistQueries.getAllArtists)
 app.get('/api/artist/:username', artistQueries.getArtist)
 app.get('/api/art', artQueries.getAllArt)
 app.get('/api/art/:id', artQueries.getArtInfo)
-app.get('/api/artist/:username/art', artistQueries.getArtistArt)
+app.get('/api/artist/art/:id', artistQueries.getArtistArt)
 
 app.post('/api/artist/signup', artistQueries.createArtist)
 app.post('/api/artist/login', artistQueries.getArtistLogin)

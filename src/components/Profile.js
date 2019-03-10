@@ -63,8 +63,7 @@ class Profile extends Component {
           artist: { 
             ...artist,
             avatar: res.data.updatedProfileImage }, 
-          isUpdatingAvatar: false,
-          art: artist.art
+          isUpdatingAvatar: false
         })
         const isUserInSession = sessionStorage.getItem('user') !== 'undefined'
         const currentUserFromSession = isUserInSession && JSON.parse(sessionStorage.getItem('user'))
@@ -172,7 +171,11 @@ class Profile extends Component {
               </div>
             </Fragment>}
           </div>
-          <p>{isUpdating ? '' : this.state.art.length > 0 ? 'Below are your current pieces for sale:' : 'It looks like you have not uploaded any art yet.'}</p>
+          <p>{isUpdating
+            ? ''
+            : (this.state.art && this.state.art.length > 0) 
+              ? 'Below are your current pieces for sale:'
+              : 'It looks like you have not uploaded any art yet.'}</p>
           {artist && <div className='profile_available-art-container'>
             {this.state.art.length > 0 && this.state.art.map(artPiece => {
               return <Artpiece artPiece={artPiece} allArt={art} artistId={artPiece.artistId} key={artPiece.artId}/>

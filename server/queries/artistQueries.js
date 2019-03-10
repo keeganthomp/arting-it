@@ -88,21 +88,15 @@ const getArtist = (req, res) => {
 }
 
 const getArtistArt = (req, res) => {
-  Artist.findOne({
+  Art.findAll({
     where: {
-      username: req.params.username
+      artistId: req.params.id
     }
-  }).then(artist => {
-    if (artist) {
-      res.json({
-        status: 200,
-        artistArt: omit(artist.dataValues, ['password']).art
-      })
-    } else {
-      res.status(400).json({
-        error: 'No Artist Found'
-      })
-    }
+  }).then(artistArt => {
+    res.json({
+      status: 200,
+      art: artistArt
+    })
   })
 }
 

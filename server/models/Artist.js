@@ -1,13 +1,11 @@
 const Sequelize = require('sequelize')
 const { sequelize } = require('../database/Tart')
-const uuidv1 = require('uuid/v1')
 
-const Artist = sequelize.define('artist', {
+const Artist = sequelize.define('artists', {
   artistId: {
     allowNull: false,
     primaryKey: true,
-    type: Sequelize.UUID,
-    defaultValue: uuidv1()
+    type: Sequelize.UUID
   },
   username: {
     type: Sequelize.STRING,
@@ -43,12 +41,6 @@ const Artist = sequelize.define('artist', {
   },
   avatar: {
     type: Sequelize.STRING
-  },
-  // // art: {
-  // //   type: Sequelize.ARRAY(Sequelize.STRING(2000))
-  // // },
-  art: {
-    type: Sequelize.ARRAY(Sequelize.STRING(2000))
   }
 })
 

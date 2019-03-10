@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import Snackbar from '@material-ui/core/Snackbar'
+import InputAdornment from '@material-ui/core/InputAdornment'
 
 class Artpiece extends Component {
   constructor() {
@@ -23,42 +24,42 @@ class Artpiece extends Component {
   }
   componentDidMount() {
     const { artPiece } = this.props
-    if (typeof artPiece === 'string') {
-      this.setState({
-        artPiece: JSON.parse(artPiece),
-        artPrice: JSON.parse(artPiece).price,
-        artDescription: JSON.parse(artPiece).description,
-        artPieceType: JSON.parse(artPiece).type
-      })
-    } else {
-      this.setState({
-        artPiece,
-        artPrice: artPiece.price,
-        artDescription: artPiece.description,
-        artPieceType: artPiece.type
-      })
-    }
-  }
-  saveUpdatedUserToSession = (dataFromApi) => {
-    sessionStorage.setItem('user', JSON.stringify(dataFromApi.artistWithUpdatedArt))
-    this.setState({  showNotification: true })
+    this.setState({
+      artPiece,
+      artPrice: artPiece.price,
+      artDescription: artPiece.description,
+      artPieceType: artPiece.type
+    })
   }
   updateArtPieceMeta = (e) => {
     e.preventDefault()
-    const { allArt, artistId } = this.props
-    const { artDescription, artPrice, artPiece, artPieceType } = this.state
-    const parsedArt = allArt.map(art => JSON.parse(art))
-    const artToUpdate = parsedArt.find(element => element.id === artPiece.id)
-    const indexOfItemToUpdate = parsedArt.indexOf(artToUpdate)
+    const { artPiece } = this.props
+    const { artDescription, artPrice, artPieceType } = this.state
     const updatedArtPiece = {
-      ...artToUpdate,
-      price: artPrice || artToUpdate.price,
-      description: artDescription || artToUpdate.description,
-      type: artPieceType || artToUpdate.type
+      ...artPiece,
+      price: artPrice || artPiece.price,
+      description: artDescription || artPiece.description,
+      type: artPieceType || artPiece.type
     }
-    parsedArt[indexOfItemToUpdate] = updatedArtPiece
-    const artForDb = parsedArt.map(art => JSON.stringify(art))
-    updateArt(artForDb, artistId, this.saveUpdatedUserToSession)
+    updateArt({
+      body: updatedArtPiece,
+      id: artPiece.artId
+    }).then(result => {
+      const artFromSession = JSON.parse(sessionStorage.getItem('art'))
+      const updatedArt = artFromSession.reduce((acc, artpieceFromSession) => {
+        if (artpieceFromSession.artId === updatedArtPiece.artId) {
+          return acc.concat(updatedArtPiece)
+        } else{
+          return acc.concat(artpieceFromSession)
+        }
+      }, [])
+      sessionStorage.setItem('art', JSON.stringify([ ...updatedArt ]))
+      const updatedArtpiece = result.data.updatedArtpiece
+      this.setState({
+        artPiece: updatedArtpiece,
+        showNotification: true
+      })
+    })
   }
 
   handleClose = (event, reason) => {
@@ -82,9 +83,12 @@ class Artpiece extends Component {
           />
           <TextField
             label='Price'
-            type='text'
+            type='number'
             name='art-price'
             value={artPrice}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>
+            }}
             onChange={e => this.setState({ artPrice: e.target.value })}
           />
           <FormControl>

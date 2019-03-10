@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 
 const generateToken = (artist) => {
-  console.log('ARTISTTT:', artist)
   //1. Dont use password and other sensitive fields
   //2. Use fields that are useful in other parts of the     
   //app/collections/models
@@ -16,7 +15,6 @@ const generateToken = (artist) => {
     location: artist.location,
     age: artist.age,
     avatar: artist.avatar,
-    art: artist.art,
     createdAt: artist.createdAt.toString(),
     updatedAt: artist.updatedAt.toString()
   }

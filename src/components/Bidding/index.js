@@ -52,13 +52,19 @@ class BidPage extends Component {
     this.setState({ user })
   }
 
-  saveArtInfo = (artInfo) => {
-    this.setState({ artInfo: artInfo.artPiece })
+  saveArtInfo = (art) => {
+    const { artist, artInfo } = art.artPiece
+    this.setState({
+      artInfo,
+      artist
+    })
     this.setState({ isFetchingArt: false })
-    const userWhoMadeTheArt = artInfo.artPiece.artist.username
     getArtistArt({
-      username: userWhoMadeTheArt,
-      callbackOnSuccess: data => this.saveParsedArt({ art: data.artistArt })
+      username: artist.username,
+      callbackOnSuccess: data => {
+        console.log('BIODDING DATA:', data)
+        // this.saveParsedArt({ art: data.artistArt })
+      }
     })
   }
 
@@ -110,12 +116,18 @@ class BidPage extends Component {
   }
   
   render () {
-    const { isFetchingArt, artInfo, bidAmount, artId, user } = this.state
+    const {
+      isFetchingArt,
+      artInfo,
+      bidAmount,
+      artId,
+      artist,
+      user
+    } = this.state
     return !isFetchingArt && !R.isEmpty(artInfo) && (<div>
       <h1>Bidding Page</h1>
-      <p>{artInfo.artist.username} is asking {artInfo.price}</p>
+      <p>{artist.username} is asking {artInfo.price}</p>
       <div className='bidding-page_art-content'>
-        {/* wrapping in a form to get the submit on enter press easily */}
         <form>
           <FormControl>
             <img className='bidding-page_art-image' src={artInfo.artImage} />
@@ -135,7 +147,7 @@ class BidPage extends Component {
         </form>
       </div>
       {<BidStream
-        currentArtistArt={this.state.currentArtistArt}
+        artist={artist}
         artInfo={artInfo}
         user={user}
         channelId={artId}

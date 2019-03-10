@@ -27,7 +27,7 @@ Art.belongsTo(Artist, {
   as: 'artist',
   foreignKey: 'artistId'
 })
-Artist.sync({ force: true }).then(() => 'Artists Table Ready')
+Artist.sync().then(() => 'Artists Table Ready')
 Art.sync({ force: true }).then(() => 'Art Table Ready')
 
 // requiring token to make any API call
@@ -84,7 +84,7 @@ app.post('/api/schedule/message', scheduleTextMessage)
 app.post('/api/get_stripe_token', grabStripeToken)
 
 app.patch('/api/artist/:id', fileUpload)
-app.patch('/api/update/art/:artistId', artQueries.updateArt)
+app.patch('/api/update/art/:artId', artQueries.updateArt)
 
 http.createServer(app).listen(port)
 https.createServer(httpsOptions, app).listen(443)

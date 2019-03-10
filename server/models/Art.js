@@ -21,6 +21,12 @@ const Art = sequelize.define('artpieces', {
   },
   type: {
     type: Sequelize.STRING
+  },
+  bidStartTime: {
+    type: Sequelize.INTEGER
+  },
+  closeTime: {
+    type: Sequelize.INTEGER
   }
 })
 

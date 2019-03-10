@@ -53,8 +53,8 @@ const uploadToS3 = (props) => {
           } else {
             if (bucket === 'artist-profile-images' ) {
               Artist.update(
-                { avatar: `https://s3.amazonaws.com/${bucket}/${data.key}` },
-                { returning: true, where: { id: userId } }
+                { avatar: `https://s3.amazonaws.com/${bucket}/${data.key || data.Key}` },
+                { returning: true, where: { artistId: userId } }
               ).then(([rowsUpdated, [artistWithUpdatedProfilePicture]]) => {
                 if (artistWithUpdatedProfilePicture) {
                   res.json({
@@ -71,7 +71,7 @@ const uploadToS3 = (props) => {
             } else {
               const artPiece = JSON.stringify({
                 artId: uuidv1(),
-                price: '$6.66',
+                price: 6.66,
                 description: 'Some description about the art',
                 artImage: `https://s3.amazonaws.com/${bucket}/${data.key || data.Key}`,
                 type: 'painting'
@@ -83,24 +83,12 @@ const uploadToS3 = (props) => {
                   }
                 }).then(artist => {
                   addedArtpiece.setArtist(artist.artistId)
-                })
-              })
-              Artist.update(
-                { 'art': sequelize.fn('array_append', sequelize.col('art'), artPiece) },
-                { returning: true, where: { artistId: userId } }
-              ).then(([rowsUpdated, [artistWithUpdatedPortfolio]]) => {
-                fs.unlink(path.join(__dirname + `/temp/${fileName}`), () => console.log('FILE REMOVED'))
-                if (artistWithUpdatedPortfolio.art) {
                   res.json({
                     status: 200,
                     message: 'Successfully added art to art image',
-                    updatedPortfolio: artistWithUpdatedPortfolio.art
+                    artpiece: addedArtpiece
                   })
-                } else {
-                  res.status(400).json({
-                    error: 'UNABLE TO UPDATE ARTIST IMAGESSS'
-                  })
-                }
+                })
               })
             }
           }

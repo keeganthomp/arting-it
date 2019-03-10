@@ -16,8 +16,12 @@ class ArtDetail extends Component {
       callbackOnFailure: () => this.props.history.push('/login')
     })
   }
-  saveArtInfo = (artInfo) => {
-    this.setState({ artInfo: artInfo.artPiece })
+  saveArtInfo = (art) => {
+    const { artInfo, artist } = art.artPiece
+    this.setState({
+      artInfo: artInfo,
+      artist: artist
+    })
     this.setState({ isFetchingArt: false })
   }
   componentDidMount() {
@@ -26,24 +30,34 @@ class ArtDetail extends Component {
     getArtInfo(artId, this.saveArtInfo)
   }
   render () {
-    const { artInfo, isFetchingArt } = this.state
+    const { artInfo, artist, isFetchingArt } = this.state
     const { history } = this.props
-    const artist = artInfo && artInfo.artist
     return(<Fragment>
       {!isFetchingArt && artist && <div className='art-detail-container'>
         <div className='art-detail_image-wrapper'>
-          <img src={artInfo.artImage} alt={artInfo.description} />
+          <img
+            src={artInfo.artImage}
+            alt={artInfo.description} />
         </div>
         <div className='art-detail-content'>
           <p className='art-detail_description'>{artInfo.description}</p>
           <p>asking: {artInfo.price}</p>
           <p>created by : {artist.first_name} {artist.last_name}</p>
-          {artist.avatar && <img onClick={() => history.push(`/artist/${artist.username}`)} className='art-detail_artist-avatar' src={artist.avatar} />}
+          {artist.avatar && <img
+            onClick={() => history.push(`/artist/${artist.username}`)} 
+            className='art-detail_artist-avatar'
+            src={artist.avatar} />}
           <p>username: {artist.username}</p>
-          <Button onClick={() => history.push(`/bid/${artInfo.id}`)} variant='contained' color='primary'>make offer</Button>
+          <Button
+            onClick={() => history.push(`/bid/${artInfo.artId}`)}
+            variant='contained'
+            color='primary'>make offer</Button>
         </div>
         <div className='art-detail_back-button-container'>
-          <Button className='art-detail_back-button' color='primary' onClick={() => history.push('/art')}>back to art</Button>
+          <Button
+            className='art-detail_back-button'
+            color='primary'
+            onClick={() => history.push('/art')}>back to art</Button>
         </div>
       </div> || <p>Loading...</p>}
     </Fragment>)

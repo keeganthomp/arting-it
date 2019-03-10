@@ -30,10 +30,9 @@ class ArtPage extends Component {
     }).then(axiosResult => {
       const art = axiosResult.data && axiosResult.data.art
       if (art.length > 0) {
-        const parsedArt = art.map(artPiece => JSON.parse(artPiece))
-        const artTypes = parsedArt.map(art => art.type)
+        const artTypes = art.map(art => art.type)
         const filtersAvailable = artTypes.filter((item, index) => artTypes.indexOf(item) >= index)
-        this.setState({art: parsedArt, filtersAvailable})
+        this.setState({ art, filtersAvailable })
       }
       this.setState({isFetchingArt: false})
     }).catch(err => {
@@ -51,7 +50,9 @@ class ArtPage extends Component {
 
   componentDidMount() {
     this.setState({isFetchingArt: true})
-    checkForValidUser({callbackOnSuccess: this.fetchArt, callbackOnFailure: this.callBackForInValidUser})
+    checkForValidUser({
+      callbackOnSuccess: this.fetchArt,
+      callbackOnFailure: this.callBackForInValidUser})
   }
   shouldShowDetailedView = (detailedViewArt) => {
     this.setState({detailedViewArt})

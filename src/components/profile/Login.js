@@ -19,12 +19,14 @@ class Login extends Component {
     this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state })
   }
   saveUserData = (userData) => {
+    console.log('USER DATA::', userData)
     this.props.saveUser({ payload: {
       artist: userData.artist,
       token: userData.token
     }
     })
     sessionStorage.setItem('user', JSON.stringify(userData.artist))
+    sessionStorage.setItem('art', JSON.stringify([]))
     sessionStorage.setItem('token', JSON.stringify(userData.token))
     this.props.history.push({
       pathname: '/profile',

@@ -11,7 +11,7 @@ const scheduleTextMessage = (req, res) => {
         body: message,
         from: '+16152056956',
         to: `+${phoneNumber}`
-      }).then(message => console.log('MESSAGE SENTTTTT:', message))
+      }).then(message => console.log('message sent:', message))
   }
   const biddengEndTime = new Date(time*1000).getTime() + (100 * 1000)
   schedule.scheduleJob(biddengEndTime, () => sendTextMessage())

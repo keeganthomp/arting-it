@@ -1,8 +1,10 @@
 const omit = require('lodash/omit')
 const { generateHash, validPassword } = require('../helpers/validation')
 const { generateToken } = require('../helpers/utils')
+const uuidv1 = require('uuid/v1')
 
 // importing db model
+const { Art } = require('../models/Art')
 const { Artist } = require('../models/Artist')
 
 const createArtist = (req, res) => {
@@ -12,6 +14,7 @@ const createArtist = (req, res) => {
   const payloadWithoutPassword = omit(req.body, ['password'])
   const payload = { 
     ...payloadWithoutPassword,
+    artistId: uuidv1(),
     password: generateHash(req.body.password),
     art: []
   }
@@ -83,35 +86,6 @@ const getArtist = (req, res) => {
     }
   })
 }
-
-// const updateArtist = (req, res) => {
-//   const bufffer = Buffer.from(req.body.avatar, 'base64')
-//   const  tempDirectory = './temp'
-//   if (!fs.existsSync(tempDirectory)){
-//     fs.mkdirSync(tempDirectory)
-//   }
-//   fs.writeFile('./temp/test.jpeg', bufffer, (err) => {
-//     if(err) {
-//       console.log('err', err)
-//     }
-//   })
-//   Artist.update(
-//     { avatar: 'bufffer' },
-//     { where: { id: req.params.id } }
-//   ).then(updatedArtist => {
-//     if (updatedArtist) {
-//       res.json({
-//         status: 200,
-//         woo: 'UPDATEDDD',
-//         updatedArtist
-//       })
-//     } else {
-//       res.status(400).json({
-//         error: 'UNABLE TO UPDATE ARTIST'
-//       })
-//     }
-//   })
-// }
 
 const getArtistArt = (req, res) => {
   Artist.findOne({

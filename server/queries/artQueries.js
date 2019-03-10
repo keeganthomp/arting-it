@@ -1,34 +1,23 @@
-const omit = require('lodash/omit')
-
 // importing db models
 const { Art } = require('../models/Art')
 const { Artist } = require('../models/Artist')
 
 const updateArt = (req, res) => {
-  Artist.update(
-    { 'art': req.body },
-    { returning: true, where: { id: req.params.artistId } }
-  ).then(([rowsUpdated, [artistWithUpdatedPortfolio]]) => {
-    if (artistWithUpdatedPortfolio.art) {
+  const updatedArtpiece = req.body
+  Art.update(
+    { ...updatedArtpiece },
+    { returning: true, where: { artId: updatedArtpiece.artId } })
+    .then(([rowsUpdated, [updatedArtpiece]]) => {
       res.json({
         status: 200,
         message: 'Successfully updated art',
-        artistWithUpdatedArt: artistWithUpdatedPortfolio
+        updatedArtpiece
       })
-    } else {
-      res.status(400).json({
-        error: 'UNABLE TO UPDATE ARTT'
-      })
-    }
-  })
+    })
 }
 
 const getAllArt = (req, res) => {
-  Artist.findAll().then((data) => {
-    const artists = data
-    const allArt = artists.reduce((art, currentArtist) => {
-      return art.concat(currentArtist.art.map(art => art))
-    }, [])
+  Art.findAll().then(allArt => {
     res.json({
       status: 200,
       message: 'Successfully got all art',
@@ -39,20 +28,24 @@ const getAllArt = (req, res) => {
 
 const getArtInfo = (req, res) => {
   const artId = req.params.id
-  Artist.findAll().then((data) => {
-    const artists = data
-    const allArt = artists.reduce((art, currentArtist) => {
-      return art.concat(currentArtist.art.map(artPiece => {
-        const parsedArtPiece = JSON.parse(artPiece)
-        const normalizedArtist = omit(currentArtist.dataValues, ['password'])
-        return { ...parsedArtPiece, artist: normalizedArtist }
-      }))
-    }, [])
-    const selectedArt = allArt.find(art => art.id === artId)
-    res.json({
-      status: 200,
-      message: 'Successfully retrieved art info',
-      artPiece: selectedArt
+  Art.findOne({
+    where: {
+      artId
+    }
+  }).then((artPiece) => {
+    Artist.findOne({
+      where: {
+        artistId: artPiece.artistId
+      }
+    }).then(artist => {
+      res.json({
+        status: 200,
+        message: 'Successfully retrieved art info',
+        artPiece: {
+          artist,
+          artInfo: artPiece
+        }
+      })
     })
   })
 }

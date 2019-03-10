@@ -9,6 +9,7 @@ import { checkForValidUser } from '../helpers/auth'
 import classnames from 'classnames'
 import PlaidLink from 'react-plaid-link'
 import Spinner from 'react-spinkit'
+import { addArt } from '../actions/artActions'
 
 class Profile extends Component {
   constructor() {
@@ -30,7 +31,8 @@ class Profile extends Component {
   }
   componentDidMount() {
     const { artist } = this.props
-    const isUserFromSession = sessionStorage.getItem('user') && sessionStorage.getItem('user') !== 'undefined'
+    const isUserFromSession = sessionStorage.getItem('user') && (sessionStorage.getItem('user') !== 'undefined')
+    const isArtInSession = sessionStorage.getItem('art') && (sessionStorage.getItem('art') !== '[]')
     this.setState({ isCheckingForValidUser: true })
     checkForValidUser({
       callbackOnSuccess: this.callBackForValidUser,
@@ -41,16 +43,10 @@ class Profile extends Component {
     } else if (artist) {
       this.setState({ artist })
     }
-    if (artist && artist.art && artist.art.length > 0) {
-      this.setState({ art: artist.art })
-    } else if (isUserFromSession && JSON.parse(sessionStorage.getItem('user')).art && JSON.parse(sessionStorage.getItem('user')).art.length > 0) {
-      this.setState({ art: JSON.parse(sessionStorage.getItem('user')).art })
+    if (isArtInSession) {
+      const artFromSession = JSON.parse(sessionStorage.getItem('art'))
+      this.setState({ art: artFromSession })
     }
-  }
-  onDrop = (file) => {
-    const art = [...this.state.art, file[0]]
-    this.setState({ art })
-    this.saveAvatar(file)
   }
   saveAvatar = (file) => {
     this.setState({ isUpdatingAvatar: true })
@@ -95,7 +91,6 @@ class Profile extends Component {
     this.setState({ isUpdating: true })
     const { artist } = this.state
     this.setState({ file: file })
-    
     const reader = new FileReader()
     reader.readAsDataURL(file[0])
     reader.onload = () => {
@@ -108,12 +103,17 @@ class Profile extends Component {
         this.setState({ 
           isUpdating: false
         })
-        res.data.updatedPortfolio && this.setState({ art: [...res.data.updatedPortfolio] })
+        const newArtPiece = res.data.artpiece
+        newArtPiece && this.setState({ art: [...this.state.art, newArtPiece] })
+        this.props.addArt({
+          payload: newArtPiece
+        })
         const isUserInSession = sessionStorage.getItem('user') !== 'undefined'
         const currentUserFromSession = isUserInSession && JSON.parse(sessionStorage.getItem('user'))
         const updatedArtist = {...currentUserFromSession}
-        updatedArtist.art = [...res.data.updatedPortfolio]
-        sessionStorage.setItem('user', JSON.stringify(updatedArtist))
+        updatedArtist.art = [...this.state.art]
+        const artFromSession = JSON.parse(sessionStorage.getItem('art'))
+        sessionStorage.setItem('art', JSON.stringify([ ...artFromSession, newArtPiece ]))
         this.setState({ artist: updatedArtist })
       })
     }
@@ -172,11 +172,10 @@ class Profile extends Component {
               </div>
             </Fragment>}
           </div>
-          <p>{isUpdating ? '' : artist.art.length > 0 ? 'Below are your current pieces for sale:' : 'It looks like you have not uploaded any art yet.'}</p>
+          <p>{isUpdating ? '' : this.state.art.length > 0 ? 'Below are your current pieces for sale:' : 'It looks like you have not uploaded any art yet.'}</p>
           {artist && <div className='profile_available-art-container'>
-            {this.state.artist && this.state.artist.art && this.state.artist.art.length > 0 && this.state.artist.art.reverse().map(artPiece => {
-              const parsedArt = JSON.parse(artPiece)
-              return <Artpiece artPiece={parsedArt} allArt={art} artistId={artist.id} key={parsedArt.id}/>
+            {this.state.art.length > 0 && this.state.art.map(artPiece => {
+              return <Artpiece artPiece={artPiece} allArt={art} artistId={artPiece.artistId} key={artPiece.artId}/>
             })}
           </div>}
         </div>
@@ -188,7 +187,8 @@ class Profile extends Component {
 Profile.propTypes = {
   location: PropTypes.object,
   history: PropTypes.object,
-  artist: PropTypes.object
+  artist: PropTypes.object,
+  addArt: PropTypes.func
 }
 
 const mapStateToProps = (state) => {
@@ -197,4 +197,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Profile)
+const mapDispatchToProps = {
+  addArt
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

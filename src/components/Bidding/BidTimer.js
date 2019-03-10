@@ -44,7 +44,7 @@ class BidTimer extends Component {
           onTick={timeToClose => {
             setTimeToClose({ 
               payload: { 
-                artId: artInfo.id,
+                artId: artInfo.artId,
                 timeToClose: timeToClose.total
               } 
             })

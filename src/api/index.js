@@ -56,10 +56,13 @@ export const getArtist = (username, callbackOnSuccess) => {
   })
 }
 
-export const getArtistArt = ({ username, callbackOnSuccess }) => {
+export const getArtistArt = ({ username, callbackOnSuccess, artistId }) => {
   return makeTartApiRequest({
     method: 'GET',
     location: `/api/artist/${username}/art`,
+    body: {
+      artistId
+    },
     callbackOnSuccess
   })
 }
@@ -80,12 +83,11 @@ export const uploadThing = (body, id) => {
   })
 }
 
-export const updateArt = (body, id, callbackOnSuccess) => {
-  makeTartApiRequest({
+export const updateArt = ({ body, id }) => {
+  return makeTartApiRequest({
     method: 'PATCH',
     location: `/api/update/art/${id}`,
-    body,
-    callbackOnSuccess
+    body
   })
 }
 
@@ -151,5 +153,12 @@ export const getStripeToken = ({ accesToken, accountId }) => {
       accesToken,
       accountId
     }
+  })
+}
+
+export const getAllArt = () => {
+  return makeTartApiRequest({
+    method: 'GET',
+    location: '/api/art'
   })
 }

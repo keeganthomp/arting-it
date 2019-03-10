@@ -4,8 +4,8 @@ const SET_TIME_TO_CLOSE = 'SET_TIME_TO_CLOSE'
 const SET_HIGHEST_BIDDER = 'SET_HIGHEST_BIDDER'
 
 export default (state = initialState, action) => {
-  const { payload } = action
-  switch (action.type) {
+  const { payload, type } = action
+  switch (type) {
   case CLOSE_BIDDING:
     return Object.assign({}, state, {
       [payload]: {

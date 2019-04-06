@@ -3,7 +3,7 @@ const stripe = require('stripe')(process.env.REACT_APP_STRIPE_KEY)
 const axios = require('axios')
 const { Artist } = require('./models/Artist')
 
-const createStripeCustomer = (tokenID, res) => {
+const createStripeCustomer = (tokenID) => {
   stripe.customers.create({
     source: tokenID,
     description: 'TOMMY JOHNNY'

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 class BuyerPage extends Component {
-  constructor(props) {
+  constructor() {
     super()
     this.state = {
 

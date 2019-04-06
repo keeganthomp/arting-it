@@ -3,7 +3,7 @@ const authToken = process.env.REACT_APP_TWILIO_AUTH_TOKEN
 const twilioClient = require('twilio')(accountSid, authToken)
 const schedule = require('node-schedule')
 
-const scheduleTextMessage = (req, res) => {
+const scheduleTextMessage = (req) => {
   const { phoneNumber, message, time } = req.body
   const sendTextMessage = () => {
     twilioClient.messages

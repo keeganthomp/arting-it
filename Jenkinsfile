@@ -1,4 +1,9 @@
 node {
+  environment {
+    registry = "keezee/tealeel"
+    registryCredential = "docker_registry_server",
+    dockerImage = ""
+  }
   try {
     stage('Checkout') {
       checkout scm
@@ -8,14 +13,23 @@ node {
       echo "Branch: ${env.BRANCH_NAME}"
       sh 'docker -v'
       sh 'printenv'
+      echoe "BUILDDDD: ${BUILD_NUMBER}"
     }
     stage('Build Docker test'){
-     echo "USER::: ${USER}"
-     sh 'groups'
-     sh 'docker build -t react-test -f Dockerfile --no-cache .'
+      steps {
+        sh 'groups'
+        sh 'docker build -t react-test -f Dockerfile --no-cache .'
+        script {
+          dockerImage = docker.build registry + ":${BUILD_NUMBER}"
+        }
+      }
     }
-    stage('Docker test'){
-      sh 'docker run --rm react-test'
+    stage('Push Docker image'){
+      script {
+        docker.withRegistry( '', registryCredential ) {
+          dockerImage.push()
+        }
+      }
     }
     stage('Clean Docker test'){
       sh 'docker rmi react-test'

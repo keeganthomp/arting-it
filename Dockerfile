@@ -36,4 +36,4 @@ RUN dir /usr/src/app
 RUN npm run build
 
 # Main command
-CMD [ "npm", "run", "start:server" ]
+# CMD [ "npm", "run", "start:server" ]

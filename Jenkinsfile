@@ -1,7 +1,7 @@
 node {
   environment {
-    registry = "keezee/tealeel"
-    registryCredential = "docker_registry_server"
+    REGISTRY = "keezee/tealeel"
+    REGISTRY_CREDENTIALS = "docker_registry_server"
     dockerImage = ""
   }
   try {
@@ -18,10 +18,10 @@ node {
     stage('Build Docker test'){
       sh 'groups'
       sh 'docker build -t react-test -f Dockerfile --no-cache .'
-      dockerImage = docker.build registry + ":${BUILD_NUMBER}"
+      dockerImage = docker.build env.REGISTRY + ":${BUILD_NUMBER}"
     }
     stage('Push Docker image'){
-      docker.withRegistry( '', registryCredential ) {
+      docker.withRegistry( '', env.REGISTRY_CREDENTIALS ) {
         dockerImage.push()
       }
     }

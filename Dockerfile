@@ -17,7 +17,6 @@ RUN node -v
 COPY package.json /usr/src/app/
 COPY package-lock.json /usr/src/app/
 
-RUN dir /usr/src/app
 
 RUN npm install
 
@@ -32,7 +31,9 @@ ENV NODE_ENV production
 ENV PORT 3000
 ENV PUBLIC_PATH "/"
 
-RUN npm run start:build
+RUN dir /usr/src/app
+
+RUN npm run build
 
 # Main command
 CMD [ "npm", "run", "start:server" ]

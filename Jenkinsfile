@@ -21,7 +21,7 @@ node {
       dockerImage = docker.build("keezee/tealeel:${BUILD_NUMBER}")
     }
     stage('Push Docker image'){
-      docker.withRegistry( 'https://registry.hub.docker.com', 'docker_registry_server') {
+      docker.withRegistry( 'https://hub.docker.com/', 'docker_registry_server') {
         dockerImage.push()
       }
     }

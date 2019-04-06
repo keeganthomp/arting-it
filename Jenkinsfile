@@ -16,19 +16,14 @@ node {
       echo "BUILDDDD: ${BUILD_NUMBER}"
     }
     stage('Build Docker test'){
-      steps {
         sh 'groups'
         sh 'docker build -t react-test -f Dockerfile --no-cache .'
-        script {
-          dockerImage = docker.build registry + ":${BUILD_NUMBER}"
-        }
+        dockerImage = docker.build registry + ":${BUILD_NUMBER}"
       }
     }
     stage('Push Docker image'){
-      script {
-        docker.withRegistry( '', registryCredential ) {
-          dockerImage.push()
-        }
+      docker.withRegistry( '', registryCredential ) {
+        dockerImage.push()
       }
     }
     stage('Clean Docker test'){

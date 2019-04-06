@@ -31,9 +31,9 @@ ENV NODE_ENV production
 ENV PORT 3000
 ENV PUBLIC_PATH "/"
 
-RUN dir /usr/src/app
 
 RUN npm run build
 
+RUN dir /usr/src/app
 # Main command
 # CMD [ "npm", "run", "start:server" ]

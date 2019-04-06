@@ -1,5 +1,5 @@
 # Extending image
-FROM node:8.15.1-alpine
+FROM buildpack-deps:jessie
 
 RUN apt-get update
 RUN apt-get upgrade -y

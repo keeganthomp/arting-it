@@ -10,7 +10,6 @@ node {
       sh 'printenv'
     }
     stage('Build Docker test'){
-     sh "USERRRRRR:: ${USER}"
      sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
     }
     stage('Docker test'){

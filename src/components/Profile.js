@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { checkForValidUser } from '../helpers/auth'
 import classnames from 'classnames'
-import PlaidLink from 'react-plaid-link'
+// import PlaidLink from 'react-plaid-link'
 import Spinner from 'react-spinkit'
 import { addArt } from '../actions/artActions'
 import { getArtistArt } from 'api'
@@ -128,8 +128,8 @@ class Profile extends Component {
     const redirectUri = 'http://localhost:5300/'
     const token = 'userToken'
     const stripeConnectUrl = `https://connect.stripe.com/express/oauth/authorize?redirect_uri=${redirectUri}&client_id=${stripeClientId}&state=${token}`
-    const plaidDevSecret = process.env.REACT_APP_PLAID_DEV_SECRET
-    const bankToken = sessionStorage.getItem('bankToken')
+    // const plaidDevSecret = process.env.REACT_APP_PLAID_DEV_SECRET
+    // const bankToken = sessionStorage.getItem('bankToken')
     const avatarOverlayClasses = classnames('profile_avatar-image-overlay', {
       'profile_avatar-image-overlay--active': this.state.isAvatarOverlayActive
     })

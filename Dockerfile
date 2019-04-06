@@ -35,5 +35,6 @@ ENV PUBLIC_PATH "/"
 RUN npm run build
 
 RUN dir /usr/src/app
+RUN dir /usr/src/app/build
 # Main command
 # CMD [ "npm", "run", "start:server" ]

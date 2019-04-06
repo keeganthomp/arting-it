@@ -8,10 +8,8 @@ node {
       echo "Branch: ${env.BRANCH_NAME}"
       sh 'docker -v'
       sh 'printenv'
-      echo "USERRR: ${USER}"
     }
     stage('Build Docker test'){
-     sh 'sudo usermod -aG docker $USER'
      sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
     }
     stage('Docker test'){

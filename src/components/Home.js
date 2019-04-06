@@ -28,7 +28,6 @@ class Homepage extends Component {
     })
   }
   componentDidMount() {
-    console.log('HOME PROPS:', this.props)
     const { search } = this.props.location
     const parsedQueryParams = queryString.parse(search)
     const stripeClientId = parsedQueryParams && parsedQueryParams.code

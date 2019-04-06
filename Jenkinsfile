@@ -8,6 +8,7 @@ node {
       echo "Branch: ${env.BRANCH_NAME}"
       sh 'docker -v'
       sh 'printenv'
+      echo "USERRR: ${USER}"
     }
     stage('Build Docker test'){
      sh 'sudo usermod -aG docker $USER'

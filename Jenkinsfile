@@ -11,6 +11,7 @@ node {
     }
     stage('Build Docker test'){
      echo "USER::: ${USER}"
+     sh 'groups'
      sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
     }
     stage('Docker test'){

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const { sequelize } = require('../database/Tart')
 
-const Artist = sequelize.define('artists', {
+const Artist = sequelize.define('artist', {
   artistId: {
     allowNull: false,
     primaryKey: true,
@@ -40,6 +40,9 @@ const Artist = sequelize.define('artists', {
     type: Sequelize.INTEGER
   },
   avatar: {
+    type: Sequelize.STRING
+  },
+  stripeId: {
     type: Sequelize.STRING
   }
 })

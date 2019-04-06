@@ -12,13 +12,14 @@ const artistQueries = require('./queries/artistQueries')
 const artQueries = require('./queries/artQueries')
 const { fileUpload } = require('./helpers/upload')
 const validation = require('./helpers/validation')
-const { grabStripeToken } = require('./helpers/stripe')
+const { createStripeConnectAccount, createChargeAndTransfer, createStripeBuyer } = require('./helpers/stripe')
 const { scheduleTextMessage } = require('./helpers/smsScheduler')
 const { httpsOptions } = require('./helpers/utils')
 
 // importing db models
 const { Art } = require('./models/Art')
 const { Artist } = require('./models/Artist')
+const { Buyer } = require('./models/Buyer')
 
 const port = process.env.PORT || 80
 
@@ -27,8 +28,15 @@ Art.belongsTo(Artist, {
   as: 'artist',
   foreignKey: 'artistId'
 })
+Buyer.hasMany(Art, {
+  foreignKey: {
+    name: 'buyerId',
+    allowNull: true
+  }
+})
 Artist.sync().then(() => 'Artists Table Ready')
-Art.sync({ force: true }).then(() => 'Art Table Ready')
+Art.sync().then(() => 'Art Table Ready')
+Buyer.sync().then(() => 'Buyer Table Ready')
 
 // requiring token to make any API call
 app.use((req, res, next) => {
@@ -82,7 +90,10 @@ app.post('/api/me/from/token', validation.verifyUser)
 app.post('/api/logout', validation.logout)
 // app.post('/api/get_access_token', db.getPlaidAccessToken)
 app.post('/api/schedule/message', scheduleTextMessage)
-app.post('/api/get_stripe_token', grabStripeToken)
+// app.post('/api/get_stripe_token', grabStripeToken)
+app.post('/api/create/stripe/account', createStripeConnectAccount)
+app.post('/api/create/charge', createChargeAndTransfer)
+app.post('/api/create/buyer', createStripeBuyer)
 
 app.patch('/api/artist/:id', fileUpload)
 app.patch('/api/update/art/:artId', artQueries.updateArt)

@@ -12,7 +12,9 @@ import NumberFormatCustom from '../ui/formattedNumberInput'
 import FormControl from '@material-ui/core/FormControl'
 import { getArtistArt } from 'api/index'
 import { startBidding } from 'actions/biddingActions'
+import { setBuyer } from 'actions/buyerActions'
 import { connect } from 'react-redux'
+import Checkout from 'components/checkout/Checkout'
 import moment from 'moment'
 
 class BidPage extends Component {
@@ -34,7 +36,8 @@ class BidPage extends Component {
     this.pubnub.init(this)
     checkForValidUser({
       callbackOnSuccess: () => this.setUser(),
-      callbackOnFailure: () => this.props.history.push('/login')
+      callbackOnFailure: () => this.props.history.push('/login'),
+      token: props.artist.token
     })
   }
 
@@ -54,6 +57,7 @@ class BidPage extends Component {
 
   saveArtInfo = (art) => {
     const { artist, artInfo } = art.artPiece
+    console.log('ARTINFO:', artInfo)
     this.setState({
       artInfo,
       artist
@@ -61,6 +65,7 @@ class BidPage extends Component {
     this.setState({ isFetchingArt: false })
     getArtistArt({
       username: artist.username,
+      artistId: artist.artistId,
       callbackOnSuccess: data => {
         console.log('BIODDING DATA:', data)
         // this.saveParsedArt({ art: data.artistArt })
@@ -124,6 +129,7 @@ class BidPage extends Component {
       artist,
       user
     } = this.state
+    const doesBuyerExist = !!this.props.buyerToken
     return !isFetchingArt && !R.isEmpty(artInfo) && (<div>
       <h1>Bidding Page</h1>
       <p>{artist.username} is asking {artInfo.price}</p>
@@ -131,22 +137,24 @@ class BidPage extends Component {
         <form>
           <FormControl>
             <img className='bidding-page_art-image' src={artInfo.artImage} />
-            <TextField
-              label='Bid Amount'
-              value={bidAmount}
-              onChange={this.handleChange('bidAmount')}
-              id='formatted-numberformat-input'
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <div className='bidding-page_submit-button-wrapper'>
+            {doesBuyerExist 
+              ?  <TextField
+                label='Bid Amount'
+                value={bidAmount}
+                onChange={this.handleChange('bidAmount')}
+                id='formatted-numberformat-input'
+                InputProps={{
+                  inputComponent: NumberFormatCustom
+                }}
+              />
+              : <Checkout />}
+            {doesBuyerExist && <div className='bidding-page_submit-button-wrapper'>
               <Button type='submit'onClick={(e) => this.handleSubmit(e)} variant='contained' color='primary' disabled={this.state.bidAmount === ''}>Place Bid</Button>
-            </div>
+            </div>}
           </FormControl>
         </form>
       </div>
-      {<BidStream
+      {doesBuyerExist && <BidStream
         artist={artist}
         artInfo={artInfo}
         user={user}
@@ -164,13 +172,17 @@ BidPage.propTypes = {
   isFetchingArt: PropTypes.bool,
   selectedFilters: PropTypes.array,
   history: PropTypes.object,
-  startBidding: PropTypes.func
+  startBidding: PropTypes.func,
+  artist: PropTypes.object,
+  buyer: PropTypes.object
 }
 
 const mapStateToProps = (state, props) => {
   const artId = props.match.params.id
   return {
-    timeLeftToBid: state.bid[artId] && state.bid[artId].timeToClose
+    timeLeftToBid: state.bid[artId] && state.bid[artId].timeToClose,
+    artist: state.user,
+    buyerToken: state.buyer.token
   }
 }
 

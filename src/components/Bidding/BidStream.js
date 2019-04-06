@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import PubNubReact from 'pubnub-react'
 import BidTimer from './BidTimer'
-import { updateArt, getArtist, scheduleTextMessage } from 'api'
+import { updateArt, getArtist, scheduleTextMessage, createChargeAndTransfer } from 'api'
 import { startBidding, setHighestBidder } from 'actions/biddingActions'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -81,15 +81,22 @@ class BidStream extends Component {
   }
 
   closeBid = () => {
-    const { artInfo } = this.props
+    const { highestBid } = this.state
+    const { artInfo, buyerToken } = this.props
+    const bidAmount = Number(highestBid.bid) * 100
     const artPieceWithBiddingEndTime = {
       ...artInfo,
       closeTime: moment().unix()
     } 
     setTimeout(() => updateArt({
       body: { ...artPieceWithBiddingEndTime },
-      id: artInfo.artId
+      artId: artInfo.artId
     }), 3000)
+    createChargeAndTransfer({
+      buyerToken,
+      seller: 'seller token',
+      amount: bidAmount
+    })
   }
 
   getBidderAndbid = (message) => {
@@ -188,7 +195,8 @@ BidStream.propTypes = {
 
 const mapStateToProps = (state, props) => {
   return {
-    bidInfo: state.bid[props.artInfo.id]
+    bidInfo: state.bid[props.artInfo.id],
+    buyerToken: state.buyer.token
   }
 }
 

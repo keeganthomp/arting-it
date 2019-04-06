@@ -165,3 +165,36 @@ export const getAllArt = () => {
     location: '/api/art'
   })
 }
+
+export const createStripeConnectAccount = ({ clientId }) => {
+  return makeTartApiRequest({
+    method: 'POST',
+    location: '/api/create/stripe/account',
+    body: {
+      clientId
+    }
+  })
+}
+
+export const createChargeAndTransfer = ({ seller, buyer }) => {
+  return makeTartApiRequest({
+    method: 'POST',
+    location: '/api/create/charge',
+    body: {
+      seller,
+      buyer
+    }
+  })
+}
+
+export const createStripeBuyer = ({ token, userId }) => {
+  return makeTartApiRequest({
+    method: 'POST',
+    location: '/api/create/buyer',
+    body: {
+      token,
+      userId
+    }
+  })
+}
+

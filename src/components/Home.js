@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import FlipCard from './ui/FlipCard'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+const queryString = require('query-string')
+import { createStripeConnectAccount } from 'api'
+
 
 class Homepage extends Component {
   state = {
@@ -25,12 +28,20 @@ class Homepage extends Component {
     })
   }
   componentDidMount() {
+    console.log('HOME PROPS:', this.props)
+    const { search } = this.props.location
+    const parsedQueryParams = queryString.parse(search)
+    const stripeClientId = parsedQueryParams && parsedQueryParams.code
+    createStripeConnectAccount({
+      clientId: stripeClientId,
+      artistId: ''
+    })
     this.fetchArt()
   }
   render () {
     return(
-      <div>
-        <h1 className='homepage-header'>Teal Eel</h1>
+      <div className='homepage-wrapper'>
+        <h1 className='homepage-header'>teal eel woo</h1>
         <div className='homepage-content-container'>
           {this.state.art.length > 0 && this.state.art.map(artPiece => <FlipCard
             key={artPiece.id}
@@ -45,7 +56,8 @@ class Homepage extends Component {
 }
 
 Homepage.propTypes = {
-  history: PropTypes.object
+  history: PropTypes.object,
+  location: PropTypes.object
 }
 
 export default Homepage

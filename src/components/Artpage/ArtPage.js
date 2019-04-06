@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import {checkForValidUser} from '../../helpers/auth'
 import Accordian from '../ui/Accordian'
+import { connect } from 'react-redux'
 
 class ArtPage extends Component {
   constructor() {
@@ -29,6 +30,7 @@ class ArtPage extends Component {
         : 'localhost:80'}/api/art`
     }).then(axiosResult => {
       const art = axiosResult.data && axiosResult.data.art
+      console.log('ARTTT344:', art)
       if (art.length > 0) {
         const artTypes = art.map(art => art.type)
         const filtersAvailable = artTypes.filter((item, index) => artTypes.indexOf(item) >= index)
@@ -49,10 +51,13 @@ class ArtPage extends Component {
   }
 
   componentDidMount() {
-    this.setState({isFetchingArt: true})
+    const { token } = this.props.artist
+    // this.setState({isFetchingArt: true})
     checkForValidUser({
       callbackOnSuccess: this.fetchArt,
-      callbackOnFailure: this.callBackForInValidUser})
+      callbackOnFailure: this.callBackForInValidUser,
+      token
+    })
   }
   shouldShowDetailedView = (detailedViewArt) => {
     this.setState({detailedViewArt})
@@ -74,6 +79,8 @@ class ArtPage extends Component {
   }
   render() {
     const {art, isFetchingArt, filtersAvailable, selectedFilters} = this.state
+    console.log('ARTTT:', art)
+    console.log('isFetchingArt:', isFetchingArt)
     return !isFetchingArt 
       ? (
         <div className='artpage-container'>
@@ -106,7 +113,13 @@ class ArtPage extends Component {
 }
 
 ArtPage.propTypes = {
-  history: PropTypes.object
+  history: PropTypes.object,
+  artist: PropTypes.object
+}
+const mapStateToProps = (state) => {
+  return {
+    artist: state.user
+  }
 }
 
-export default ArtPage
+export default connect(mapStateToProps)(ArtPage)

@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { getArtInfo } from '../../api'
 import Button from '@material-ui/core/Button'
+import { connect } from 'react-redux'
 import { checkForValidUser } from '../../helpers/auth'
 
 class ArtDetail extends Component {
@@ -13,7 +14,8 @@ class ArtDetail extends Component {
       isFetchingArt: false
     }
     checkForValidUser({
-      callbackOnFailure: () => this.props.history.push('/login')
+      callbackOnFailure: () => this.props.history.push('/login'),
+      token: props.artist.token
     })
   }
   saveArtInfo = (art) => {
@@ -68,7 +70,14 @@ ArtDetail.propTypes = {
   image: PropTypes.string,
   history: PropTypes.object,
   match: PropTypes.object,
-  getArtistArt: PropTypes.func
+  getArtistArt: PropTypes.func,
+  artist: PropTypes.object
 }
 
-export default ArtDetail
+const mapStateToProps = (state) => {
+  return {
+    artist: state.user
+  }
+}
+
+export default connect(mapStateToProps)(ArtDetail)

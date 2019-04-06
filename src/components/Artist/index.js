@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getArtist, getArtistArt } from '../../api'
 import { checkForValidUser } from '../../helpers/auth'
-
+import { connect } from 'react-redux'
 
 class ArtistPage extends Component {
-  constructor() {
+  constructor(props) {
     super()
     this.state = {
       isFetchingArtist: false,
@@ -13,7 +13,8 @@ class ArtistPage extends Component {
       art: []
     }
     checkForValidUser({
-      callbackOnFailure: () => this.props.history.push('/login')
+      callbackOnFailure: () => this.props.history.push('/login'),
+      token: props.artist.token
     })
   }
   saveArtistToState = (artist) => {
@@ -60,7 +61,14 @@ class ArtistPage extends Component {
 ArtistPage.propTypes = {
   image: PropTypes.string,
   history: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
+  artist: PropTypes.object
 }
 
-export default ArtistPage
+const mapStateToProps = (state) => {
+  return {
+    artist: state.user
+  }
+}
+
+export default connect(mapStateToProps)(ArtistPage)

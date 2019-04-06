@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { logout } from '../api'
 import classnames from 'classnames'
+import { connect } from 'react-redux'
 
-export default class Navigation extends Component {
+class Navigation extends Component {
   constructor () {
     super ()
     this.state = {
@@ -28,6 +29,7 @@ export default class Navigation extends Component {
     )
   }
   render() {
+    console.log('NAV_PROPSS:', this.props)
     const linkContainerClasses = classnames('navigation-link-container', {
       'navigation-link-container--open': this.state.mobileNavIsOpen
     })
@@ -45,16 +47,25 @@ export default class Navigation extends Component {
           <Link to='/profile'>
             <button className='navigation-link'>profile</button>
           </Link>
-          <Link to='/signup'>
+          {!this.props.token && <Link to='/signup'>
             <button className='navigation-link'>signup</button>
-          </Link>
-          <Link to='/login'>
+          </Link>}
+          {!this.props.token && <Link to='/login'>
             <button className='navigation-link'>login</button>
-          </Link>
-          <button className='navigation-link' onClick={logout}>logout</button>
+          </Link>}
+          {this.props.token && <button className='navigation-link' onClick={logout}>logout</button>}
         </div>
         {this.renderMenuIcon()}
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    token: state.user.token
+  }
+}
+
+export default connect(mapStateToProps, null)(Navigation)
+

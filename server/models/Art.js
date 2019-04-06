@@ -27,6 +27,10 @@ const Art = sequelize.define('artpieces', {
   },
   closeTime: {
     type: Sequelize.INTEGER
+  },
+  buyerId: {
+    type: Sequelize.UUID,
+    allowNull: true
   }
 })
 

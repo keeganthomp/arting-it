@@ -13,7 +13,7 @@ node {
       echo "Branch: ${env.BRANCH_NAME}"
       sh 'docker -v'
       sh 'printenv'
-      echoe "BUILDDDD: ${BUILD_NUMBER}"
+      echo "BUILDDDD: ${BUILD_NUMBER}"
     }
     stage('Build Docker test'){
       steps {

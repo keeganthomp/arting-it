@@ -1,7 +1,7 @@
 node {
   environment {
     registry = "keezee/tealeel"
-    registryCredential = "docker_registry_server",
+    registryCredential = "docker_registry_server"
     dockerImage = ""
   }
   try {

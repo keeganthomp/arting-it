@@ -46,8 +46,9 @@ RUN yarn
 RUN yarn build
 
 FROM nginx:alpine
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=react-build /app/build /usr/share/nginx/html
+RUN rm -rf /etc/nginx/conf.d
+COPY conf /etc/nginx
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 

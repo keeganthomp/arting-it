@@ -39,7 +39,7 @@
 # Main command
 # CMD [ "npm", "run", "start:server" ]
 
-FROM node:8 as react-build
+FROM node:8 as tealeel-fe-build
 WORKDIR /app
 COPY . ./
 RUN yarn
@@ -48,7 +48,7 @@ RUN yarn build
 FROM nginx:alpine
 RUN rm -rf /etc/nginx/conf.d
 COPY conf /etc/nginx
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=tealeel-fe-build /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 

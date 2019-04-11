@@ -1,13 +1,12 @@
-FROM nginx
-# ADD default.conf /etc/nginx/conf.d/default.conf
-RUN apk add nginx && \
-    mkdir /run/nginx && \
-    apk add nodejs && \
-    apk add npm && \
-    apk add bash && \
-    cd /var/www/localhost/htdocs && \
-    npm install && \
-    npm run build && \
-    apk del nodejs && \
-    apk del npm && \
-    mv /var/www/localhost/htdocs/build /usr/share/nginx/html
+FROM node:8 as react-build
+WORKDIR /app
+COPY . ./
+RUN yarn
+RUN yarn build
+
+# Stage 2 - the production environment
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=react-build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

@@ -11,7 +11,7 @@ RUN npm run build
 
 # production environment
 FROM nginx:1.13.9-alpine
-RUN rm -rf /etc/nginx/conf.d
+# RUN rm -rf /etc/nginx/conf.d
 
 RUN mkdir /etc/letsencrypt
 
@@ -19,8 +19,9 @@ COPY letsencrypt/live/tealeel.com/fullchain.pem /etc/letsencrypt
 
 COPY letsencrypt/live/tealeel.com/privkey.pem /etc/letsencrypt
 
-COPY conf /etc/nginx
-COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx.config /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 

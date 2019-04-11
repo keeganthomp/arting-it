@@ -13,13 +13,15 @@ RUN npm run build
 FROM nginx:1.13.9-alpine
 # RUN rm -rf /etc/nginx/conf.d
 
+RUN mkdir /usr/src/app
+
+COPY ./build /usr/src/app
+
 RUN mkdir /etc/letsencrypt
 
 COPY letsencrypt/live/tealeel.com/fullchain.pem /etc/letsencrypt
 
 COPY letsencrypt/live/tealeel.com/privkey.pem /etc/letsencrypt
-
-# RUN rm /etc/nginx/nginx.conf
 
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80

@@ -13,9 +13,7 @@ RUN npm run build
 FROM nginx:1.13.9-alpine
 # RUN rm -rf /etc/nginx/conf.d
 
-RUN mkdir /usr/src/app
-
-COPY ./build /usr/src/app
+COPY --from=build-stage /usr/src/app /usr/share/nginx/html
 
 RUN mkdir /etc/letsencrypt
 

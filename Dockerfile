@@ -26,6 +26,10 @@ RUN apk add nginx && \
     cd /var/www/localhost/htdocs && \
     rm -rf * && \
     mv /var/www/localhost/build /var/www/localhost/htdocs;
+RUN mkdir /etc/letsencrypt
+COPY letsencrypt/live/tealeel.com/fullchain.pem /etc/letsencrypt
+
+COPY letsencrypt/live/tealeel.com/privkey.pem /etc/letsencrypt
 CMD ["/bin/sh", "-c", "exec nginx -g 'daemon off;';"]
 WORKDIR /var/www/localhost/htdocs
 
@@ -34,11 +38,7 @@ WORKDIR /var/www/localhost/htdocs
 
 # COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
-# RUN mkdir /etc/letsencrypt
 
-# COPY letsencrypt/live/tealeel.com/fullchain.pem /etc/letsencrypt
-
-# COPY letsencrypt/live/tealeel.com/privkey.pem /etc/letsencrypt
 
 # COPY nginx.conf /etc/nginx/nginx.conf
 # EXPOSE 80

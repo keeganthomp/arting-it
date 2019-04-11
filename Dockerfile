@@ -30,7 +30,7 @@ RUN mkdir /etc/letsencrypt
 COPY letsencrypt/live/tealeel.com/fullchain.pem /etc/letsencrypt
 
 COPY letsencrypt/live/tealeel.com/privkey.pem /etc/letsencrypt
-CMD ["/bin/sh", "-c", "exec nginx -g 'daemon off;';"]
+CMD ["nginx", "-g", "daemon off;"]
 WORKDIR /var/www/localhost/htdocs
 
 # production environment

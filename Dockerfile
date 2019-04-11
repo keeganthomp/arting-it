@@ -6,6 +6,7 @@ RUN apk add nginx && \
     mkdir /run/nginx && \
     apk add nodejs && \
     apk add npm && \
+    apk add bash && \
     cd /var/www/localhost/htdocs && \
     npm install && \
     npm run build && \

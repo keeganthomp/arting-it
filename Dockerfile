@@ -1,7 +1,5 @@
-FROM alpine
-EXPOSE 80
-ADD default.conf /etc/nginx/conf.d/default.conf
-COPY . /var/www/localhost/htdocs
+FROM nginx
+# ADD default.conf /etc/nginx/conf.d/default.conf
 RUN apk add nginx && \
     mkdir /run/nginx && \
     apk add nodejs && \
@@ -12,9 +10,4 @@ RUN apk add nginx && \
     npm run build && \
     apk del nodejs && \
     apk del npm && \
-    mv /var/www/localhost/htdocs/build /var/www/localhost && \
-    cd /var/www/localhost/htdocs && \
-    rm -rf * && \
-    mv /var/www/localhost/build /var/www/localhost/htdocs;
-CMD ["nginx", "-g", "daemon off;"]
-WORKDIR /var/www/localhost/htdocs
+    mv /var/www/localhost/htdocs/build /usr/share/nginx/html

@@ -40,7 +40,7 @@ class Homepage extends Component {
   render () {
     return(
       <div className='homepage-wrapper'>
-        <h1 className='homepage-header'>teal eel</h1>
+        <h1 className='homepage-header'>teal eelwee</h1>
         <div className='homepage-content-container'>
           {this.state.art.length > 0 && this.state.art.map(artPiece => <FlipCard
             key={artPiece.id}

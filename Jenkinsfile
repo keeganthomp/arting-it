@@ -17,7 +17,7 @@ node {
     }
     stage('Build Docker test'){
       sh 'groups'
-      sh 'docker build -t react-test -f Dockerfile --no-cache .'
+      sh 'docker build -t tealeel-frontend -f Dockerfile --no-cache .'
       dockerImage = docker.build("keezee/tealeel:${BUILD_NUMBER}")
     }
     stage('Push Docker image'){
@@ -26,7 +26,7 @@ node {
       }
     }
     stage('Clean Docker test'){
-      sh 'docker rmi react-test'
+      sh 'docker rmi tealeel-frontend'
     }
     stage('Deploy'){
       if(env.BRANCH_NAME == 'master'){

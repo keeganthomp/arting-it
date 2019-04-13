@@ -10,8 +10,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN mkdir /etc/letsencrypt
 
-COPY letsencrypt/live/tealeel.com/fullchain.pem /etc/letsencrypt
+COPY letsencrypt/live/www.tealeel.com/fullchain.pem /etc/letsencrypt
 
-COPY letsencrypt/live/tealeel.com/privkey.pem /etc/letsencrypt
+COPY letsencrypt/live/www.tealeel.com/privkey.pem /etc/letsencrypt
 
 COPY --from=react-build /app/build /usr/share/nginx/html

@@ -8,14 +8,13 @@ node {
     stage('Checkout') {
       checkout scm
     }
-    stage('Environment') {
+    stage('Check Environment') {
       sh 'git --version'
       echo "Branch: ${env.BRANCH_NAME}"
       sh 'docker -v'
       sh 'printenv'
-      echo "BUILDDDD: ${BUILD_NUMBER}"
     }
-    stage('Build Docker test'){
+    stage('Build Docker Image'){
       sh 'groups'
       sh 'docker build -t tealeel-frontend -f Dockerfile --no-cache .'
       dockerImage = docker.build("keezee/tealeel:${BUILD_NUMBER}")
@@ -25,15 +24,17 @@ node {
         dockerImage.push()
       }
     }
-    stage('Clean Docker test'){
+    stage('Clean Docker Images'){
       sh 'docker rmi tealeel-frontend'
+      sh 'yes | docker system prune -a'
     }
     stage('Deploy'){
-      if(env.BRANCH_NAME == 'master'){
-        sh 'docker build -t react-app --no-cache .'
-        sh 'docker tag react-app localhost:5000/react-app'
-        sh 'docker push localhost:5000/react-app'
-        sh 'docker rmi -f react-app localhost:5000/react-app'
+      sshagent(credentials : ['tealeel-frontend-ssh-credentials']) {
+      sh '''
+          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
+          ls
+        '''
+        sh "echo 'new docker image(s) running'"
       }
     }
   }

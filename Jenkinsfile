@@ -32,7 +32,11 @@ node {
       sshagent(credentials : ['tealeel-frontend-ssh-credentials']) {
       sh '''
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          ls
+          docker stop tealeel-fronted-app &&
+          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
+          docker rm -f tealeel-fronted-app
+          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
+          docker run --name tealeel-fronted-app -p 80:80 -p 443:443 -d keezee/tealeel:${BUILD_NUMBER}
         '''
         sh "echo 'new docker image(s) running'"
       }

@@ -60,7 +60,7 @@ Homepage.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    artist: state.user
+    artist: state.user.artist
   }
 }
 

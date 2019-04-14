@@ -163,12 +163,13 @@ export const getAllArt = () => {
   })
 }
 
-export const createStripeConnectAccount = ({ clientId }) => {
+export const createStripeConnectAccount = ({ clientId, artistId }) => {
   return makeTartApiRequest({
     method: 'POST',
     location: '/api/create/stripe/account',
     body: {
-      clientId
+      clientId,
+      artistId
     }
   })
 }

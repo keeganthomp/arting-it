@@ -15,6 +15,7 @@ node {
       sh 'printenv'
     }
     stage('Build Docker Image'){
+      sh 'groups'
       sh 'docker build -t tealeel-frontend -f Dockerfile --no-cache .'
       dockerImage = docker.build("keezee/tealeel:${BUILD_NUMBER}")
     }
@@ -24,21 +25,18 @@ node {
       }
     }
     stage('Clean Docker Images'){
-      sh 'docker rmi tealeel-frontend'
+      // sh 'docker rmi tealeel-frontend'
       sh 'yes | docker system prune -a'
     }
     stage('Deploy'){
       sshagent(credentials : ['tealeel-frontend-ssh-credentials']) {
-      sh 'scp Dockerfile root@${FRONTEND_SERVER_IP}:~'
       sh '''
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker build . -t tealeel-frontend-image
+          docker stop tealeel-fronted-app &&
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker stop tealeel-fronted-app
+          docker rm -f tealeel-fronted-app
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker run --name tealeel-fronted-app -p 80:80 -p 443:443 -d tealeel-frontend-image
-          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker rm -f tealeel-fronted-image
+          docker run --name tealeel-fronted-tapp3e -p 80:80 -p 443:443 -v $(pwd)/letsencrypt/live/www.tealeel.com/:/etc/letsencrypt -it keezee/tealeel:${BUILD_NUMBER}
         '''
         sh "echo 'new docker image(s) running'"
       }

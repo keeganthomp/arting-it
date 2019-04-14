@@ -14,5 +14,5 @@ RUN mkdir /etc/letsencrypt
 # COPY letsencrypt/live/www.tealeel.com/fullchain.pem /etc/letsencrypt
 
 # COPY letsencrypt/live/www.tealeel.com/privkey.pem /etc/letsencrypt
-
+EXPOSE 3000
 COPY --from=react-build /app/build /usr/share/nginx/html

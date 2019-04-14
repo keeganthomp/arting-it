@@ -1,0 +1,21 @@
+# docker compose config for the backend
+version: "2"
+services:
+  app: 
+    image: keezee/tealeel:${BUILD_NUMBER}
+    container_name: app
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=production
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    links:
+      - "app"

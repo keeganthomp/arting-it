@@ -2,6 +2,7 @@ FROM node:8 as tealeel-frontend
 WORKDIR /app
 COPY . ./
 ENV NODE_ENV=production
+RUN ls
 RUN yarn
 RUN yarn build
 

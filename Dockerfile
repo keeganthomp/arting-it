@@ -1,4 +1,4 @@
-FROM node:8 as react-build
+FROM node:8
 WORKDIR /app
 COPY . ./
 ENV NODE_ENV=production

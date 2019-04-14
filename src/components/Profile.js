@@ -123,7 +123,6 @@ class Profile extends Component {
 
   render () {
     const { artist, isUpdating, isValidUser, isUpdatingAvatar, art } = this.state
-    console.log('ARTISTTT:', artist)
     const stripeClientId = 'ca_EffV60ZGfT5OB2IOBh9CvoWH7mgHrpDJ'
     const redirectUri = 'http://localhost:5300/'
     const token = 'userToken'

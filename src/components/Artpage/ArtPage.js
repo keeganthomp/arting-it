@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, {Component} from 'react'
 import ArtGrid from './ArtGrid'
 import ArtPageFilters from './ArtPageFilters'
@@ -8,6 +7,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import {checkForValidUser} from '../../helpers/auth'
 import Accordian from '../ui/Accordian'
 import { connect } from 'react-redux'
+import { getAllArt } from 'api'
 
 class ArtPage extends Component {
   constructor() {
@@ -23,14 +23,8 @@ class ArtPage extends Component {
   }
 
   fetchArt = () => {
-    axios({
-      method: 'GET',
-      url: `http://${process.env.NODE_ENV === 'production'
-        ? 'tealeel-api.com'
-        : 'localhost:80'}/api/art`
-    }).then(axiosResult => {
+    getAllArt().then(axiosResult => {
       const art = axiosResult.data && axiosResult.data.art
-      console.log('ARTTT344:', art)
       if (art.length > 0) {
         const artTypes = art.map(art => art.type)
         const filtersAvailable = artTypes.filter((item, index) => artTypes.indexOf(item) >= index)
@@ -39,7 +33,6 @@ class ArtPage extends Component {
       this.setState({isFetchingArt: false})
     }).catch(err => {
       this.setState({isFetchingArt: false})
-      console.log('Error fetching art:', err)
     })
   }
 
@@ -79,8 +72,6 @@ class ArtPage extends Component {
   }
   render() {
     const {art, isFetchingArt, filtersAvailable, selectedFilters} = this.state
-    console.log('ARTTT:', art)
-    console.log('isFetchingArt:', isFetchingArt)
     return !isFetchingArt 
       ? (
         <div className='artpage-container'>

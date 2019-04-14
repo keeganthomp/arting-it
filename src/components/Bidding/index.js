@@ -57,7 +57,6 @@ class BidPage extends Component {
 
   saveArtInfo = (art) => {
     const { artist, artInfo } = art.artPiece
-    console.log('ARTINFO:', artInfo)
     this.setState({
       artInfo,
       artist
@@ -67,7 +66,6 @@ class BidPage extends Component {
       username: artist.username,
       artistId: artist.artistId,
       callbackOnSuccess: data => {
-        console.log('BIODDING DATA:', data)
         // this.saveParsedArt({ art: data.artistArt })
       }
     })

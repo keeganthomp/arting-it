@@ -30,7 +30,6 @@ class Navigation extends Component {
     )
   }
   render() {
-    console.log('NAV_PROPSS:', this.props)
     const linkContainerClasses = classnames('navigation-link-container', {
       'navigation-link-container--open': this.state.mobileNavIsOpen
     })

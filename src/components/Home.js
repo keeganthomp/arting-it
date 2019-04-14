@@ -1,20 +1,16 @@
 import React, { Component } from 'react'
 import FlipCard from './ui/FlipCard'
-import axios from 'axios'
 import PropTypes from 'prop-types'
 const queryString = require('query-string')
-import { createStripeConnectAccount } from 'api'
-
+import { connect } from 'react-redux'
+import { createStripeConnectAccount, getAllArt } from 'api'
 
 class Homepage extends Component {
   state = {
     art: []
   }
   fetchArt = () => {
-    axios({
-      method: 'GET',
-      url: `http://${process.env.NODE_ENV === 'production' ? 'tealeel-api.com' : 'localhost:80'}/api/art`
-    }).then(axiosResult => {
+    getAllArt().then(axiosResult => {
       const art = axiosResult.data && axiosResult.data.art
       if (art.length > 0) {
         this.setState({ 
@@ -28,14 +24,15 @@ class Homepage extends Component {
     })
   }
   componentDidMount() {
-    console.log('WEEEEEEEEEEEEEE', process.env.NODE_ENV)
     const { search } = this.props.location
     const parsedQueryParams = queryString.parse(search)
     const stripeClientId = parsedQueryParams && parsedQueryParams.code
-    createStripeConnectAccount({
-      clientId: stripeClientId,
-      artistId: ''
-    })
+    if (stripeClientId) {
+      createStripeConnectAccount({
+        clientId: stripeClientId,
+        artistId: this.props.artist.artistId
+      })
+    }
     this.fetchArt()
   }
   render () {
@@ -43,12 +40,12 @@ class Homepage extends Component {
       <div className='homepage-wrapper'>
         <h1 className='homepage-header'>teal eelwee</h1>
         <div className='homepage-content-container'>
-          {this.state.art.length > 0 && this.state.art.map(artPiece => <FlipCard
-            key={artPiece.id}
-            imageClass='homepage-content_image'
-            artPiece={artPiece}
-            push={this.props.history.push} />
-          )}
+          {this.state.art.length > 0 && this.state.art.map((artPiece, index) => 
+            <FlipCard
+              key={(artPiece.id || artPiece.Id) + index.toString()}
+              imageClass='homepage-content_image'
+              artPiece={artPiece}
+              push={this.props.history.push} />)}
         </div>
       </div>
     )
@@ -57,7 +54,14 @@ class Homepage extends Component {
 
 Homepage.propTypes = {
   history: PropTypes.object,
-  location: PropTypes.object
+  location: PropTypes.object,
+  artist: PropTypes.object
 }
 
-export default Homepage
+const mapStateToProps = (state) => {
+  return {
+    artist: state.user
+  }
+}
+
+export default connect(mapStateToProps)(Homepage)

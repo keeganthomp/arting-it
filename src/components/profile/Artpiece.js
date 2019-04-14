@@ -26,7 +26,6 @@ class Artpiece extends Component {
   }
   componentDidMount() {
     const { artPiece, art } = this.props
-    console.log('ART:', art)
     this.setState({
       artPiece,
       artPrice: artPiece.price,
@@ -102,7 +101,7 @@ class Artpiece extends Component {
               <MenuItem value='photography'>Photography</MenuItem>
             </Select>
           </FormControl>
-          <Button size='small' type='submit' variant='outline1' color='primary' >Update</Button>
+          <Button size='small' type='submit' variant='outlined' color='primary' >Update</Button>
         </form>
         {/* showing snackbar when artpiece meta has been updated */}
         <Snackbar
@@ -131,7 +130,7 @@ class Artpiece extends Component {
 Artpiece.propTypes = {
   artPiece: PropTypes.object,
   allArt: PropTypes.array,
-  artistId: PropTypes.number,
+  artistId: PropTypes.string,
   addArt: PropTypes.func,
   art: PropTypes.array
 }

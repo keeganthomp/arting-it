@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:8 as tealeel-frontend
 WORKDIR /app
 COPY . ./
 ENV NODE_ENV=production
@@ -11,8 +11,10 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN mkdir /etc/letsencrypt
 
-COPY ./letsencrypt/live/www.tealeel.com/fullchain.pem /etc/letsencrypt
+ADD ./letsencrypt/live/www.tealeel.com/fullchain.pem /etc/letsencrypt
 
-COPY ./letsencrypt/live/www.tealeel.com/privkey.pem /etc/letsencrypt
+ADD ./letsencrypt/live/www.tealeel.com/privkey.pem /etc/letsencrypt
+
+RUN ls /etc
 EXPOSE 3000
-COPY --from=react-build /app/build /usr/share/nginx/html
+COPY --from=tealeel-frontend /app/build /usr/share/nginx/html

@@ -1,3 +1,4 @@
+require('dotenv').config()
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getArtInfo } from '../../api'
@@ -16,6 +17,7 @@ import { startBidding } from 'actions/biddingActions'
 import { connect } from 'react-redux'
 import Checkout from 'components/checkout/Checkout'
 import moment from 'moment'
+
 
 class BidPage extends Component {
   constructor(props) {
@@ -72,6 +74,7 @@ class BidPage extends Component {
   }
 
   componentDidMount() {
+    console.log('WEEEEEE', process.env.REACT_APP_PUBNUB_PUBLISH_KEY)
     const { artId } = this.state
     this.setState({ isFetchingArt: true })
     getArtInfo(artId, this.saveArtInfo)

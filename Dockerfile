@@ -15,6 +15,5 @@ ADD ./letsencrypt/live/www.tealeel.com/fullchain.pem /etc/letsencrypt
 
 ADD ./letsencrypt/live/www.tealeel.com/privkey.pem /etc/letsencrypt
 
-RUN ls /etc
 EXPOSE 3000
 COPY --from=tealeel-frontend /app/build /usr/share/nginx/html

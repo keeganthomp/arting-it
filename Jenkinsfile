@@ -15,7 +15,6 @@ node {
       sh 'printenv'
     }
     stage('Build Docker Image'){
-      sh 'groups'
       sh 'docker build -t tealeel-frontend -f Dockerfile --no-cache .'
       dockerImage = docker.build("keezee/tealeel:${BUILD_NUMBER}")
     }
@@ -30,13 +29,16 @@ node {
     }
     stage('Deploy'){
       sshagent(credentials : ['tealeel-frontend-ssh-credentials']) {
+      sh 'scp Dockerfile root@${FRONTEND_SERVER_IP}:~'
       sh '''
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker stop tealeel-fronted-app &&
+          docker build . -t tealeel-frontend-image
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker rm -f tealeel-fronted-app
+          docker stop tealeel-fronted-app
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker run --name tealeel-fronted-app -p 80:80 -p 443:443 -d keezee/tealeel:${BUILD_NUMBER}
+          docker run --name tealeel-fronted-app -p 80:80 -p 443:443 -d tealeel-frontend-image
+          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
+          docker rm -f tealeel-fronted-image
         '''
         sh "echo 'new docker image(s) running'"
       }

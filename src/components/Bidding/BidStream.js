@@ -82,7 +82,7 @@ class BidStream extends Component {
 
   closeBid = () => {
     const { highestBid } = this.state
-    const { artInfo, buyerToken } = this.props
+    const { artInfo } = this.props
     const bidAmount = Number(highestBid.bid) * 100
     const artPieceWithBiddingEndTime = {
       ...artInfo,

@@ -1,22 +1,19 @@
 import axios from 'axios'
 
+const apiUrl = process.env.NODE_ENV === 'production' ? 'https://www.tealeel-api.com' : 'http://localhost:5000'
+
 export const makeTartApiRequest = ({ method, location, body = {}, callbackOnSuccess,  callbackOnFailure }) => {
   const isUserFromSession = sessionStorage.getItem('token') !== 'undefined'
   const token = isUserFromSession && JSON.parse(sessionStorage.getItem('token'))
   return new Promise((resolve, reject) => {
     return axios({
       method: method,
-      url: `http://${process.env.NODE_ENV === 'production' ? 'tealeel-api.com' : 'localhost'}${location}`,
+      url: `${apiUrl}${location}`,
       headers: { 
         'Content-Type': 'application/json',
         'Authorization' : `Bearer ${token}`
       },
-      data: body,
-      onUploadProgress: progressEvent => {
-        if (progressEvent.lengthComputable) {
-          console.log(progressEvent.loaded + ' ' + progressEvent.total)
-        }
-      }
+      data: body
     }).then(axiosResult => {
       if (callbackOnSuccess) {
         callbackOnSuccess(axiosResult.data)
@@ -166,12 +163,13 @@ export const getAllArt = () => {
   })
 }
 
-export const createStripeConnectAccount = ({ clientId }) => {
+export const createStripeConnectAccount = ({ clientId, artistId }) => {
   return makeTartApiRequest({
     method: 'POST',
     location: '/api/create/stripe/account',
     body: {
-      clientId
+      clientId,
+      artistId
     }
   })
 }

@@ -1,36 +1,18 @@
-# Extending image
-FROM node:carbon
+FROM node:8 as react-build
+WORKDIR /app
+COPY . ./
+ENV NODE_ENV=production
+RUN yarn
+RUN yarn build
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get -y install autoconf automake libtool nasm make pkg-config git apt-utils
+# Stage 2 - the production environment
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir /etc/letsencrypt
 
-# Versions
-RUN npm -v
-RUN node -v
+COPY letsencrypt/live/www.tealeel.com/fullchain.pem /etc/letsencrypt
 
-# Install app dependencies
-COPY package.json /usr/src/app/
-COPY package-lock.json /usr/src/app/
+COPY letsencrypt/live/www.tealeel.com/privkey.pem /etc/letsencrypt
 
-RUN npm install
-
-# Bundle app source
-COPY . /usr/src/app
-
-# Port to listener
-EXPOSE 3000
-
-# Environment variables
-ENV NODE_ENV production
-ENV PORT 3000
-ENV PUBLIC_PATH "/"
-
-RUN npm run start:build
-
-# Main command
-CMD [ "npm", "run", "start:server" ]
+COPY --from=react-build /app/build /usr/share/nginx/html

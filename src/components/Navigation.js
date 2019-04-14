@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { logout } from '../api'
 import classnames from 'classnames'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 class Navigation extends Component {
@@ -29,7 +30,6 @@ class Navigation extends Component {
     )
   }
   render() {
-    console.log('NAV_PROPSS:', this.props)
     const linkContainerClasses = classnames('navigation-link-container', {
       'navigation-link-container--open': this.state.mobileNavIsOpen
     })
@@ -59,6 +59,10 @@ class Navigation extends Component {
       </div>
     )
   }
+}
+
+Navigation.propTypes = {
+  token: PropTypes.string
 }
 
 const mapStateToProps = (state) => {

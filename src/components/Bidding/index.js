@@ -1,3 +1,4 @@
+require('dotenv').config()
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getArtInfo } from '../../api'
@@ -12,10 +13,11 @@ import NumberFormatCustom from '../ui/formattedNumberInput'
 import FormControl from '@material-ui/core/FormControl'
 import { getArtistArt } from 'api/index'
 import { startBidding } from 'actions/biddingActions'
-import { setBuyer } from 'actions/buyerActions'
+// import { setBuyer } from 'actions/buyerActions'
 import { connect } from 'react-redux'
 import Checkout from 'components/checkout/Checkout'
 import moment from 'moment'
+
 
 class BidPage extends Component {
   constructor(props) {
@@ -57,7 +59,6 @@ class BidPage extends Component {
 
   saveArtInfo = (art) => {
     const { artist, artInfo } = art.artPiece
-    console.log('ARTINFO:', artInfo)
     this.setState({
       artInfo,
       artist
@@ -67,13 +68,13 @@ class BidPage extends Component {
       username: artist.username,
       artistId: artist.artistId,
       callbackOnSuccess: data => {
-        console.log('BIODDING DATA:', data)
         // this.saveParsedArt({ art: data.artistArt })
       }
     })
   }
 
   componentDidMount() {
+    console.log('WEEEEEE', process.env.REACT_APP_PUBNUB_PUBLISH_KEY)
     const { artId } = this.state
     this.setState({ isFetchingArt: true })
     getArtInfo(artId, this.saveArtInfo)

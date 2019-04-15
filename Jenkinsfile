@@ -32,11 +32,17 @@ node {
       sshagent(credentials : ['tealeel-frontend-ssh-credentials']) {
       sh '''
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker stop tealeel-fronted-app &&
+          sudo rm -rf arting-it &&
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker rm -f tealeel-fronted-app
+          git clone git@github.com:keeganthomp/arting-it.git
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker run --name tealeel-fronted-tapp3e -p 80:80 -p 443:443 -v $(pwd)/letsencrypt/live/www.tealeel.com/:/etc/letsencrypt -it keezee/tealeel:${BUILD_NUMBER}
+          cp -r letsencrypt arting-it
+          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
+          docker build -t tealeel-frontend-image -f ./arting-it/Dockerfile --no-cache .
+          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
+          docker stop tealeel-frontent-container
+          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
+          docker run 
         '''
         sh "echo 'new docker image(s) running'"
       }

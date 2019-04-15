@@ -31,7 +31,7 @@ node {
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
           docker build -t tealeel-frontend-image -f ./arting-it/Dockerfile --no-cache .
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker stop tealeel-frontend-container
+          docker rm --force tealeel-frontend-container
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
           docker run --name tealeel-frontend-container -p 80:80 -p 443:443 -d tealeel-frontend-image
         '''

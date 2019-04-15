@@ -25,17 +25,18 @@ node {
       }
     }
     stage('Clean Docker Images'){
-      sh 'docker rmi tealeel-frontend'
+      // sh 'docker rmi tealeel-frontend'
       sh 'yes | docker system prune -a'
     }
     stage('Deploy'){
       sshagent(credentials : ['tealeel-frontend-ssh-credentials']) {
-      sh 'scp docker-compose.yml root@${FRONTEND_SERVER_IP}:~'
       sh '''
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker-compose down &&
+          docker stop tealeel-fronted-app &&
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          BUILD_NUMBER=${BUILD_NUMBER} docker-compose -f docker-compose.yml up -d --force-recreate
+          docker rm -f tealeel-fronted-app
+          ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
+          docker run --name tealeel-fronted-tapp3e -p 80:80 -p 443:443 -v $(pwd)/letsencrypt/live/www.tealeel.com/:/etc/letsencrypt -it keezee/tealeel:${BUILD_NUMBER}
         '''
         sh "echo 'new docker image(s) running'"
       }

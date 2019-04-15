@@ -23,7 +23,7 @@ node {
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
           sudo rm -rf arting-it &&
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          git clone git@github.com:keeganthomp/arting-it.git
+          git clone https://github.com/keeganthomp/arting-it.git
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
           cp -r letsencrypt arting-it
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\

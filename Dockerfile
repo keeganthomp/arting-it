@@ -1,6 +1,6 @@
 FROM node:8 as tealeel-frontend
 WORKDIR /app
-COPY . ./
+COPY ./arting-it/ ./
 ENV NODE_ENV=production
 RUN ls
 RUN yarn

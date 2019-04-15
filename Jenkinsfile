@@ -14,21 +14,10 @@ node {
       sh 'docker -v'
       sh 'printenv'
     }
-    stage('Build Docker Image'){
-      sh 'groups'
-      sh 'docker build -t tealeel-frontend -f Dockerfile --no-cache .'
-      dockerImage = docker.build("keezee/tealeel:${BUILD_NUMBER}")
-    }
-    stage('Push Docker image'){
-      docker.withRegistry( 'https://registry.hub.docker.com', 'docker_registry_server') {
-        dockerImage.push()
-      }
-    }
     stage('Clean Docker Images'){
-      // sh 'docker rmi tealeel-frontend'
       sh 'yes | docker system prune -a'
     }
-    stage('Deploy'){
+    stage('Build & Deploy'){
       sshagent(credentials : ['tealeel-frontend-ssh-credentials']) {
       sh '''
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
@@ -44,7 +33,7 @@ node {
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
           docker stop tealeel-frontent-container
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker run --name tealeel-frontend-container -p 80:80 -p 443:443 -v -d tealeel-frontend-image
+          docker run --name tealeel-frontend-container -p 80:80 -p 443:443 -d tealeel-frontend-image
         '''
         sh "echo 'new docker image(s) running'"
       }

@@ -123,10 +123,6 @@ class Profile extends Component {
 
   render () {
     const { artist, isUpdating, isValidUser, isUpdatingAvatar, art } = this.state
-    const stripeClientId = 'ca_EffV60ZGfT5OB2IOBh9CvoWH7mgHrpDJ'
-    const redirectUri = 'http://localhost:5300/'
-    const token = 'userToken'
-    const stripeConnectUrl = `https://connect.stripe.com/express/oauth/authorize?redirect_uri=${redirectUri}&client_id=${stripeClientId}&state=${token}`
     // const plaidDevSecret = process.env.REACT_APP_PLAID_DEV_SECRET
     // const bankToken = sessionStorage.getItem('bankToken')
     const avatarOverlayClasses = classnames('profile_avatar-image-overlay', {
@@ -170,7 +166,6 @@ class Profile extends Component {
             onSuccess={(token, metaData) => this.exchangePlaidTokenForStripeBankToken(token, metaData)}>
             <span><i className='fas fa-dollar-sign' />Click Here to link your bank account</span>
           </PlaidLink> || <p>Your bank account has been linked. Feel free to begin bidding on art.</p>} */}
-          <button onClick={() => window.location.href = stripeConnectUrl}>WOOOO</button>
           {/* <Checkout /> */}
           <div className='profile_file-upload-wrapper'>
             {!isUpdating && <FileUploader

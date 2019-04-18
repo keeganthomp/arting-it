@@ -24,15 +24,7 @@ class Homepage extends Component {
     })
   }
   componentDidMount() {
-    const { search } = this.props.location
-    const parsedQueryParams = queryString.parse(search)
-    const stripeClientId = parsedQueryParams && parsedQueryParams.code
-    if (stripeClientId) {
-      createStripeConnectAccount({
-        clientId: stripeClientId,
-        artistId: this.props.artist.artistId
-      })
-    }
+    console.log('PROCESS ENV STRIP THINGS:, ', process.env.REACT_APP_STRIPE_KEY)
     this.fetchArt()
   }
   render () {

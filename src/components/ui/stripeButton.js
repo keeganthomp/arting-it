@@ -1,7 +1,9 @@
 import React from 'react'
 
 const StripeButton = () => {
-  const connectedStripeAccountLink = 'https://connect.stripe.com/express/oauth/authorize?redirect_uri=http://localhost:5300/&client_id=ca_EffV60ZGfT5OB2IOBh9CvoWH7mgHrpDJ'
+  const stripeClientId = process.env.REACT_APP_STRIPE_CLIENT_ID_TEST
+  const redirectUri = 'http://localhost:5300/'
+  const connectedStripeAccountLink = `https://connect.stripe.com/express/oauth/authorize?redirect_uri=${redirectUri}&client_id=${stripeClientId}`
   return(<div className='stripe-button_container'>
     <button 
       className='stripe-button'

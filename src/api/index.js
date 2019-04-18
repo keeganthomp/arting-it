@@ -174,25 +174,33 @@ export const createStripeConnectAccount = ({ clientId, artistId }) => {
   })
 }
 
-export const createChargeAndTransfer = ({ seller, buyer }) => {
+export const createChargeAndTransfer = ({ seller, buyer, amount }) => {
   return makeTartApiRequest({
     method: 'POST',
     location: '/api/create/charge',
     body: {
       seller,
-      buyer
+      buyer,
+      amount
     }
   })
 }
 
-export const createStripeBuyer = ({ token, userId }) => {
+export const createStripeBuyer = ({ token, userId, email }) => {
   return makeTartApiRequest({
     method: 'POST',
     location: '/api/create/buyer',
     body: {
       token,
-      userId
+      userId,
+      email
     }
   })
 }
 
+export const retrieveCustomerPaymentInfo = ({ customerId }) => {
+  return makeTartApiRequest({
+    method: 'GET',
+    location: `/api/customer/payment/info/${customerId}`
+  })
+}

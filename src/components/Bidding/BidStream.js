@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import PubNubReact from 'pubnub-react'
 import BidTimer from './BidTimer'
-import { updateArt, getArtist, scheduleTextMessage, createChargeAndTransfer } from 'api'
+import { updateArt, getArtist, scheduleTextMessage, createChargeAndTransfer, getArtistFromId, retrieveCustomerPaymentInfo } from 'api'
 import { startBidding, setHighestBidder } from 'actions/biddingActions'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -13,7 +13,8 @@ class BidStream extends Component {
     this.state = {
       currentBids: [],
       fetchingBids: false,
-      highestBid: ''
+      highestBid: '',
+      artistStripeId: ''
     }
     this.pubnub = new PubNubReact({
       publishKey: process.env.REACT_APP_PUBNUB_PUBLISH_KEY,
@@ -28,6 +29,10 @@ class BidStream extends Component {
   }
   componentDidMount() {
     const { channelId, artInfo } = this.props
+    getArtistFromId({ artistId: artInfo.artistId }).then(response => {
+      const artist = response.data.artist
+      this.setState({ artistStripeId: artist.stripeId })
+    })
     this.setState({ fetchingBids: true })
     this.pubnub.subscribe({
       channels: [channelId],
@@ -80,9 +85,17 @@ class BidStream extends Component {
     })
   }
 
+  checkPaymentMethod = () => {
+    const { buyerToken } = this.props
+    console.log('CHECKINGG', buyerToken)
+    retrieveCustomerPaymentInfo({
+      customerId: buyerToken
+    })
+  }
+
   closeBid = () => {
-    const { highestBid } = this.state
-    const { artInfo } = this.props
+    const { highestBid, artistStripeId } = this.state
+    const { artInfo, buyerToken } = this.props
     const bidAmount = Number(highestBid.bid) * 100
     const artPieceWithBiddingEndTime = {
       ...artInfo,
@@ -93,8 +106,8 @@ class BidStream extends Component {
       artId: artInfo.artId
     }), 3000)
     createChargeAndTransfer({
-      buyerToken,
-      seller: 'seller token',
+      buyer: buyerToken,
+      seller: artistStripeId,
       amount: bidAmount
     })
   }
@@ -149,6 +162,7 @@ class BidStream extends Component {
   render () {
     const { currentBids, fetchingBids, highestBid, highestBidderProfile } = this.state
     const { user, artInfo } = this.props
+
     const doesHighestBidExist = highestBid.bid && highestBid.bid !== ''
     const timeToStart = this.state.startTime || artInfo.bidStartTime
     return(!fetchingBids && <div>
@@ -168,6 +182,7 @@ class BidStream extends Component {
         }`}</p>
       </div>}
       <h1>Bid Stream</h1>
+      <button onClick={() => this.checkPaymentMethod()}>CHECK PAYMENT METHOD</button>
       {currentBids.slice(Math.max(currentBids.length - 5, 0)).reverse().map((bid, i) => (<div
         className={bid.bidder === user.username ? 'bid-stream-bid--own-bid' : 'bid-stream-bid'}
         key={i}>
@@ -190,7 +205,8 @@ BidStream.propTypes = {
   currentArtistArt: PropTypes.array,
   startBidding: PropTypes.func,
   setHighestBidder: PropTypes.func,
-  bidInfo: PropTypes.object
+  bidInfo: PropTypes.object,
+  buyerToken: PropTypes.string
 }
 
 const mapStateToProps = (state, props) => {

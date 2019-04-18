@@ -137,7 +137,7 @@ class Profile extends Component {
     })
     return(
       
-      isValidUser && <Fragment>
+      isValidUser && <div>
 
         <h3 className='profile-header'>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
         <StripeButton />
@@ -194,7 +194,7 @@ class Profile extends Component {
             })}
           </div>}
         </div>
-      </Fragment> 
+      </div> 
     )
   }
 }

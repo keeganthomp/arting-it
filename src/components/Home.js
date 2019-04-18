@@ -25,7 +25,6 @@ class Homepage extends Component {
   }
   componentDidMount() {
     const { search } = this.props.location
-    console.log('WEEEEEE', process.env.REACT_APP_PUBNUB_PUBLISH_KEY)
     const parsedQueryParams = queryString.parse(search)
     const stripeClientId = parsedQueryParams && parsedQueryParams.code
     if (stripeClientId) {

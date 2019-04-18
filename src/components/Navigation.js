@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { logout } from '../api'
 import classnames from 'classnames'
@@ -18,7 +18,7 @@ class Navigation extends Component {
       'navigation-menu-icon-animate': this.state.mobileNavIsOpen
     })
     return(
-      <div className='navigation-menu-icon-continer'>
+      <div className='navigation-menu-icon-container'>
         <div 
           className={menuIconClasses}
           onClick={() => this.setState({ mobileNavIsOpen: !this.state.mobileNavIsOpen })}>
@@ -31,10 +31,14 @@ class Navigation extends Component {
   }
   render() {
     const linkContainerClasses = classnames('navigation-link-container', {
-      'navigation-link-container--open': this.state.mobileNavIsOpen
+      'navigation-link-container': this.state.mobileNavIsOpen
     })
-    return (
-      <div className='navigation-container'>
+    const navigationClasses = classnames('navigation-container', {
+      'navigation-container--mobile': this.props.isMobile,
+      'navigation-container--open': this.state.mobileNavIsOpen
+    })
+    return (<Fragment>
+      <div className={navigationClasses}>
         <div 
           onClick={() => this.setState({ mobileNavIsOpen: !this.state.mobileNavIsOpen })}
           className={linkContainerClasses}>
@@ -53,10 +57,13 @@ class Navigation extends Component {
           {!this.props.token && <Link to='/login'>
             <button className='navigation-link'>login</button>
           </Link>}
-          {this.props.token && <button className='navigation-link' onClick={logout}>logout</button>}
+          {this.props.token && <a href='#'>
+            <button className='navigation-link' onClick={logout}>logout</button>
+          </a>}
         </div>
-        {this.renderMenuIcon()}
       </div>
+      {this.props.isMobile && this.renderMenuIcon()}
+    </Fragment>
     )
   }
 }

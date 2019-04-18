@@ -1,17 +1,33 @@
 .navigation-container {
   margin: 0 auto;
   width: 100%;
+  &--mobile {
+    width: 100%;
+    position: absolute;
+    transform: translateX(-110%);
+    -webkit-transition: -webkit-transform 1.0s ease 0s;
+    -moz-transition: -moz-transform 1.0s ease 0s;
+    -o-transition: -o-transform 1.0s ease 0s;
+    transition: transform 1.0s ease 0s;
+    z-index: 9;
+    background:	rgba(255,192,203, .95);
+    height: 100vh;
+  }
+  &--open {
+    transform: translateX(0%);
+  }
 }
 
 .navigation-link {
   position: relative;
-  color: #000;
+  color: #fff;
   text-decoration: none;
   border: none;
   background: none;
   font-size: 1.75rem;
-  margin: 0 .5rem;
-  font-weight: 100;
+  margin: 1rem .5rem;
+  font-weight: 500;
+  text-transform: uppercase;
   &:before {
     content: '';
     position: absolute;
@@ -19,7 +35,7 @@
     height: 3px;
     bottom: 0;
     left: 0;
-    background-color: #009999;
+    background-color: #fff;
     visibility: hidden;
     -webkit-transform: scaleX(0);
     transform: scaleX(0);
@@ -39,7 +55,7 @@
     border: none;
   }
   @media only screen and (max-width: 715px) {
-    color: #fff;
+    color: #333;
     font-size: 2.5rem;
     margin-bottom: .5rem;
     &:before {
@@ -49,30 +65,16 @@
 }
 
 .navigation-link-container {
-  @media only screen and (max-width: 715px) {
-    display: flex;
-    flex-direction: column;
-    height: 0;
-    width: 100%;
-    position: fixed;
-    z-index: 1;
-    top: -60px;
-    left: 0;
-    background-color: rgba(136,136,136,0.95);
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-    position: absolute;
-  }
-  &--open {
-    top: 0;
-    height: 100%;
-  }
+  display: flex;
+  flex-direction: column;
 }
 
-.navigation-menu-icon-continer {
+.navigation-menu-icon-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  position: relative;
+  width: 100%;
+  right: 10px;
 }
 
 .navigation-menu-icon {
@@ -100,18 +102,22 @@
 .navigation-menu-icon-barOne {
   -webkit-transform: rotate(-45deg) translate(-9px, 6px);
   transform: rotate(-45deg) translate(-9px, 6px);
-  background-color: #fff;
+  background-color: #333;
 }
 
 .navigation-menu-icon-animate
 .navigation-menu-icon-barTwo {
   opacity: 0;
-  background-color: #fff;
+  background-color: #333;
 }
 
 .navigation-menu-icon-animate
 .navigation-menu-icon-barThree {
   -webkit-transform: rotate(45deg) translate(-8px, -8px);
   transform: rotate(45deg) translate(-8px, -8px);
-  background-color: #fff;
+  background-color: #333;
+}
+
+.homepage-menu {
+  color: #333;
 }

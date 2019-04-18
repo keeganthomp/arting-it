@@ -12,6 +12,7 @@ import noRouteFound from './ui/404'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import mobile from 'is-mobile'
 import classnames from 'classnames'
+import StripePage from './StripePage'
 
 class App extends Component {
   state = {
@@ -53,6 +54,7 @@ class App extends Component {
               <Route exact path='/artist/:username' component={ArtistPage} />
               <Route exact path='/signup' component={Signup} />
               <Route exact path='/login' component={Login} />
+              <Route exact path='/stripeconnect' component={StripePage} />
               <Route path='*' exact={true} component={noRouteFound} />
             </Switch>
           </div>

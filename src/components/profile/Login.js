@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField'
 import { login } from '../../api'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { saveUser } from '../../actions/userActions'
+import { setUser } from '../../actions/userActions'
 import Button from '@material-ui/core/Button'
 
 class Login extends Component {
@@ -19,7 +19,7 @@ class Login extends Component {
     this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state })
   }
   saveUserData = (userData) => {
-    this.props.saveUser({ payload: {
+    this.props.setUser({ payload: {
       artist: userData.artist,
       token: userData.token
     }
@@ -83,11 +83,11 @@ class Login extends Component {
 Login.propTypes = {
   location: PropTypes.object,
   history: PropTypes.object,
-  saveUser: PropTypes.func
+  setUser: PropTypes.func
 }
 
 const mapDispatchToProps = {
-  saveUser
+  setUser
 }
 
 export default connect(null, mapDispatchToProps)(Login)

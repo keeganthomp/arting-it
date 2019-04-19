@@ -74,7 +74,6 @@ class BidPage extends Component {
   }
 
   componentDidMount() {
-    console.log('WEEEEEE', process.env.REACT_APP_PUBNUB_PUBLISH_KEY)
     const { artId } = this.state
     this.setState({ isFetchingArt: true })
     getArtInfo(artId, this.saveArtInfo)

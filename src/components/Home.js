@@ -24,7 +24,6 @@ class Homepage extends Component {
     })
   }
   componentDidMount() {
-    console.log('PROCESS ENV STRIP THINGS:, ', process.env.REACT_APP_STRIPE_KEY)
     this.fetchArt()
   }
   render () {

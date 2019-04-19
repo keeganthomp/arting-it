@@ -87,7 +87,6 @@ class BidStream extends Component {
 
   checkPaymentMethod = () => {
     const { buyerToken } = this.props
-    console.log('CHECKINGG', buyerToken)
     retrieveCustomerPaymentInfo({
       customerId: buyerToken
     })

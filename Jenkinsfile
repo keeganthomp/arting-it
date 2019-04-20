@@ -35,7 +35,7 @@ node {
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
           docker rm --force tealeel-frontend-container
           ssh -o StrictHostKeyChecking=no root@${FRONTEND_SERVER_IP} -C\
-          docker run --name tealeel-frontend-container -p 80:80 -p 443:443 -d --env-file .env tealeel-frontend-image
+          docker run --name tealeel-frontend-container --restart on-failure -p 80:80 -p 443:443 -d tealeel-frontend-image --env-file .env
         '''
         sh "echo 'new docker image(s) running'"
       }

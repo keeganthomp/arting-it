@@ -66,15 +66,14 @@ class BidPage extends Component {
     this.setState({ isFetchingArt: false })
     getArtistArt({
       username: artist.username,
-      artistId: artist.artistId,
-      callbackOnSuccess: data => {
-        // this.saveParsedArt({ art: data.artistArt })
-      }
+      artistId: artist.artistId
+      // callbackOnSuccess: data => {
+      //   // this.saveParsedArt({ art: data.artistArt })
+      // }
     })
   }
 
   componentDidMount() {
-    console.log('WEEEEEE', process.env.REACT_APP_PUBNUB_PUBLISH_KEY)
     const { artId } = this.state
     this.setState({ isFetchingArt: true })
     getArtInfo(artId, this.saveArtInfo)
@@ -175,7 +174,8 @@ BidPage.propTypes = {
   history: PropTypes.object,
   startBidding: PropTypes.func,
   artist: PropTypes.object,
-  buyer: PropTypes.object
+  buyer: PropTypes.object,
+  buyerToken: PropTypes.string
 }
 
 const mapStateToProps = (state, props) => {

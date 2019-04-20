@@ -23,7 +23,6 @@ class CreditCardCatpure extends Component {
       userId
     }).then(async result => {
       const buyer = result.data.buyer
-      console.log('BUYERR')
       await setBuyer({
         payload: {
           token: buyer.stripeToken

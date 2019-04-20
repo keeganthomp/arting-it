@@ -17,8 +17,8 @@ class StripePage extends Component {
         createStripeConnectAccount({
           clientId: stripeClientId,
           artistId: this.props.artist.artistId
-        }).then((axiosResult) => {
-          const artistWithStripId = axiosResult.data.artist
+        }).then(() => {
+          // const artistWithStripId = axiosResult.data.artist
           window.location = redirectPage
         })
       }

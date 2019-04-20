@@ -158,8 +158,9 @@
     "extends": "react-app"
   },
   "devDependencies": {
+    "autoprefixer": "^7.1.6",
     "node-sass": "^4.9.3",
-    "postcss-loader": "^2.0.8",
+    "postcss-loader": "^2.1.6",
     "sass-loader": "^7.1.0"
   },
   "proxy": "http://localhost:5000/"

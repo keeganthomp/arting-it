@@ -5,12 +5,12 @@
     width: 100%;
     position: absolute;
     transform: translateX(-110%);
-    -webkit-transition: -webkit-transform 1.0s ease 0s;
-    -moz-transition: -moz-transform 1.0s ease 0s;
-    -o-transition: -o-transform 1.0s ease 0s;
-    transition: transform 1.0s ease 0s;
-    z-index: 9;
-    background:	rgba(255,192,203, .95);
+    -webkit-transition: -webkit-transform .5s ease 0s;
+    -moz-transition: -moz-transform .5s ease 0s;
+    -o-transition: -o-transform .5s ease 0s;
+    transition: transform .5s ease 0s;
+    z-index: 9999999;
+    background:	rgba(255,192,203, .99);
     height: 100vh;
   }
   &--open {
@@ -55,7 +55,7 @@
     border: none;
   }
   @media only screen and (max-width: 715px) {
-    color: #333;
+    color: #fff;
     font-size: 2.5rem;
     margin-bottom: .5rem;
     &:before {
@@ -72,9 +72,14 @@
 .navigation-menu-icon-container {
   display: flex;
   justify-content: flex-end;
-  position: relative;
+  position: absolute;
   width: 100%;
-  right: 10px;
+  background: white;
+  z-index: 999;
+  &--open {
+    // need to hide white icon container when menu is open
+    z-index: inherit;
+  }
 }
 
 .navigation-menu-icon {
@@ -82,7 +87,9 @@
   cursor: pointer;
   position: relative;
   display: none;
-  z-index: 9;
+  // needs to be visible when mobile menu open
+  z-index: 9999999;
+  right: 10px;
   @media only screen and (max-width: 715px) {
     display: block;
   }
@@ -102,20 +109,20 @@
 .navigation-menu-icon-barOne {
   -webkit-transform: rotate(-45deg) translate(-9px, 6px);
   transform: rotate(-45deg) translate(-9px, 6px);
-  background-color: #333;
+  background-color: #fff;
 }
 
 .navigation-menu-icon-animate
 .navigation-menu-icon-barTwo {
   opacity: 0;
-  background-color: #333;
+  background-color: #fff;
 }
 
 .navigation-menu-icon-animate
 .navigation-menu-icon-barThree {
   -webkit-transform: rotate(45deg) translate(-8px, -8px);
   transform: rotate(45deg) translate(-8px, -8px);
-  background-color: #333;
+  background-color: #fff;
 }
 
 .homepage-menu {

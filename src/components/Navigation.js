@@ -17,8 +17,11 @@ class Navigation extends Component {
     const menuIconClasses = classnames('navigation-menu-icon', {
       'navigation-menu-icon-animate': this.state.mobileNavIsOpen
     })
+    const navigationMenuIconClasses = classnames('navigation-menu-icon-container', {
+      'navigation-menu-icon-container--open': this.state.mobileNavIsOpen
+    })
     return(
-      <div className='navigation-menu-icon-container'>
+      <div className={navigationMenuIconClasses}>
         <div 
           className={menuIconClasses}
           onClick={() => this.setState({ mobileNavIsOpen: !this.state.mobileNavIsOpen })}>

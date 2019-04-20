@@ -45,18 +45,20 @@ class App extends Component {
             {isMobile && <div className='homepage-menu'>
               <Navigation isMobile/>
             </div>}
-            <Switch>
-              <Route exact path='/' component={Homepage} />
-              <Route exact path='/profile' component={Profile} />
-              <Route exact path='/art' component={ArtPage} />
-              <Route exact path='/art/:id' component={ArtDetail} />
-              <Route exact path='/bid/:id' component={BidPage} />
-              <Route exact path='/artist/:username' component={ArtistPage} />
-              <Route exact path='/signup' component={Signup} />
-              <Route exact path='/login' component={Login} />
-              <Route exact path='/stripeconnect' component={StripePage} />
-              <Route path='*' exact={true} component={noRouteFound} />
-            </Switch>
+            <div className='homepage-content_main'>
+              <Switch>
+                <Route exact path='/' component={Homepage} />
+                <Route exact path='/profile' component={Profile} />
+                <Route exact path='/art' component={ArtPage} />
+                <Route exact path='/art/:id' component={ArtDetail} />
+                <Route exact path='/bid/:id' component={BidPage} />
+                <Route exact path='/artist/:username' component={ArtistPage} />
+                <Route exact path='/signup' component={Signup} />
+                <Route exact path='/login' component={Login} />
+                <Route exact path='/stripeconnect' component={StripePage} />
+                <Route path='*' exact={true} component={noRouteFound} />
+              </Switch>
+            </div>
           </div>
         </div>
       </BrowserRouter>

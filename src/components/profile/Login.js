@@ -39,7 +39,7 @@ class Login extends Component {
     login(data, this.saveUserData, this.handleApiErrors)
   }
   render() {
-    return(<div className='Login-container container'>
+    return(<div className='login-container'>
       <h1 className='login-header'>Login page</h1>
       <Formik
         onSubmit={(values) => this.login(values)}

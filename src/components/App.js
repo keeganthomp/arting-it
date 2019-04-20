@@ -10,7 +10,7 @@ import Login from './profile/Login'
 import BidPage from './Bidding'
 import noRouteFound from './ui/404'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import mobile from 'is-mobile'
+// import mobile from 'is-mobile'
 import classnames from 'classnames'
 import StripePage from './StripePage'
 

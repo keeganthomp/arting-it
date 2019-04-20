@@ -31,7 +31,7 @@ class ArtPage extends Component {
         this.setState({ art, filtersAvailable })
       }
       this.setState({isFetchingArt: false})
-    }).catch(err => {
+    }).catch(() => {
       this.setState({isFetchingArt: false})
     })
   }

@@ -69,7 +69,8 @@ class Navigation extends Component {
 }
 
 Navigation.propTypes = {
-  token: PropTypes.string
+  token: PropTypes.string,
+  isMobile: PropTypes.string
 }
 
 const mapStateToProps = (state) => {

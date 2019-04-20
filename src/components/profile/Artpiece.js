@@ -25,7 +25,7 @@ class Artpiece extends Component {
     }
   }
   componentDidMount() {
-    const { artPiece, art } = this.props
+    const { artPiece } = this.props
     this.setState({
       artPiece,
       artPrice: artPiece.price,

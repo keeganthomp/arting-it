@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import FlipCard from './ui/FlipCard'
 import PropTypes from 'prop-types'
-const queryString = require('query-string')
+// const queryString = require('query-string')
 import { connect } from 'react-redux'
-import { createStripeConnectAccount, getAllArt } from 'api'
+import { getAllArt } from 'api'
 
 class Homepage extends Component {
   state = {

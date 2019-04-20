@@ -63,6 +63,7 @@
     "pg-promise": "^8.4.6",
     "plaid": "^2.10.0",
     "postcss-flexbugs-fixes": "3.2.0",
+    "postcss-loader": "^3.0.0",
     "promise": "8.0.1",
     "prop-types": "^15.6.2",
     "pubnub-react": "^1.2.0",
@@ -160,7 +161,7 @@
   "devDependencies": {
     "autoprefixer": "^7.1.6",
     "node-sass": "^4.9.3",
-    "postcss-loader": "^2.1.6",
+    "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0"
   },
   "proxy": "http://localhost:5000/"

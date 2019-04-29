@@ -9,22 +9,8 @@ import * as Yup from 'yup'
 import { createArtist, createBuyer } from 'api'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
-import { withStyles } from '@material-ui/core/styles'
 import MuiPhoneNumber from 'material-ui-phone-number'
 
-const styles = theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  formControl: {
-    margin: theme.spacing.unit,
-    width: 175
-  },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2
-  }
-})
 class Signup extends Component {
   state = {
     phoneNumber: '',
@@ -63,7 +49,6 @@ class Signup extends Component {
   }
 
   render () {
-    const { classes } = this.props
     return (<div className='signup-container container'>
       <h1 className='signup-header'>Signup page</h1>
       <Formik
@@ -91,7 +76,7 @@ class Signup extends Component {
         }) => (
           <form className='signup-form' onSubmit={handleSubmit}>
             <div className='signup-input-container'>
-              <FormControl required className={classes.formControl}>
+              <FormControl required style={{width: 175}}>
                 <InputLabel error={!!errors.accountType} shrink htmlFor='account-type-input_account-type'>
                   Account Type
                 </InputLabel>
@@ -155,7 +140,6 @@ class Signup extends Component {
                 InputLabelProps={{
                   shrink: true
                 }}
-                inputClass={classes.formControl}
               />
               {this.state.phoneNumberError && <div className='signup-form_error'>{this.state.phoneNumberError}</div>}
             </div>
@@ -175,4 +159,4 @@ Signup.propTypes = {
   classes: PropTypes.object
 }
 
-export default withStyles(styles)(Signup)
+export default Signup

@@ -5,6 +5,7 @@
     width: 100%;
     position: absolute;
     transform: translateX(-110%);
+    -webkit-transform: translateX(-110%);
     -webkit-transition: -webkit-transform .5s ease 0s;
     -moz-transition: -moz-transform .5s ease 0s;
     -o-transition: -o-transform .5s ease 0s;
@@ -15,6 +16,7 @@
   }
   &--open {
     transform: translateX(0%);
+    -webkit-transform: translateX(0%);
   }
 }
 

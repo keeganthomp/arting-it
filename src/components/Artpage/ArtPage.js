@@ -44,7 +44,7 @@ class ArtPage extends Component {
   }
 
   componentDidMount() {
-    const { token } = this.props.artist
+    const { token } = this.props
     // this.setState({isFetchingArt: true})
     checkForValidUser({
       callbackOnSuccess: this.fetchArt,
@@ -105,11 +105,13 @@ class ArtPage extends Component {
 
 ArtPage.propTypes = {
   history: PropTypes.object,
-  artist: PropTypes.object
+  artist: PropTypes.object,
+  token: PropTypes.object
 }
 const mapStateToProps = (state) => {
   return {
-    artist: state.user
+    artist: state.user,
+    token: state.session.token
   }
 }
 

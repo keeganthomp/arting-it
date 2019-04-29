@@ -99,16 +99,23 @@ class BidStream extends Component {
     const artPieceWithBiddingEndTime = {
       ...artInfo,
       closeTime: moment().unix()
-    } 
+    }
     setTimeout(() => updateArt({
       body: { ...artPieceWithBiddingEndTime },
       artId: artInfo.artId
-    }), 3000)
+    }), 1000)
     createChargeAndTransfer({
       buyer: buyerToken,
       seller: artistStripeId,
       amount: bidAmount
     })
+    const highestBidder = this.state.highestBidderProfile
+    scheduleTextMessage({
+      phoneNumber: highestBidder.phone,
+      message: `WOOOO ${highestBidder.username}!! You freaking won the art auction. Please go to https://www.tealeel.com/ to finalize the purchase.`,
+      time: artPieceWithBiddingEndTime.startTime
+    })
+
   }
 
   getBidderAndbid = (message) => {
@@ -144,11 +151,6 @@ class BidStream extends Component {
               artId: this.props.artInfo.artId
             }
           })
-          this.props.bidInfo && scheduleTextMessage({
-            phoneNumber: highestBidder.phone,
-            message: `WOOOO ${highestBidder.username}!! You freaking won the art auction. Please go to https://www.tealeel.com/ to finalize the purchase.`,
-            time: this.props.bidInfo.startTime
-          })
         })
       }
     }
@@ -161,7 +163,6 @@ class BidStream extends Component {
   render () {
     const { currentBids, fetchingBids, highestBid, highestBidderProfile } = this.state
     const { user, artInfo } = this.props
-
     const doesHighestBidExist = highestBid.bid && highestBid.bid !== ''
     const timeToStart = this.state.startTime || artInfo.bidStartTime
     return(!fetchingBids && <div>
@@ -169,7 +170,7 @@ class BidStream extends Component {
         currentBids={currentBids}
         startTime={timeToStart}
         isBiddingClosed={artInfo.closeTime}
-        artId={artInfo.id}
+        artId={artInfo.artId}
         closeBid={this.closeBid}
         artInfo={artInfo}
         highestBidderProfile={highestBidderProfile}
@@ -211,7 +212,8 @@ BidStream.propTypes = {
 const mapStateToProps = (state, props) => {
   return {
     bidInfo: state.bid[props.artInfo.id],
-    buyerToken: state.buyer.token
+    buyerToken: state.buyer.token,
+    token: state.session.token
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Navigation from './Navigation'
 import ArtPage from './Artpage/ArtPage'
-import Profile from './Profile'
+import Dashboard from './Dashboard'
 import ArtDetail from './Artpage/ArtDetail'
 import ArtistPage from './Artist/'
 import Homepage from './Home'
@@ -48,7 +48,7 @@ class App extends Component {
             <div className='homepage-content_main'>
               <Switch>
                 <Route exact path='/' component={Homepage} />
-                <Route exact path='/profile' component={Profile} />
+                <Route exact path='/profile' component={Dashboard} />
                 <Route exact path='/art' component={ArtPage} />
                 <Route exact path='/art/:id' component={ArtDetail} />
                 <Route exact path='/bid/:id' component={BidPage} />

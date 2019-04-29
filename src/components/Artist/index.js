@@ -14,7 +14,7 @@ class ArtistPage extends Component {
     }
     checkForValidUser({
       callbackOnFailure: () => this.props.history.push('/login'),
-      token: props.artist.token
+      token: props.token
     })
   }
   saveArtistToState = (artist) => {
@@ -62,12 +62,14 @@ ArtistPage.propTypes = {
   image: PropTypes.string,
   history: PropTypes.object,
   match: PropTypes.object,
-  artist: PropTypes.object
+  artist: PropTypes.object,
+  token: PropTypes.string
 }
 
 const mapStateToProps = (state) => {
   return {
-    artist: state.user
+    artist: state.user,
+    token: state.session.token
   }
 }
 

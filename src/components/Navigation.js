@@ -78,7 +78,7 @@ Navigation.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.user.token
+    token: state.session.token
   }
 }
 

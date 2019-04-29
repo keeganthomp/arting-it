@@ -4,23 +4,66 @@ import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
-import Input from '@material-ui/core/Input'
 import MenuItem from '@material-ui/core/MenuItem'
 import * as Yup from 'yup'
-import { createArtist } from '../../api'
+import { createArtist, createBuyer } from 'api'
 import PropTypes from 'prop-types'
-import InputMask from 'react-input-mask'
 import Button from '@material-ui/core/Button'
+import { withStyles } from '@material-ui/core/styles'
+import MuiPhoneNumber from 'material-ui-phone-number'
 
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    width: 175
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2
+  }
+})
 class Signup extends Component {
-  createArtist = data => {
+  state = {
+    phoneNumber: '',
+    phoneNumberError: false
+  }
+  createUser = data => {
+    // user will either be an artist or a buyer
+    const isUserAnArtist = data.accountType.toLowerCase() === 'artist'
     const formattedData = {
       ...data,
-      phone: data.phone.replace(/[/\s_()]/g, '')
+      phone: data.phone.replace(/[- )(]/g,'')
     }
-    createArtist(formattedData).then(res => res.status === 200 && this.props.history.push('/login'))
+    // if the new user is not an artist, then they are a buyer
+    if (isUserAnArtist) {
+      createArtist(formattedData).then(res => res.status === 200 && this.props.history.push('/login'))
+    } else {
+      createBuyer(formattedData).then(res => res.status === 200 && this.props.history.push('/login'))
+    }
   }
+  checkForPhoneNumberError = (phoneNumberFromInput) => {
+    const { phoneNumber } = this.state
+    const phoneNumberToValidate = phoneNumberFromInput || phoneNumber
+    const validPhoneNumberRegex = /^\+?[0-9]{1}\s*(\([0-9]{3}\)\s*|[0-9]{3}-)[0-9]{3}-[0-9]{4}$/
+    const isValidPhoneNumber = validPhoneNumberRegex.test(phoneNumberToValidate)
+    if (isValidPhoneNumber) {
+      this.setState({ phoneNumberError: false })
+    } else {
+      this.setState({ phoneNumberError: 'Please enter a valid phone number' })
+    }
+  }
+  hanndlePhoneNumberChange  = (phoneNumber) => {
+    this.setState({ phoneNumber })
+    if (this.state.phoneNumberError) {
+      this.checkForPhoneNumberError(phoneNumber)
+    }
+  }
+
   render () {
+    const { classes } = this.props
     return (<div className='signup-container container'>
       <h1 className='signup-header'>Signup page</h1>
       <Formik
@@ -28,12 +71,17 @@ class Signup extends Component {
           Yup.object().shape({
             username: Yup.string().min(5).required('Username is required'),
             password: Yup.string().min(5).required('Password is required'),
-            phone: Yup.string().required('Phone number is required')
-            // first_name: Yup.string().required('First Name is required'),
-            // last_name: Yup.string().required('Last Name is required')
+            accountType: Yup.string().required('Account Type is required')
           })
         }
-        onSubmit={(values) => this.createArtist(values)}
+        validateOnBlur={false}
+        onSubmit={(values) => {
+          const valuesForDatabase = {
+            ...values,
+            phone: this.state.phoneNumber
+          }
+          this.createUser(valuesForDatabase)
+        }}
         render={({
           values,
           errors,
@@ -43,7 +91,28 @@ class Signup extends Component {
         }) => (
           <form className='signup-form' onSubmit={handleSubmit}>
             <div className='signup-input-container'>
+              <FormControl required className={classes.formControl}>
+                <InputLabel error={!!errors.accountType} shrink htmlFor='account-type-input_account-type'>
+                  Account Type
+                </InputLabel>
+                <Select
+                  value={values.accountType}
+                  onChange={handleChange}
+                  name='accountType'
+                  error={!!errors.accountType}
+                  inputProps={{
+                    id: 'account-type-input_account-type'
+                  }}
+                >
+                  <MenuItem value='artist'>Artist</MenuItem>
+                  <MenuItem value='buyer'>Buyer</MenuItem>
+                </Select>
+              </FormControl>
+              {errors.accountType && <div className='signup-form_error'>{errors.accountType}</div>}
+            </div>
+            <div className='signup-input-container'>
               <TextField
+                required
                 error={errors.username && true}
                 label='Username'
                 type='text'
@@ -51,116 +120,44 @@ class Signup extends Component {
                 value={values.username}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                InputLabelProps={{
+                  shrink: true
+                }}
               />
               {errors.username && <div className='signup-form_error'>{errors.username}</div>}
             </div>
             <div className='signup-input-container'>
               <TextField
+                required
                 error={errors.password && true}
                 label='Password'
                 type='password'
                 name='password'
                 value={values.password}
                 onChange={handleChange}
+                InputLabelProps={{
+                  shrink: true
+                }}
               />
               {errors.password && <div className='signup-form_error'>{errors.password}</div>}
             </div>
             <div className='signup-input-container'>
-              <InputMask
-                mask="(1)999 999 9999"
-                value={values.phone}
-                onChange={handleChange}
-              >
-                {() => <TextField
-                  error={errors.phone && true}
-                  label='Phone'
-                  type='text'
-                  name='phone'
-                />}
-              </InputMask>
-              {errors.phone && <div className='signup-form_error'>{errors.phone}</div>}
-            </div>
-            
-            {/* <div className='signup-input-container'>
-              <TextField
-                label='First Name'
-                type='text'
-                name='first_name'
-                value={values.firstName}
-                onChange={handleChange}
+              <MuiPhoneNumber
+                required
+                onBlur={() => this.checkForPhoneNumberError()}
+                name='phone'
+                error={this.state.phoneNumberError}
+                label='Phone Number'
+                data-cy='user-phone'
+                defaultCountry={'us'}
+                value={this.state.phoneNumber}
+                onChange={phoneNumber => this.hanndlePhoneNumberChange(phoneNumber)}
+                InputLabelProps={{
+                  shrink: true
+                }}
+                inputClass={classes.formControl}
               />
-              {errors.first_name && <div className='signup-form_error'>{errors.first_name}</div>}
-            </div>
-            <div className='signup-input-container'>
-              <TextField
-                label='Last Name'
-                type='text'
-                name='last_name'
-                value={values.lastName}
-                onChange={handleChange}
-              />
-              {errors.last_name && <div className='signup-form_error'>{errors.last_name}</div>}
-            </div> */}
-            <div className='signup-input-container'>
-              <FormControl>
-                <InputLabel shrink htmlFor='sex-input-signup'>
-                  Sex
-                </InputLabel>
-                <Select
-                  value={values.sex}
-                  onChange={handleChange}
-                  input={<Input name='sex' id='sex-input-signup' />}
-                >
-                  <MenuItem value='F'>Female</MenuItem>
-                  <MenuItem value='M'>Male</MenuItem>
-                </Select>
-              </FormControl>
-              {errors.sex && <div className='signup-form_error'>{errors.sex}</div>}
-            </div>
-            <div className='signup-input-container'>
-              <FormControl>
-                <InputLabel shrink htmlFor='age-input-signup'>
-                  Age
-                </InputLabel>
-                <Select
-                  value={values.age}
-                  onChange={handleChange}
-                  input={<Input name='age' id='age-input-signup' />}
-                >
-                  <MenuItem value={20}>20</MenuItem>
-                  <MenuItem value={40}>40</MenuItem>
-                  <MenuItem value={50}>50</MenuItem>
-                  <MenuItem value={60}>60</MenuItem>
-                </Select>
-              </FormControl>
-              {errors.age && <div className='signup-form_error'>{errors.age}</div>}
-            </div>
-            <div className='signup-input-container'>
-              <FormControl>
-                <InputLabel shrink htmlFor='location-input-signup'>
-                  Location
-                </InputLabel>
-                <Select
-                  value={values.location}
-                  onChange={handleChange}
-                  input={<Input name='location' id='location-input-signup' />}
-                >
-                  <MenuItem value='Nashville'>Nashville</MenuItem>
-                  <MenuItem value='Smyrna'>Smyrna</MenuItem>
-                  <MenuItem value='Brentwood'>Brentwood</MenuItem>
-                  <MenuItem value='Franklin'>Franklin</MenuItem>
-                </Select>
-              </FormControl>
-              {errors.location && <div className='signup-form_error'>{errors.location}</div>}
-            </div>
-            <div className='signup-input-container'>
-              <TextField
-                label='Specialty'
-                type='text'
-                name='specialty'
-                value={values.specialty}
-                onChange={handleChange}
-              />
+              {this.state.phoneNumberError && <div className='signup-form_error'>{this.state.phoneNumberError}</div>}
             </div>
             <div className='signup-input-container' style={{ marginTop: '1rem' }}>
               <Button type='submit' variant='contained' color='primary' >signup</Button>
@@ -174,7 +171,8 @@ class Signup extends Component {
 }
 
 Signup.propTypes = {
-  history: PropTypes.object
+  history: PropTypes.object,
+  classes: PropTypes.object
 }
 
-export default Signup
+export default withStyles(styles)(Signup)

@@ -1,26 +1,24 @@
+
 import React, { Component, Fragment } from 'react'
-import FileUploader from './ui/fileUploader'
-import { uploadThing, getStripeToken } from '../api'
+import FileUploader from '../ui/fileUploader'
+import { uploadThing } from 'api'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Artpiece from './profile/Artpiece'
+import Artpiece from '../profile/Artpiece'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { checkForValidUser } from '../helpers/auth'
 import classnames from 'classnames'
-// import PlaidLink from 'react-plaid-link'
 import Spinner from 'react-spinkit'
-import { addArt } from '../actions/artActions'
+import { addArt } from '../../actions/artActions'
 import { getArtistArt } from 'api'
-import StripeButton from './ui/stripeButton'
+import StripeButton from '../ui/stripeButton'
 
-class Profile extends Component {
+class ArtistDashboard extends Component {
   constructor(props) {
     super()
     this.state = {
       artist: {},
       art: props.art || [],
       isUpdating: false,
-      isValidUser: false,
       isCheckingForValidUser: false,
       isAvatarOverlayActive: false
     }
@@ -32,27 +30,17 @@ class Profile extends Component {
     this.props.history.push('login')
   }
   componentDidMount() {
-    const { artist, token } = this.props.artist
-    const isUserFromSession = (sessionStorage.getItem('user') && (sessionStorage.getItem('user') !== 'undefined'))
-    this.setState({ isCheckingForValidUser: true })
-    checkForValidUser({
-      callbackOnSuccess: this.callBackForValidUser,
-      callbackOnFailure: this.callBackForInValidUser,
-      token
+    const { artist } = this.props.artist
+    this.setState({ artist })
+    getArtistArt({
+      username: artist.username,
+      artistId: artist.artistId
+    }).then(result => {
+      const art = result.data.art
+      this.setState({ art: [ ...art ] })
     })
-    if (isUserFromSession) {
-      this.setState({ artist: JSON.parse(sessionStorage.getItem('user')) })
-    } else if (artist) {
-      this.setState({ artist })
-      getArtistArt({
-        username: artist.username,
-        artistId: artist.artistId
-      }).then(result => {
-        const art = result.data.art
-        this.setState({ art: [ ...art ] })
-      })
-    }
   }
+
   saveAvatar = (file) => {
     this.setState({ isUpdatingAvatar: true })
     const { artist } = this.state
@@ -78,17 +66,6 @@ class Profile extends Component {
         this.setState({ artist: updatedArtist })
       })
     }
-  }
-
-  exchangePlaidTokenForStripeBankToken = (token, metaData) => {
-    const accountId = metaData.account_id
-    this.setState({
-      bankToken: token,
-      accountId
-    })
-    getStripeToken({ accountId, accesToken: token }).then(response => {
-      console.log('RESPONSE:', response)
-    })
   }
 
   updateArtPortfolio = (file) => {
@@ -122,19 +99,15 @@ class Profile extends Component {
   }
 
   render () {
-    const { artist, isUpdating, isValidUser, isUpdatingAvatar, art } = this.state
-    // const plaidDevSecret = process.env.REACT_APP_PLAID_DEV_SECRET
-    // const bankToken = sessionStorage.getItem('bankToken')
+    const { artist, isUpdating, isUpdatingAvatar, art } = this.state
     const avatarOverlayClasses = classnames('profile_avatar-image-overlay', {
       'profile_avatar-image-overlay--active': this.state.isAvatarOverlayActive
     })
     const avatarOverlayPencilIconClasses = classnames('profile_avatar-edit-icon', {
       'profile_avatar-edit-icon--active': this.state.isAvatarOverlayActive
     })
-    return(
-      
-      isValidUser && <div>
-
+    return(     
+      <div>
         <h3 className='profile-header'>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
         <StripeButton />
         <div className='profile-main-content'>
@@ -156,17 +129,6 @@ class Profile extends Component {
                 className='fas fa-user-alt profile_avatar-icon' />}
             </div>
           </FileUploader> || <CircularProgress />}
-          {/* can use onExit prop to fire when the user exits plaid plugin */}
-          {/* {!bankToken && <PlaidLink
-            clientName='Teal Eel'
-            env='sandbox'
-            product={['auth', 'transactions']}
-            publicKey={plaidDevSecret}
-            className='weee'
-            onSuccess={(token, metaData) => this.exchangePlaidTokenForStripeBankToken(token, metaData)}>
-            <span><i className='fas fa-dollar-sign' />Click Here to link your bank account</span>
-          </PlaidLink> || <p>Your bank account has been linked. Feel free to begin bidding on art.</p>} */}
-          {/* <Checkout /> */}
           <div className='profile_file-upload-wrapper'>
             {!isUpdating && <FileUploader
               className='profile_art-upload-zone'
@@ -194,7 +156,7 @@ class Profile extends Component {
   }
 }
 
-Profile.propTypes = {
+ArtistDashboard.propTypes = {
   location: PropTypes.object,
   history: PropTypes.object,
   artist: PropTypes.object,
@@ -213,4 +175,4 @@ const mapDispatchToProps = {
   addArt
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile)
+export default connect(mapStateToProps, mapDispatchToProps)(ArtistDashboard)

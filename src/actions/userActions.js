@@ -1,6 +1,8 @@
+const SET_USER = 'SET_USER'
+
 export const setUser = ({ payload }) => dispatch => {
   dispatch({
-    type: 'GET_USER',
+    type: SET_USER,
     payload
   })
 }

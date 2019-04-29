@@ -35,10 +35,18 @@ export const createArtist = (body) => {
   })
 }
 
+export const createBuyer = (body) => {
+  return makeTartApiRequest({
+    method: 'POST',
+    location: '/api/buyer/signup',
+    body
+  })
+}
+
 export const login = (body, callbackOnSuccess, callbackOnFailure) => {
   makeTartApiRequest({
     method: 'POST',
-    location: '/api/artist/login',
+    location: '/api/user/login',
     body,
     callbackOnSuccess,
     callbackOnFailure
@@ -84,10 +92,11 @@ export const uploadThing = (body, id) => {
   })
 }
 
-export const updateArt = ({ body, id }) => {
+export const updateArt = ({ body, artId }) => {
+  console.log('artIdartId', artId)
   return makeTartApiRequest({
     method: 'PATCH',
-    location: `/api/update/art/${id}`,
+    location: `/api/update/art/${artId}`,
     body
   })
 }

@@ -39,7 +39,7 @@ class BidPage extends Component {
     checkForValidUser({
       callbackOnSuccess: () => this.setUser(),
       callbackOnFailure: () => this.props.history.push('/login'),
-      token: props.artist.token
+      token: props.token
     })
   }
 
@@ -175,7 +175,8 @@ BidPage.propTypes = {
   startBidding: PropTypes.func,
   artist: PropTypes.object,
   buyer: PropTypes.object,
-  buyerToken: PropTypes.string
+  buyerToken: PropTypes.string,
+  token: PropTypes.string
 }
 
 const mapStateToProps = (state, props) => {
@@ -183,7 +184,8 @@ const mapStateToProps = (state, props) => {
   return {
     timeLeftToBid: state.bid[artId] && state.bid[artId].timeToClose,
     artist: state.user,
-    buyerToken: state.buyer.token
+    buyerToken: state.buyer.token,
+    token: state.session.token
   }
 }
 

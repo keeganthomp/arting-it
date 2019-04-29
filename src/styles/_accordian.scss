@@ -1,5 +1,6 @@
 .accordian-content {
   transition: height .5s;
+  -webkit-transition: height .5s;
   height: 0;
   overflow: hidden;
   &--open {
@@ -19,6 +20,7 @@
 .accordian-arrow-icon {
   font-size: 1.75rem;
   transition: transform .5s;
+  -webkit-transition: transform .5s;
   &--open {
     transform: rotate(180deg);
   }

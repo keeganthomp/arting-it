@@ -5,6 +5,7 @@ import { login } from '../../api'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { setUser } from '../../actions/userActions'
+import { setToken } from '../../actions/sessionActions'
 import Button from '@material-ui/core/Button'
 
 class Login extends Component {
@@ -19,17 +20,15 @@ class Login extends Component {
     this.props.location.state && this.setState({ noPermissionsMessage: this.props.location.state })
   }
   saveUserData = (userData) => {
-    this.props.setUser({ payload: {
-      artist: userData.artist,
-      token: userData.token
-    }
-    })
-    sessionStorage.setItem('user', JSON.stringify(userData.artist))
+    const user = userData.artist || userData.buyer
+    this.props.setUser({ payload: { user } })
+    this.props.setToken({ payload: { token: userData.token } })
+    sessionStorage.setItem('user', JSON.stringify(user))
     sessionStorage.setItem('art', JSON.stringify([]))
     sessionStorage.setItem('token', JSON.stringify(userData.token))
     this.props.history.push({
       pathname: '/profile',
-      state: userData.artist
+      state: user
     })
   }
   handleApiErrors = (apiError) => {
@@ -83,11 +82,13 @@ class Login extends Component {
 Login.propTypes = {
   location: PropTypes.object,
   history: PropTypes.object,
-  setUser: PropTypes.func
+  setUser: PropTypes.func,
+  setToken: PropTypes.func
 }
 
 const mapDispatchToProps = {
-  setUser
+  setUser,
+  setToken
 }
 
 export default connect(null, mapDispatchToProps)(Login)

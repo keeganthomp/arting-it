@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import classnames from 'classnames'
 import Spinner from 'react-spinkit'
 import { addArt } from '../../actions/artActions'
-import { getArtistArt } from 'api'
+import { getArtistArt, getArtist } from 'api'
 import StripeButton from '../ui/stripeButton'
 
 class ArtistDashboard extends Component {
@@ -31,7 +31,10 @@ class ArtistDashboard extends Component {
   }
   componentDidMount() {
     const { artist } = this.props.artist
-    this.setState({ artist })
+    getArtist(artist.username).then(apiResponse => {
+      const artist = apiResponse.data.artist
+      this.setState({ artist })
+    })
     getArtistArt({
       username: artist.username,
       artistId: artist.artistId
@@ -106,10 +109,11 @@ class ArtistDashboard extends Component {
     const avatarOverlayPencilIconClasses = classnames('profile_avatar-edit-icon', {
       'profile_avatar-edit-icon--active': this.state.isAvatarOverlayActive
     })
+    const hasLinkedBankAccount = artist.stripeId !== null
     return(     
       <div>
         <h3 className='profile-header'>Hi {artist.username || (artist.first_name + artist.last_name)}!</h3>
-        <StripeButton />
+        {!hasLinkedBankAccount && <StripeButton />}
         <div className='profile-main-content'>
           {this.state.source && <img src={this.state.source} alt='' />}
           {!isUpdatingAvatar && <FileUploader

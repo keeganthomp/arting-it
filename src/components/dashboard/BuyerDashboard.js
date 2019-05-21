@@ -90,7 +90,7 @@ BuyerDashboard.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    buyer: state.user
+    buyer: state.user.buyer
   }
 }
 

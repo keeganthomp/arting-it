@@ -1,4 +1,17 @@
 .credit-card-form {
   max-width: 19rem;
   margin: 0 auto;
+  &_email {
+    outline: none;
+    border: none;
+    margin-bottom: .25rem;
+  }
+  &_submit-button {
+    margin-top: .5rem;
+  }
+  p {
+    font-style: italic;
+    font-size: 10px;
+    margin: 10px 0 5px 0;
+  }
 }

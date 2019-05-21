@@ -35,10 +35,12 @@ class FileUploader extends Component {
             onMouseEnter={() => this.setState({ isHoveringOnDropZone: true })}
             onMouseLeave={() => this.setState({ isHoveringOnDropZone: false })}
           >
-            <div className={uploaderOverlayClasses}>
-              click to upload
-            </div>
-            <h1 style={{ padding: '2.25rem', fontSize: '4rem' }}>+</h1>
+            <p style={{ 
+              fontSize: '3rem',
+              position: 'relative', 
+              bottom: '5px',
+              marginBottom: '0'
+            }}>+</p>
           </div>}
         </Dropzone>
         {files.length > 0 && !noPreview && !loading && !isLoading && <div className='file-uploader_summary'>

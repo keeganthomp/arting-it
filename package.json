@@ -81,6 +81,7 @@
     "react-dropzone": "^5.0.1",
     "react-fileupload-progress": "^0.4.2",
     "react-input-mask": "^2.0.4",
+    "react-jss": "^8.6.1",
     "react-number-format": "^4.0.6",
     "react-phone-number-input": "^2.3.5",
     "react-plaid-link": "^1.0.3",

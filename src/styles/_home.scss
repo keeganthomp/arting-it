@@ -22,7 +22,7 @@
 
 .homepage-content {
   overflow: scroll;
-  max-height: 100vh;
+  min-height: 100vh;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   &_image-container {

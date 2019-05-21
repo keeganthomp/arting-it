@@ -13,3 +13,7 @@
 @import 'accordian';
 @import 'phone-input';
 @import 'credit-card';
+
+#root {
+  min-height: 100vh;
+}

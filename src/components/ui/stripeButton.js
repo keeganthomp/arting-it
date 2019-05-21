@@ -5,9 +5,12 @@ const StripeButton = () => {
   const redirectUri = 'http://localhost:5300/'
   const connectedStripeAccountLink = `https://connect.stripe.com/express/oauth/authorize?redirect_uri=${redirectUri}&client_id=${stripeClientId}`
   return(<div className='stripe-button_container'>
-    <button 
-      className='stripe-button'
-      onClick={() => window.location = connectedStripeAccountLink} >Connect Account</button>
+    <p className='stripe-connect-button_description'>Click here to set up your bank account</p>
+    <div 
+      className='stripe-connect-button'
+      onClick={() => window.location = connectedStripeAccountLink}>
+      <i className='fab fa-cc-stripe' />
+    </div>
   </div>)
 }
 

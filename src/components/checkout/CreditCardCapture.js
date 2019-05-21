@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import {CardElement, injectStripe} from 'react-stripe-elements'
 // import {Elements, StripeProvider} from 'react-stripe-elements'
 import { createStripeBuyer } from 'api'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
 
 class CreditCardCatpure extends Component {
   constructor(props) {
@@ -39,13 +41,28 @@ class CreditCardCatpure extends Component {
     return (
       <div className='credit-card-form'>
         <p>Insert your credit card information and email to start bidding.</p>
-        <input
+        <TextField
+          required
+          label='Email'
           type='email'
+          name='email'
           placeholder='example@gmail.com'
+          style={{ marginBottom: '.5rem' }}
+          value={this.state.email}
           onChange={this.handleEmailChange()}
-          value={this.state.email}/>
-        <CardElement />
-        <button onClick={this.submit}>Send</button>
+          InputLabelProps={{
+            shrink: true
+          }}
+        />
+        <CardElement onChange={cardForm => console.log('isComplete', cardForm.complete)} />
+        <Button
+          onClick={this.submit} 
+          type='submit'
+          variant='contained'
+          color='primary'
+          style={{ marginTop: '.5rem' }}>
+          Start Bidding
+        </Button>
       </div>
     )
   }

@@ -101,7 +101,14 @@ class Artpiece extends Component {
               <MenuItem value='photography'>Photography</MenuItem>
             </Select>
           </FormControl>
-          <Button size='small' type='submit' variant='outlined' color='primary' >Update</Button>
+          <Button
+            style={{ marginTop: '7px' }}
+            size='small'
+            type='submit'
+            variant='outlined'
+            color='primary'>
+            Update
+          </Button>
         </form>
         {/* showing snackbar when artpiece meta has been updated */}
         <Snackbar

@@ -48,14 +48,15 @@ class Profile extends Component {
 
   render () {
     const { isValidUser } = this.state
-    const { user } = this.props
+    const { user, token } = this.props
     const shouldShowArtistDashboard = user.hasOwnProperty('artist')
-    return(     
-      isValidUser
+    return(token && 
+      (isValidUser
         ? shouldShowArtistDashboard
           ? <ArtistDashboard />
           : <BuyerDashboard />
-        : <div>Please login again</div>
+        : <div>Please login again</div>)
+      || null
     )
   }
 }

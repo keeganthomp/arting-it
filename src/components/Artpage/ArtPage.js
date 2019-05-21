@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { getAllArt } from 'api'
 
 class ArtPage extends Component {
-  constructor() {
+  constructor(props) {
     super()
     this.state = {
       detailedViewArt: '',
@@ -72,7 +72,8 @@ class ArtPage extends Component {
   }
   render() {
     const {art, isFetchingArt, filtersAvailable, selectedFilters} = this.state
-    return !isFetchingArt 
+    const { token } = this.props
+    return !!token && !isFetchingArt 
       ? (
         <div className='artpage-container'>
           {this.state.detailedViewArt && <ArtDetail

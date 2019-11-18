@@ -7,7 +7,7 @@
     "atob": "^2.1.2",
     "autoprefixer": "^7.1.6",
     "aws-sdk": "^2.353.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "b64-to-blob": "^1.2.19",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
